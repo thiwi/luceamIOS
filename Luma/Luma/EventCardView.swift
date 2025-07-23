@@ -6,7 +6,7 @@ struct EventCardView: View {
 
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
-        let cardHeight = UIScreen.main.bounds.height * 0.3
+        let cardHeight = UIScreen.main.bounds.height * 0.25
 
         return ZStack {
             Image("CardBackground")
