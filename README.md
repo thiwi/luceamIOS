@@ -37,3 +37,10 @@ Mood definitions (animations, colors, ambient audio) should be loaded from the `
 
 The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUITests`. These can be executed from Xcode or via `xcodebuild` to validate the app once implemented.
 
+## Offline mock mode
+
+By default the app runs without a backend. `APIClient.useMock` is set to `true`,
+causing all API calls and presence updates to return local mock data defined in
+`MockData.swift`. Set this flag to `false` when you want to connect to a real
+server.
+
