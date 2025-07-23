@@ -5,10 +5,14 @@ struct EventCardView: View {
     @State private var hovering = false
 
     var body: some View {
-        ZStack {
-            Image("CardBackground")
+        let cardWidth = UIScreen.main.bounds.width * 0.98
+        let cardHeight = UIScreen.main.bounds.height * 0.3
+
+        return ZStack {
+            Image("CardBackground\(event.id)")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
+                .frame(width: cardWidth, height: cardHeight)
                 .clipped()
                 .cornerRadius(16)
             Text(event.content)
@@ -17,8 +21,8 @@ struct EventCardView: View {
                 .padding()
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 120)
+        .frame(width: cardWidth, height: cardHeight)
+        .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .scaleEffect(hovering ? 1.05 : 1)
         .animation(.easeInOut(duration: 0.2), value: hovering)
         .onHover { hovering = $0 }
