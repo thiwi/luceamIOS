@@ -9,7 +9,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Image("day_background")
+            Image("day_splash_final2")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -26,6 +26,7 @@ struct ContentView: View {
                     .padding()
                 }
                 .navigationTitle("Moments")
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     Button("Add") { creating = true }
                 }
@@ -50,7 +51,7 @@ struct ContentView: View {
                     }
                 }
                 .sheet(item: $selectedEvent) { event in
-                    EventDetailView(event: event)
+                    EventDetailView(event: event, background: "card_background1")
                 }
                 .task {
                     await session.ensureSession()
