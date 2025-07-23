@@ -39,21 +39,23 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
-            .overlay(alignment: .topTrailing) {
-                Menu {
-                    Button("New Mood Room") { creatingMoodRoom = true }
-                    Button("New Moment") { creatingMoment = true }
-                } label: {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(Color.black.opacity(0.6))
-                        .clipShape(Circle())
+            .navigationTitle("Moments")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button("New Mood Room") { creatingMoodRoom = true }
+                        Button("New Moment") { creatingMoment = true }
+                    } label: {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.white)
+                            .padding(12)
+                            .background(Color.black.opacity(0.6))
+                            .clipShape(Circle())
+                    }
                 }
-                .padding()
             }
             .sheet(isPresented: $creatingMoment) {
                 NavigationView {
