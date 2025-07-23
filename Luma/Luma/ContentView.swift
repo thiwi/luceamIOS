@@ -9,7 +9,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Image("day_splash_final2")
+            Image("MainViewBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -19,7 +19,7 @@ struct ContentView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(events.events) { event in
                             Button(action: { selectedEvent = event }) {
-                                EventCardView(event: event, background: "card_background1")
+                                EventCardView(event: event)
                             }
                         }
                     }
@@ -52,7 +52,7 @@ struct ContentView: View {
                     }
                 }
                 .sheet(item: $selectedEvent) { event in
-                    EventDetailView(event: event, background: "card_background1")
+                    EventDetailView(event: event)
                 }
                 .task {
                     await session.ensureSession()
