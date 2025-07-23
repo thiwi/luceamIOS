@@ -35,7 +35,7 @@ struct ContentView: View {
                         Button("New Moment") { creatingMoment = true }
                     } label: {
                         Image(systemName: "plus")
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                     }
                 }
                 .sheet(isPresented: $creatingMoment) {
