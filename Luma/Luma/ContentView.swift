@@ -4,12 +4,14 @@ struct ContentView: View {
     @StateObject private var session = SessionStore()
     @StateObject private var events = EventStore()
     @State private var newEventText = ""
-    @State private var creating = false
+    @State private var creatingMoment = false
+    @State private var creatingMoodRoom = false
+    @State private var showCreateOptions = false
     @State private var selectedEvent: Event?
 
     var body: some View {
         ZStack {
-            Image("MainViewBackground")
+            Image("DetailViewBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -29,9 +31,17 @@ struct ContentView: View {
                 .navigationTitle("Moments")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    Button("Add") { creating = true }
+                    Button(action: { showCreateOptions = true }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.black)
+                    }
                 }
-                .sheet(isPresented: $creating) {
+                .confirmationDialog("Create", isPresented: $showCreateOptions) {
+                    Button("New Mood Room") { creatingMoodRoom = true }
+                    Button("New Moment") { creatingMoment = true }
+                    Button("Cancel", role: .cancel) {}
+                }
+                .sheet(isPresented: $creatingMoment) {
                     NavigationView {
                         VStack {
                             TextField("Write something", text: $newEventText)
@@ -40,9 +50,11 @@ struct ContentView: View {
                             Button("Create") {
                                 Task {
                                     if let token = session.token {
-                                        await events.createEvent(token: token, content: newEventText)
-                                        creating = false
-                                        newEventText = ""
+                                        if let created = await events.createEvent(token: token, content: newEventText) {
+                                            creatingMoment = false
+                                            newEventText = ""
+                                            selectedEvent = created
+                                        }
                                     }
                                 }
                             }
@@ -50,6 +62,9 @@ struct ContentView: View {
                         }
                         .navigationTitle("New Moment")
                     }
+                }
+                .sheet(isPresented: $creatingMoodRoom) {
+                    CreateMoodRoomView()
                 }
                 .sheet(item: $selectedEvent) { event in
                     EventDetailView(event: event)
@@ -59,13 +74,13 @@ struct ContentView: View {
                     await events.loadEvents()
                 }
             }
-            VStack {
-                Spacer()
-                Text("More moments")
-                    .font(.footnote)
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.bottom, 8)
-            }
+                VStack {
+                    Spacer()
+                    Text("More moments")
+                        .font(.footnote)
+                        .foregroundColor(Color(.darkGray))
+                        .padding(.bottom, 8)
+                }
         }
     }
 }
