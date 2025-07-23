@@ -50,7 +50,7 @@ struct ContentView: View {
                     }
                 }
                 .sheet(item: $selectedEvent) { event in
-                    EnergyRoomView(event: event)
+                    EventDetailView(event: event)
                 }
                 .task {
                     await session.ensureSession()

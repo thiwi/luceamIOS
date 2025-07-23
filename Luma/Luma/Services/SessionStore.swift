@@ -17,6 +17,8 @@ class SessionStore: ObservableObject {
             UserDefaults.standard.set(sess.token, forKey: key)
         } catch {
             print("Session creation failed", error)
+            // Use a mock token so the app can run without the backend
+            token = "mock-token"
         }
     }
 }
