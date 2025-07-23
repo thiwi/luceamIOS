@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct LumaApp: App {
+    @State private var showSplash = true
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if showSplash {
+                SplashView(showSplash: $showSplash)
+            } else {
+                ContentView()
+            }
         }
     }
 }

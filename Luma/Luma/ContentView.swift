@@ -8,44 +8,54 @@ struct ContentView: View {
     @State private var selectedEvent: Event?
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(events.events) { event in
-                    Button(action: { selectedEvent = event }) {
-                        Text(event.content)
-                    }
-                }
-            }
-            .navigationTitle("Moments")
-            .toolbar {
-                Button("Add") { creating = true }
-            }
-            .sheet(isPresented: $creating) {
-                NavigationView {
-                    VStack {
-                        TextField("Write something", text: $newEventText)
-                            .textFieldStyle(.roundedBorder)
-                            .padding()
-                        Button("Create") {
-                            Task {
-                                if let token = session.token {
-                                    await events.createEvent(token: token, content: newEventText)
-                                    creating = false
-                                    newEventText = ""
-                                }
+        ZStack {
+            Image("day_background")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+
+            NavigationView {
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(events.events) { event in
+                            Button(action: { selectedEvent = event }) {
+                                EventCardView(event: event, background: "card_background1")
                             }
                         }
-                        .padding()
                     }
-                    .navigationTitle("New Moment")
+                    .padding()
                 }
-            }
-            .sheet(item: $selectedEvent) { event in
-                EnergyRoomView(event: event)
-            }
-            .task {
-                await session.ensureSession()
-                await events.loadEvents()
+                .navigationTitle("Moments")
+                .toolbar {
+                    Button("Add") { creating = true }
+                }
+                .sheet(isPresented: $creating) {
+                    NavigationView {
+                        VStack {
+                            TextField("Write something", text: $newEventText)
+                                .textFieldStyle(.roundedBorder)
+                                .padding()
+                            Button("Create") {
+                                Task {
+                                    if let token = session.token {
+                                        await events.createEvent(token: token, content: newEventText)
+                                        creating = false
+                                        newEventText = ""
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                        .navigationTitle("New Moment")
+                    }
+                }
+                .sheet(item: $selectedEvent) { event in
+                    EnergyRoomView(event: event)
+                }
+                .task {
+                    await session.ensureSession()
+                    await events.loadEvents()
+                }
             }
         }
     }
