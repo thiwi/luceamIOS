@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "day_background.png",
+      "filename" : "CardBackground.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
