@@ -2,12 +2,11 @@ import SwiftUI
 
 struct EventCardView: View {
     let event: Event
-    let background: String
     @State private var hovering = false
 
     var body: some View {
         ZStack {
-            Image(background)
+            Image("CardBackground")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 120)
@@ -27,5 +26,5 @@ struct EventCardView: View {
 }
 
 #Preview {
-    EventCardView(event: Event(id: 1, content: "Hello world", mood: nil, symbol: nil), background: "card_background1")
+    EventCardView(event: Event(id: 1, content: "Hello world", mood: nil, symbol: nil))
 }
