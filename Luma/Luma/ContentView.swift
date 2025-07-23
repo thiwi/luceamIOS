@@ -17,7 +17,7 @@ struct ContentView: View {
                 .scaledToFill()
                 .ignoresSafeArea()
 
-            NavigationView {
+            NavigationStack {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(events.events) { event in
@@ -32,15 +32,17 @@ struct ContentView: View {
                 .navigationTitle("Moments")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    Menu {
-                        Button("New Mood Room") { creatingMoodRoom = true }
-                        Button("New Moment") { creatingMoment = true }
-                    } label: {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.gray)
-                            .padding(6)
-                            .background(Color.white)
-                            .clipShape(Circle())
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button("New Mood Room") { creatingMoodRoom = true }
+                            Button("New Moment") { creatingMoment = true }
+                        } label: {
+                            Image(systemName: "plus")
+                                .foregroundColor(.gray)
+                                .padding(6)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        }
                     }
                 }
                 .sheet(isPresented: $creatingMoment) {
