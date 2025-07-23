@@ -2,12 +2,11 @@ import SwiftUI
 
 struct EventDetailView: View {
     let event: Event
-    let background: String
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack {
-            Image("day_splash_final2")
+            Image("DetailViewBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -30,7 +29,7 @@ struct EventDetailView: View {
 
                 Spacer()
                 ZStack {
-                    Image(background)
+                    Image("CardBackground")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(height: 200)
@@ -55,5 +54,5 @@ struct EventDetailView: View {
 }
 
 #Preview {
-    EventDetailView(event: MockData.events.first!, background: "card_background1")
+    EventDetailView(event: MockData.events.first!)
 }
