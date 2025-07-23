@@ -28,9 +28,9 @@ struct EventDetailView: View {
                 }
 
                 Spacer()
-                Text("You are no in this moment.")
+                Text("You are now in this moment.")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(.darkGray))
                     .padding(.bottom, 8)
 
                 ZStack {
