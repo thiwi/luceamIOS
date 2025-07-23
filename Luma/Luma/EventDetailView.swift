@@ -29,27 +29,31 @@ struct EventDetailView: View {
 
                 Spacer()
                 ZStack {
-                    Image("CardBackground")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: UIScreen.main.bounds.height * 0.7)
-                        .clipped()
-                        .cornerRadius(16)
-
-                    VStack {
+                    VStack(spacing: 0) {
                         Text("You are now in this moment")
                             .font(.headline)
                             .foregroundColor(.black)
                             .padding(.top, 16)
                         Spacer()
+                        Text(event.content)
+                            .font(.title)
+                            .foregroundColor(.black)
+                            .padding()
+                            .multilineTextAlignment(.center)
+                        Spacer()
                     }
-
-                    Text(event.content)
-                        .font(.title)
-                        .foregroundColor(.black)
-                        .padding()
-                        .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(
+                        Image("CardBackground")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    )
                 }
+                .frame(width: UIScreen.main.bounds.width * 0.98,
+                       height: UIScreen.main.bounds.height * 0.7)
+                .cornerRadius(16)
+                .clipped()
+                .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
                 Text("Swipe done to leave this moment")
                     .font(.footnote)
