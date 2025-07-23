@@ -9,16 +9,6 @@ struct SplashView: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-            VStack {
-                Spacer()
-                Button(action: { showSplash = false }) {
-                    Label("Get Started", systemImage: "sun.max.fill")
-                        .padding()
-                        .background(Color.white.opacity(0.8))
-                        .cornerRadius(12)
-                }
-                .padding(.bottom, 40)
-            }
         }
     }
 }

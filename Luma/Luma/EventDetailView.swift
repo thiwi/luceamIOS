@@ -29,13 +29,19 @@ struct EventDetailView: View {
                         .shadow(radius: 4)
                 }
                 .padding()
+                Text("You are now in this moment")
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 20)
                 Spacer()
             }
             Button(action: { dismiss() }) {
                 Image(systemName: "xmark")
-                    .foregroundColor(.black)
-                    .padding(8)
-                    .background(Color.white)
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(.white)
+                    .padding(12)
+                    .background(Color.black.opacity(0.6))
                     .clipShape(Circle())
             }
             .padding()
