@@ -6,6 +6,13 @@ class PresenceService: ObservableObject {
 
     func connect(eventId: Int) {
         disconnect()
+
+        guard !APIClient.useMock else {
+            // In mock mode just use a fixed presence count
+            count = 1
+            return
+        }
+
         var urlComponents = URLComponents()
         urlComponents.scheme = "ws"
         urlComponents.host = "localhost"
