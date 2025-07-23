@@ -12,12 +12,13 @@ struct EventCardView: View {
                 .clipped()
                 .cornerRadius(16)
             Text(event.content)
-                .font(.title2)
+                .font(.title)
                 .foregroundColor(.black)
                 .padding()
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity, height: 200)
+        .frame(maxWidth: .infinity)
+        .frame(height: 150)
         .scaleEffect(hovering ? 1.05 : 1)
         .animation(.easeInOut(duration: 0.2), value: hovering)
         .onHover { hovering = $0 }

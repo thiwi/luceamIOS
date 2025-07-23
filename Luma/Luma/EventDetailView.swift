@@ -35,6 +35,15 @@ struct EventDetailView: View {
                         .frame(height: UIScreen.main.bounds.height * 0.8)
                         .clipped()
                         .cornerRadius(16)
+
+                    VStack {
+                        Text("You are now in this moment")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.top, 16)
+                        Spacer()
+                    }
+
                     Text(event.content)
                         .font(.title)
                         .foregroundColor(.black)
@@ -42,7 +51,7 @@ struct EventDetailView: View {
                         .multilineTextAlignment(.center)
                 }
                 .padding()
-                Text("You are now in this moment")
+                Text("Swipe done to leave this moment")
                     .font(.footnote)
                     .foregroundColor(.white)
                     .padding(.bottom, 20)
