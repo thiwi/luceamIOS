@@ -6,7 +6,6 @@ struct ContentView: View {
     @State private var newEventText = ""
     @State private var creatingMoment = false
     @State private var creatingMoodRoom = false
-    @State private var showCreateOptions = false
     @State private var selectedEvent: Event?
 
     var body: some View {
@@ -31,15 +30,13 @@ struct ContentView: View {
                 .navigationTitle("Moments")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    Button(action: { showCreateOptions = true }) {
-                        Image(systemName: "xmark")
+                    Menu {
+                        Button("New Mood Room") { creatingMoodRoom = true }
+                        Button("New Moment") { creatingMoment = true }
+                    } label: {
+                        Image(systemName: "plus")
                             .foregroundColor(.black)
                     }
-                }
-                .confirmationDialog("Create", isPresented: $showCreateOptions) {
-                    Button("New Mood Room") { creatingMoodRoom = true }
-                    Button("New Moment") { creatingMoment = true }
-                    Button("Cancel", role: .cancel) {}
                 }
                 .sheet(isPresented: $creatingMoment) {
                     NavigationView {
