@@ -9,7 +9,7 @@ struct EventCardView: View {
         let cardHeight = UIScreen.main.bounds.height * 0.3
 
         return ZStack {
-            Image("CardBackground\(event.id)")
+            Image("CardBackground")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: cardWidth, height: cardHeight)
