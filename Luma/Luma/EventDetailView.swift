@@ -6,13 +6,28 @@ struct EventDetailView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             Image("day_splash_final2")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
 
-            VStack {
+            VStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.white)
+                            .padding(12)
+                            .background(Color.black.opacity(0.6))
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding()
+                }
+
                 Spacer()
                 ZStack {
                     Image(background)
@@ -35,16 +50,6 @@ struct EventDetailView: View {
                     .padding(.bottom, 20)
                 Spacer()
             }
-            Button(action: { dismiss() }) {
-                Image(systemName: "xmark")
-                    .resizable()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(.white)
-                    .padding(12)
-                    .background(Color.black.opacity(0.6))
-                    .clipShape(Circle())
-            }
-            .padding()
         }
     }
 }
