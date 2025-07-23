@@ -11,13 +11,13 @@ struct ContentView: View {
     @State private var createdRoomName = ""
 
     var body: some View {
-        ZStack {
-            Image("DetailViewBackground")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Image("DetailViewBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
 
-            NavigationStack {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(events.events) { event in
@@ -29,28 +29,38 @@ struct ContentView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical)
                 }
-                .navigationTitle("Moments")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button("New Mood Room") { creatingMoodRoom = true }
-                            Button("New Moment") { creatingMoment = true }
-                        } label: {
-                            Image(systemName: "plus")
-                                .foregroundColor(.gray)
-                                .padding(6)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                        }
+                .overlay(alignment: .bottom) {
+                    VStack {
+                        Spacer()
+                        Text("More moments")
+                            .font(.footnote)
+                            .foregroundColor(Color(.darkGray))
+                            .padding(.bottom, 8)
                     }
                 }
-                .sheet(isPresented: $creatingMoment) {
-                    NavigationView {
-                        VStack {
-                            TextField("Write something", text: $newEventText)
-                                .textFieldStyle(.roundedBorder)
-                                .padding()
+            }
+            .navigationBarHidden(true)
+            .overlay(alignment: .topTrailing) {
+                Menu {
+                    Button("New Mood Room") { creatingMoodRoom = true }
+                    Button("New Moment") { creatingMoment = true }
+                } label: {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(Color.black.opacity(0.6))
+                        .clipShape(Circle())
+                }
+                .padding()
+            }
+            .sheet(isPresented: $creatingMoment) {
+                NavigationView {
+                    VStack {
+                        TextField("Write something", text: $newEventText)
+                            .textFieldStyle(.roundedBorder)
+                            .padding()
                             Button("Create") {
                                 Task {
                                     if let token = session.token {
@@ -67,30 +77,22 @@ struct ContentView: View {
                         .navigationTitle("New Moment")
                     }
                 }
-                .sheet(isPresented: $creatingMoodRoom) {
-                    CreateMoodRoomView { name in
-                        createdRoomName = name
-                        showMoodRoom = true
-                    }
-                }
-                .sheet(isPresented: $showMoodRoom) {
-                    MoodRoomView(name: createdRoomName)
-                }
-                .sheet(item: $selectedEvent) { event in
-                    EventDetailView(event: event)
-                }
-                .task {
-                    await session.ensureSession()
-                    await events.loadEvents()
+            .sheet(isPresented: $creatingMoodRoom) {
+                CreateMoodRoomView { name in
+                    createdRoomName = name
+                    showMoodRoom = true
                 }
             }
-                VStack {
-                    Spacer()
-                    Text("More moments")
-                        .font(.footnote)
-                        .foregroundColor(Color(.darkGray))
-                        .padding(.bottom, 8)
-                }
+            .sheet(isPresented: $showMoodRoom) {
+                MoodRoomView(name: createdRoomName)
+            }
+            .sheet(item: $selectedEvent) { event in
+                EventDetailView(event: event)
+            }
+            .task {
+                await session.ensureSession()
+                await events.loadEvents()
+            }
         }
     }
 }
