@@ -28,36 +28,33 @@ struct EventDetailView: View {
                 }
 
                 Spacer()
+                Text("You are no in this moment.")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 8)
+
                 ZStack {
-                    VStack(spacing: 0) {
-                        Text("You are now in this moment")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.top, 16)
-                        Spacer()
-                        Text(event.content)
-                            .font(.title)
-                            .foregroundColor(.black)
-                            .padding()
-                            .multilineTextAlignment(.center)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(
-                        Image("CardBackground")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    )
+                    Text(event.content)
+                        .font(.title)
+                        .foregroundColor(.black)
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(
+                            Image("CardBackground")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        )
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.98,
+                .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
                 .cornerRadius(16)
                 .clipped()
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
-                Text("Swipe done to leave this moment")
+                Text("Swipe down to leave this moment.")
                     .font(.footnote)
-                    .foregroundColor(.white)
+                    .foregroundColor(.gray)
                     .padding(.bottom, 20)
                 Spacer()
             }

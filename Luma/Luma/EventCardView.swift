@@ -5,7 +5,7 @@ struct EventCardView: View {
     @State private var hovering = false
 
     var body: some View {
-        let cardWidth = UIScreen.main.bounds.width * 0.98
+        let cardWidth = UIScreen.main.bounds.width * 0.95
         let cardHeight = UIScreen.main.bounds.height * 0.3
 
         return ZStack {
