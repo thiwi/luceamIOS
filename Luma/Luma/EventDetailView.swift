@@ -32,7 +32,7 @@ struct EventDetailView: View {
                     Image("CardBackground")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: UIScreen.main.bounds.height * 0.8)
+                        .frame(height: UIScreen.main.bounds.height * 0.7)
                         .clipped()
                         .cornerRadius(16)
 
