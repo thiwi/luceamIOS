@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CreateMoodRoomView: View {
     @Environment(\.dismiss) private var dismiss
+    var onCreate: (String) -> Void = { _ in }
 
     @State private var name: String = ""
     @State private var backgroundIndex = 0
@@ -72,7 +73,10 @@ struct CreateMoodRoomView: View {
                 Button("Cancel") { dismiss() }
                     .padding()
                 Spacer()
-                Button("Create") { dismiss() }
+                Button("Create") {
+                    onCreate(name)
+                    dismiss()
+                }
                     .padding()
             }
         }
