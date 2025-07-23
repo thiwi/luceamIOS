@@ -8,8 +8,7 @@ struct EventCardView: View {
         ZStack {
             Image("CardBackground")
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 120)
+                .aspectRatio(1, contentMode: .fill)
                 .clipped()
                 .cornerRadius(16)
             Text(event.content)
@@ -19,6 +18,8 @@ struct EventCardView: View {
                 .multilineTextAlignment(.center)
                 .shadow(radius: 4)
         }
+        .aspectRatio(1, contentMode: .fit)
+        .frame(maxWidth: .infinity)
         .scaleEffect(hovering ? 1.05 : 1)
         .animation(.easeInOut(duration: 0.2), value: hovering)
         .onHover { hovering = $0 }
