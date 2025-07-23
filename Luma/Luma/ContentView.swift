@@ -7,6 +7,8 @@ struct ContentView: View {
     @State private var creatingMoment = false
     @State private var creatingMoodRoom = false
     @State private var selectedEvent: Event?
+    @State private var showMoodRoom = false
+    @State private var createdRoomName = ""
 
     var body: some View {
         ZStack {
@@ -34,8 +36,11 @@ struct ContentView: View {
                         Button("New Mood Room") { creatingMoodRoom = true }
                         Button("New Moment") { creatingMoment = true }
                     } label: {
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
+                        Image(systemName: "xmark")
+                            .foregroundColor(.gray)
+                            .padding(6)
+                            .background(Color.white)
+                            .clipShape(Circle())
                     }
                 }
                 .sheet(isPresented: $creatingMoment) {
@@ -61,7 +66,13 @@ struct ContentView: View {
                     }
                 }
                 .sheet(isPresented: $creatingMoodRoom) {
-                    CreateMoodRoomView()
+                    CreateMoodRoomView { name in
+                        createdRoomName = name
+                        showMoodRoom = true
+                    }
+                }
+                .sheet(isPresented: $showMoodRoom) {
+                    MoodRoomView(name: createdRoomName)
                 }
                 .sheet(item: $selectedEvent) { event in
                     EventDetailView(event: event)
