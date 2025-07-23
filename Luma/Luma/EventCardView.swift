@@ -3,6 +3,7 @@ import SwiftUI
 struct EventCardView: View {
     let event: Event
     let background: String
+    @State private var hovering = false
 
     var body: some View {
         ZStack {
@@ -19,6 +20,9 @@ struct EventCardView: View {
                 .multilineTextAlignment(.center)
                 .shadow(radius: 4)
         }
+        .scaleEffect(hovering ? 1.05 : 1)
+        .animation(.easeInOut(duration: 0.2), value: hovering)
+        .onHover { hovering = $0 }
     }
 }
 

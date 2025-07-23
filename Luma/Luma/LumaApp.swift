@@ -15,6 +15,11 @@ struct LumaApp: App {
         WindowGroup {
             if showSplash {
                 SplashView(showSplash: $showSplash)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            showSplash = false
+                        }
+                    }
             } else {
                 ContentView()
             }

@@ -23,7 +23,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .padding()
+                    .padding(.horizontal)
                 }
                 .navigationTitle("Moments")
                 .navigationBarTitleDisplayMode(.inline)
