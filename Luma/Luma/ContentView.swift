@@ -23,7 +23,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 8)
                     .padding(.vertical)
                 }
                 .navigationTitle("Moments")
@@ -58,6 +58,13 @@ struct ContentView: View {
                     await session.ensureSession()
                     await events.loadEvents()
                 }
+            }
+            VStack {
+                Spacer()
+                Text("More moments")
+                    .font(.footnote)
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.bottom, 8)
             }
         }
     }
