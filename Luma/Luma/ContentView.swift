@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var creatingMoment = false
     @State private var creatingMoodRoom = false
     @State private var selectedEvent: Event?
+    @State private var myCreatedEventId: Int?
     @State private var showMoodRoom = false
     @State private var createdRoomName = ""
 
@@ -29,15 +30,6 @@ struct ContentView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical)
                 }
-                .overlay(alignment: .bottom) {
-                    VStack {
-                        Spacer()
-                        Text("More moments")
-                            .font(.footnote)
-                            .foregroundColor(Color(.darkGray))
-                            .padding(.bottom, 8)
-                    }
-                }
             }
             .navigationTitle("Moments")
             .navigationBarTitleDisplayMode(.inline)
@@ -57,28 +49,22 @@ struct ContentView: View {
                     }
                 }
             }
-            .sheet(isPresented: $creatingMoment) {
-                NavigationView {
-                    VStack {
-                        TextField("Write something", text: $newEventText)
-                            .textFieldStyle(.roundedBorder)
-                            .padding()
-                            Button("Create") {
-                                Task {
-                                    if let token = session.token {
-                                        if let created = await events.createEvent(token: token, content: newEventText) {
-                                            creatingMoment = false
-                                            newEventText = ""
-                                            selectedEvent = created
-                                        }
-                                    }
-                                }
+            .sheet(isPresented: $creatingMoment) { CreateMomentView(text: $newEventText) { text in
+                    Task {
+                        if let token = session.token {
+                            if let created = await events.createEvent(token: token, content: text) {
+                                creatingMoment = false
+                                newEventText = ""
+                                myCreatedEventId = created.id
+                                selectedEvent = created
                             }
-                            .padding()
                         }
-                        .navigationTitle("New Moment")
                     }
+                } onDiscard: {
+                    creatingMoment = false
+                    newEventText = ""
                 }
+            }
             .sheet(isPresented: $creatingMoodRoom) {
                 CreateMoodRoomView { name in
                     createdRoomName = name
@@ -89,7 +75,7 @@ struct ContentView: View {
                 MoodRoomView(name: createdRoomName)
             }
             .sheet(item: $selectedEvent) { event in
-                EventDetailView(event: event)
+                EventDetailView(event: event, isOwnEvent: event.id == myCreatedEventId)
             }
             .task {
                 await session.ensureSession()

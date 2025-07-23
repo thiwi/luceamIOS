@@ -2,7 +2,11 @@ import SwiftUI
 
 struct MoodRoomView: View {
     let name: String
+    var background: String = "MoodRoomHappy"
     @Environment(\.dismiss) private var dismiss
+
+    var onCreate: (() -> Void)? = nil
+    var onDiscard: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
@@ -40,7 +44,7 @@ struct MoodRoomView: View {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(
-                            Image("CardBackground")
+                            Image(background)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                         )
@@ -52,6 +56,14 @@ struct MoodRoomView: View {
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
 
+                if onCreate != nil || onDiscard != nil {
+                    HStack {
+                        if let onDiscard { Button("Discard") { onDiscard() } }
+                        Spacer()
+                        if let onCreate { Button("Create") { onCreate() } }
+                    }
+                    .padding()
+                }
                 Spacer()
             }
         }
