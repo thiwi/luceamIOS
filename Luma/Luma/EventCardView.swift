@@ -18,7 +18,7 @@ struct EventCardView: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 150)
+        .frame(height: 120)
         .scaleEffect(hovering ? 1.05 : 1)
         .animation(.easeInOut(duration: 0.2), value: hovering)
         .onHover { hovering = $0 }
