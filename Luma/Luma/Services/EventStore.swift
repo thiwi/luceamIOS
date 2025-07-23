@@ -9,6 +9,8 @@ class EventStore: ObservableObject {
             events = try await APIClient.shared.listEvents()
         } catch {
             print("Failed to load events", error)
+            // Fallback to local mock data when the backend is unavailable
+            events = MockData.events
         }
     }
 
