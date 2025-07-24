@@ -7,14 +7,20 @@ class MockData {
         Event(id: 3, content: "Reading a good book", mood: nil, symbol: nil)
     ]
 
-    static var moodRooms: [MoodRoom] = [
-        MoodRoom(name: "Monday Blues", schedule: "Every Monday at 17:30"),
-        MoodRoom(name: "Mindful night routine", schedule: "Daily at 22:00"),
-        MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00")
+    static var presetMoodRooms: [MoodRoom] = [
+        MoodRoom(name: "Monday Blues", schedule: "Every Monday at 17:30", background: "MoodRoomSad"),
+        MoodRoom(name: "Mindful night routine", schedule: "Daily at 22:00", background: "MoodRoomNight"),
+        MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00", background: "MoodRoomNature")
     ]
 
-    static func addMoodRoom(name: String, schedule: String) {
-        moodRooms.append(MoodRoom(name: name, schedule: schedule))
+    static var userMoodRooms: [MoodRoom] = []
+
+    static var moodRooms: [MoodRoom] {
+        userMoodRooms + presetMoodRooms
+    }
+
+    static func addMoodRoom(name: String, schedule: String, background: String) {
+        userMoodRooms.insert(MoodRoom(name: name, schedule: schedule, background: background), at: 0)
     }
 
     static func addEvent(content: String) -> Event {

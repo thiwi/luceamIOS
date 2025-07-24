@@ -7,7 +7,6 @@ struct MoodRoomView: View {
 
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
-    @State private var duration: Double = 1
 
     var body: some View {
         ZStack {
@@ -60,20 +59,12 @@ struct MoodRoomView: View {
                 .padding()
 
                 if onCreate != nil || onDiscard != nil {
-                    VStack {
-                        HStack {
-                            Text("Duration: \(Int(duration * 60)) min")
-                            Slider(value: $duration, in: 0.1...3, step: 0.1)
-                        }
-                        .padding(.horizontal)
-
-                        HStack {
-                            if let onDiscard { Button("Discard") { onDiscard() }.foregroundColor(.black) }
-                            Spacer()
-                            if let onCreate { Button("Create") { onCreate() }.foregroundColor(.black) }
-                        }
-                        .padding()
+                    HStack {
+                        if let onDiscard { Button("Discard") { onDiscard() }.foregroundColor(.black) }
+                        Spacer()
+                        if let onCreate { Button("Create") { onCreate() }.foregroundColor(.black) }
                     }
+                    .padding()
                 }
                 Spacer()
             }

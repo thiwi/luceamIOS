@@ -2,20 +2,28 @@ import SwiftUI
 
 struct MoodRoomListView: View {
     @Environment(\.dismiss) private var dismiss
-    let rooms: [MoodRoom] = MockData.moodRooms
-
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("startscreen")
+                Image("MainViewBackground")
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
 
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(rooms) { room in
-                            MoodRoomCardView(room: room)
+                        ForEach(MockData.userMoodRooms) { room in
+                            NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                                MoodRoomCardView(room: room)
+                            }
+                        }
+                        if !MockData.userMoodRooms.isEmpty {
+                            Divider()
+                        }
+                        ForEach(MockData.presetMoodRooms) { room in
+                            NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                                MoodRoomCardView(room: room)
+                            }
                         }
                     }
                     .padding(.horizontal, 8)

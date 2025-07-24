@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var myCreatedEventId: Int?
     @State private var showMoodRoom = false
     @State private var createdRoomName = ""
+    @State private var createdRoomBackground = "MoodRoomHappy"
     @State private var exploringMoodRooms = false
 
     var body: some View {
@@ -68,13 +69,14 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $creatingMoodRoom) {
-                CreateMoodRoomView { name in
+                CreateMoodRoomView { name, background in
                     createdRoomName = name
+                    createdRoomBackground = background
                     showMoodRoom = true
                 }
             }
             .sheet(isPresented: $showMoodRoom) {
-                MoodRoomView(name: createdRoomName)
+                MoodRoomView(name: createdRoomName, background: createdRoomBackground)
             }
             .sheet(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
