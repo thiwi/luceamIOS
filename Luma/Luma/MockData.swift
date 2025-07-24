@@ -8,9 +8,9 @@ class MockData {
     ]
 
     static var presetMoodRooms: [MoodRoom] = [
-        MoodRoom(name: "Monday Blues", schedule: "Every Monday at 17:30", background: "MoodRoomSad"),
-        MoodRoom(name: "Mindful night routine", schedule: "Daily at 22:00", background: "MoodRoomNight"),
-        MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00", background: "MoodRoomNature")
+        MoodRoom(name: "Monday Blues", schedule: "Every Monday at 17:30", background: "MoodRoomSad", durationMinutes: 30, isActive: true),
+        MoodRoom(name: "Mindful night routine", schedule: "Daily at 22:00", background: "MoodRoomNight", durationMinutes: 30, isActive: true),
+        MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00", background: "MoodRoomNature", durationMinutes: 30, isActive: true)
     ]
 
     static var userMoodRooms: [MoodRoom] = []
@@ -19,8 +19,17 @@ class MockData {
         userMoodRooms + presetMoodRooms
     }
 
-    static func addMoodRoom(name: String, schedule: String, background: String) {
-        userMoodRooms.insert(MoodRoom(name: name, schedule: schedule, background: background), at: 0)
+    static func addMoodRoom(name: String,
+                             schedule: String,
+                             background: String,
+                             durationMinutes: Int,
+                             isActive: Bool = true) {
+        userMoodRooms.insert(MoodRoom(name: name,
+                                      schedule: schedule,
+                                      background: background,
+                                      durationMinutes: durationMinutes,
+                                      isActive: isActive),
+                             at: 0)
     }
 
     static func addEvent(content: String) -> Event {

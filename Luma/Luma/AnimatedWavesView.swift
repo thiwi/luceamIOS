@@ -8,11 +8,11 @@ struct Wave: Shape {
         let waveHeight: CGFloat = 20
         let wavelength = rect.width / 1.5
 
-        path.move(to: .zero)
+        path.move(to: CGPoint(x: 0, y: 0))
         for x in stride(from: 0, to: rect.width, by: 1) {
             let relativeX = x / wavelength
             let sine = sin(relativeX * 2 * .pi + phase)
-            let y = waveHeight * sine + rect.height / 2
+            let y = waveHeight * sine
             path.addLine(to: CGPoint(x: x, y: y))
         }
 
@@ -32,17 +32,24 @@ struct AnimatedWavesView: View {
     @State private var phase: CGFloat = 0
 
     var body: some View {
-        ZStack {
-            Color(.systemBackground)
+        GeometryReader { geo in
+            ZStack {
+                let gradient = LinearGradient(colors: [
+                    Color(red: 0.96, green: 0.89, blue: 0.76),
+                    Color(red: 0.93, green: 0.80, blue: 0.66)
+                ], startPoint: .top, endPoint: .bottom)
 
-            ForEach(0..<6) { i in
-                Wave(phase: phase + CGFloat(i) * 0.5)
-                    .fill(Color(white: 0.9 - Double(i) * 0.05))
-                    .frame(height: 300)
-                    .offset(y: CGFloat(i * 25))
+                gradient
+
+                ForEach(0..<6) { i in
+                    Wave(phase: phase + CGFloat(i) * 0.5)
+                        .fill(gradient)
+                        .frame(height: geo.size.height)
+                        .offset(y: CGFloat(i * 25) - geo.size.height / 2)
+                }
             }
+            .clipped()
         }
-        .ignoresSafeArea()
         .onAppear {
             withAnimation(.linear(duration: 5).repeatForever(autoreverses: false)) {
                 phase = .pi * 2
