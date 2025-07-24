@@ -7,7 +7,7 @@ struct MoodRoomCardView: View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
         let cardHeight = UIScreen.main.bounds.height * 0.2
         ZStack {
-            Image("TintedCardBackground")
+            Image(room.background)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: cardWidth, height: cardHeight)
@@ -30,5 +30,5 @@ struct MoodRoomCardView: View {
 }
 
 #Preview {
-    MoodRoomCardView(room: MoodRoom(name: "Test", schedule: "Daily"))
+    MoodRoomCardView(room: MoodRoom(name: "Test", schedule: "Daily", background: "MoodRoomHappy"))
 }

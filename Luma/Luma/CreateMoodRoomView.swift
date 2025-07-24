@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CreateMoodRoomView: View {
     @Environment(\.dismiss) private var dismiss
-    var onCreate: (String) -> Void = { _ in }
+    var onCreate: (String, String) -> Void = { _, _ in }
 
     @State private var name: String = ""
     @State private var backgroundIndex = 0
@@ -32,6 +32,7 @@ struct CreateMoodRoomView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    .padding(.horizontal)
 
                     ZStack(alignment: .topLeading) {
                         if name.isEmpty {
@@ -68,8 +69,8 @@ struct CreateMoodRoomView: View {
                         }
                     }
 
-                    HStack {
-                        Text("Starting")
+                    VStack(alignment: .leading) {
+                        Text("Start")
                         DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
                             .labelsHidden()
                             .datePickerStyle(.wheel)
@@ -123,8 +124,8 @@ struct CreateMoodRoomView: View {
                     } else {
                         schedule = "Once at \(timeString)"
                     }
-                    MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name, schedule: schedule)
-                    onCreate(name)
+                    MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name, schedule: schedule, background: backgrounds[backgroundIndex])
+                    onCreate(name, backgrounds[backgroundIndex])
                     dismiss()
                 }
                 .padding()
@@ -133,7 +134,7 @@ struct CreateMoodRoomView: View {
                 MoodRoomView(name: name.isEmpty ? "Unnamed" : name,
                              background: backgrounds[backgroundIndex],
                              onCreate: {
-                                 onCreate(name)
+                                 onCreate(name, backgrounds[backgroundIndex])
                                  dismiss()
                              },
                              onDiscard: { showPreview = false })
