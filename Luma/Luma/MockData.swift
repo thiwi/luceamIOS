@@ -8,9 +8,21 @@ class MockData {
     ]
 
     static var presetMoodRooms: [MoodRoom] = [
-        MoodRoom(name: "Monday Blues", schedule: "Every Monday at 17:30", background: "MoodRoomSad", durationMinutes: 30, isActive: true),
-        MoodRoom(name: "Mindful night routine", schedule: "Daily at 22:00", background: "MoodRoomNight", durationMinutes: 30, isActive: true),
-        MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00", background: "MoodRoomNature", durationMinutes: 30, isActive: true)
+        MoodRoom(name: "Monday Blues",
+                 schedule: "Every Monday at 17:30",
+                 background: "MoodRoomSad",
+                 startTime: Date().addingTimeInterval(600),
+                 durationMinutes: 30),
+        MoodRoom(name: "Mindful night routine",
+                 schedule: "Daily at 22:00",
+                 background: "MoodRoomNight",
+                 startTime: Date().addingTimeInterval(900),
+                 durationMinutes: 30),
+        MoodRoom(name: "Saturday for Reflection",
+                 schedule: "Every Saturday at 10:00",
+                 background: "MoodRoomNature",
+                 startTime: Date().addingTimeInterval(1200),
+                 durationMinutes: 30)
     ]
 
     static var userMoodRooms: [MoodRoom] = []
@@ -22,13 +34,12 @@ class MockData {
     static func addMoodRoom(name: String,
                              schedule: String,
                              background: String,
-                             durationMinutes: Int,
-                             isActive: Bool = true) {
+                             durationMinutes: Int) {
         userMoodRooms.insert(MoodRoom(name: name,
                                       schedule: schedule,
                                       background: background,
-                                      durationMinutes: durationMinutes,
-                                      isActive: isActive),
+                                      startTime: Date().addingTimeInterval(600),
+                                      durationMinutes: durationMinutes),
                              at: 0)
     }
 
