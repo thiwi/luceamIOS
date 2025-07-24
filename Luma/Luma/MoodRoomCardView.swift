@@ -40,5 +40,6 @@ struct MoodRoomCardView: View {
                                    schedule: "Daily",
                                    background: "MoodRoomHappy",
                                    startTime: Date(),
+                                   createdAt: Date(),
                                    durationMinutes: 30))
 }
