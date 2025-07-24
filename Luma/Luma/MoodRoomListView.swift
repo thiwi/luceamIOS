@@ -13,16 +13,26 @@ struct MoodRoomListView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(MockData.userMoodRooms) { room in
-                            NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                            if room.isActive {
+                                NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                                    MoodRoomCardView(room: room)
+                                }
+                            } else {
                                 MoodRoomCardView(room: room)
+                                    .opacity(0.6)
                             }
                         }
                         if !MockData.userMoodRooms.isEmpty {
                             Divider()
                         }
                         ForEach(MockData.presetMoodRooms) { room in
-                            NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                            if room.isActive {
+                                NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                                    MoodRoomCardView(room: room)
+                                }
+                            } else {
                                 MoodRoomCardView(room: room)
+                                    .opacity(0.6)
                             }
                         }
                     }

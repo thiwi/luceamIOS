@@ -14,12 +14,13 @@ struct MoodRoomCardView: View {
                 .clipped()
                 .cornerRadius(16)
             VStack {
+                let textColor = room.background == "MoodRoomNight" ? Color.white : Color.black
                 Text(room.name)
                     .font(.title2)
-                    .foregroundColor(.black)
-                Text(room.schedule)
+                    .foregroundColor(textColor)
+                Text(room.schedule + " | \(room.durationMinutes)min")
                     .font(.caption)
-                    .foregroundColor(.black)
+                    .foregroundColor(textColor)
             }
             .multilineTextAlignment(.center)
             .padding()
@@ -30,5 +31,5 @@ struct MoodRoomCardView: View {
 }
 
 #Preview {
-    MoodRoomCardView(room: MoodRoom(name: "Test", schedule: "Daily", background: "MoodRoomHappy"))
+    MoodRoomCardView(room: MoodRoom(name: "Test", schedule: "Daily", background: "MoodRoomHappy", durationMinutes: 30, isActive: true))
 }
