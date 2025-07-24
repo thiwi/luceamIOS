@@ -7,11 +7,11 @@ struct MoodRoom: Identifiable, Hashable {
     let schedule: String
     let background: String
     let startTime: Date
+    let createdAt: Date
     var durationMinutes: Int
 
     var isJoinable: Bool {
-        let openTime = startTime.addingTimeInterval(-300)
         let closeTime = startTime.addingTimeInterval(TimeInterval(durationMinutes * 60))
-        return Date() >= openTime && Date() <= closeTime
+        return Date() >= startTime && Date() <= closeTime
     }
 }

@@ -130,6 +130,7 @@ struct CreateMoodRoomView: View {
                     MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name,
                                          schedule: schedule,
                                          background: backgrounds[backgroundIndex],
+                                         startTime: time,
                                          durationMinutes: durationMinutes)
                     onCreate(name, backgrounds[backgroundIndex])
                     dismiss()

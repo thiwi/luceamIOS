@@ -12,16 +12,19 @@ class MockData {
                  schedule: "Every Monday at 17:30",
                  background: "MoodRoomSad",
                  startTime: Date().addingTimeInterval(600),
+                 createdAt: Date(),
                  durationMinutes: 30),
         MoodRoom(name: "Mindful night routine",
                  schedule: "Daily at 22:00",
                  background: "MoodRoomNight",
                  startTime: Date().addingTimeInterval(900),
+                 createdAt: Date(),
                  durationMinutes: 30),
         MoodRoom(name: "Saturday for Reflection",
                  schedule: "Every Saturday at 10:00",
                  background: "MoodRoomNature",
                  startTime: Date().addingTimeInterval(1200),
+                 createdAt: Date(),
                  durationMinutes: 30)
     ]
 
@@ -34,11 +37,13 @@ class MockData {
     static func addMoodRoom(name: String,
                              schedule: String,
                              background: String,
+                             startTime: Date,
                              durationMinutes: Int) {
         userMoodRooms.insert(MoodRoom(name: name,
                                       schedule: schedule,
                                       background: background,
-                                      startTime: Date().addingTimeInterval(600),
+                                      startTime: startTime,
+                                      createdAt: Date(),
                                       durationMinutes: durationMinutes),
                              at: 0)
     }
