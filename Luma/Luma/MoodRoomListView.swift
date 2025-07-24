@@ -2,7 +2,9 @@ import SwiftUI
 
 struct MoodRoomListView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var now = Date()
     var body: some View {
+        let _ = now
         NavigationStack {
             ZStack {
                 Image("MainViewBackground")
@@ -12,27 +14,36 @@ struct MoodRoomListView: View {
 
                 ScrollView {
                     LazyVStack(spacing: 16) {
+                        if !MockData.userMoodRooms.isEmpty {
+                            Text("Your mood rooms")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+
                         ForEach(MockData.userMoodRooms) { room in
-                            if room.isActive {
+                            if room.isJoinable {
                                 NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
                                     MoodRoomCardView(room: room)
                                 }
                             } else {
-                                MoodRoomCardView(room: room)
-                                    .opacity(0.6)
+                                MoodRoomCardView(room: room, joinable: false)
                             }
                         }
+
                         if !MockData.userMoodRooms.isEmpty {
                             Divider()
+                            Text("Mood rooms created by others")
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
+
                         ForEach(MockData.presetMoodRooms) { room in
-                            if room.isActive {
+                            if room.isJoinable {
                                 NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
                                     MoodRoomCardView(room: room)
                                 }
                             } else {
-                                MoodRoomCardView(room: room)
-                                    .opacity(0.6)
+                                MoodRoomCardView(room: room, joinable: false)
                             }
                         }
                     }
@@ -48,6 +59,9 @@ struct MoodRoomListView: View {
                         .foregroundColor(.black)
                 }
             }
+        }
+        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
+            now = Date()
         }
     }
 }

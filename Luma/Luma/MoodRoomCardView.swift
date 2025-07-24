@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MoodRoomCardView: View {
     let room: MoodRoom
+    var joinable: Bool = true
 
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
@@ -27,9 +28,17 @@ struct MoodRoomCardView: View {
         }
         .frame(width: cardWidth, height: cardHeight)
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
+        .overlay(
+            joinable ? nil : Color.gray.opacity(0.4)
+        )
+        .allowsHitTesting(joinable)
     }
 }
 
 #Preview {
-    MoodRoomCardView(room: MoodRoom(name: "Test", schedule: "Daily", background: "MoodRoomHappy", durationMinutes: 30, isActive: true))
+    MoodRoomCardView(room: MoodRoom(name: "Test",
+                                   schedule: "Daily",
+                                   background: "MoodRoomHappy",
+                                   startTime: Date(),
+                                   durationMinutes: 30))
 }

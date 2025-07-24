@@ -3,6 +3,7 @@ import SwiftUI
 struct MoodRoomView: View {
     let name: String
     var background: String = "MoodRoomHappy"
+    var isPreview: Bool = false
     @Environment(\.dismiss) private var dismiss
 
     var onCreate: (() -> Void)? = nil
@@ -65,6 +66,11 @@ struct MoodRoomView: View {
                         if let onCreate { Button("Create") { onCreate() }.foregroundColor(.black) }
                     }
                     .padding()
+                } else if isPreview {
+                    Text("Swipe down to close preview.")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 20)
                 }
                 Spacer()
             }
@@ -73,5 +79,5 @@ struct MoodRoomView: View {
 }
 
 #Preview {
-    MoodRoomView(name: "Test Room")
+    MoodRoomView(name: "Test Room", isPreview: true)
 }

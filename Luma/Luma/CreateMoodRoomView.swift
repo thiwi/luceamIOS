@@ -74,6 +74,7 @@ struct CreateMoodRoomView: View {
                         DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
                             .labelsHidden()
                             .datePickerStyle(.wheel)
+                            .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
 
                     HStack {
@@ -94,6 +95,7 @@ struct CreateMoodRoomView: View {
                             }
                         }
                         .pickerStyle(.wheel)
+                        .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
                 }
                 .foregroundColor(textColor)
@@ -136,11 +138,7 @@ struct CreateMoodRoomView: View {
             .sheet(isPresented: $showPreview) {
                 MoodRoomView(name: name.isEmpty ? "Unnamed" : name,
                              background: backgrounds[backgroundIndex],
-                             onCreate: {
-                                 onCreate(name, backgrounds[backgroundIndex])
-                                 dismiss()
-                             },
-                             onDiscard: { showPreview = false })
+                             isPreview: true)
             }
         }
     }
