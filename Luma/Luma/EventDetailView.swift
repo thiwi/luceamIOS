@@ -36,17 +36,19 @@ struct EventDetailView: View {
                     .padding(.bottom, 8)
 
                 ZStack {
+                    if isOwnEvent {
+                        Image("OwnMoment")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        AnimatedWavesView()
+                    }
                     Text(event.content)
                         .font(.title)
                         .foregroundColor(.black)
                         .padding()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(
-                            Image(isOwnEvent ? "OwnMoment" : "CardBackground")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        )
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
