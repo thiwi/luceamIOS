@@ -42,7 +42,7 @@ struct MoodRoomView: View {
                     .foregroundColor(textColor)
                     .padding(.bottom, 8)
 
-                ZStack {
+                ZStack(alignment: .bottom) {
                     Text(name)
                         .font(.title)
                         .foregroundColor(textColor)
@@ -54,6 +54,16 @@ struct MoodRoomView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                         )
+
+                    if isOwnRoom {
+                        Text("There are \(people) people with you in this room.")
+                            .font(.footnote)
+                            .foregroundColor(textColor)
+                            .padding(6)
+                            .background(Color.black.opacity(0.4))
+                            .cornerRadius(8)
+                            .padding(8)
+                    }
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
@@ -70,17 +80,12 @@ struct MoodRoomView: View {
                     }
                     .padding()
                 } else if isPreview {
-                    Text("Swipe down to close preview.")
+                    Text("Use the back button to close preview.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
-                } else if isOwnRoom {
-                    Text("There are \(people) people with you in this room.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 8)
                 } else {
-                    Text("Swipe down to leave this room.")
+                    Text("Use the back button to leave this room.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
@@ -93,6 +98,7 @@ struct MoodRoomView: View {
             people = 0
             incrementPeople()
         }
+        .interactiveDismissDisabled()
     }
 
     private func incrementPeople() {
