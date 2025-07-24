@@ -11,11 +11,6 @@ struct CreateMomentView: View {
                 Image("OwnMoment")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                TextEditor(text: $text)
-                    .foregroundColor(.clear)
-                    .background(Color.clear)
-                    .scrollContentBackground(.hidden)
-                    .padding()
                 Text(text)
                     .font(.title)
                     .foregroundColor(.black)
@@ -28,6 +23,11 @@ struct CreateMomentView: View {
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
             .padding()
+
+            TextEditor(text: $text)
+                .scrollContentBackground(.hidden)
+                .frame(height: 100)
+                .padding([.horizontal])
 
             HStack {
                 Button("Discard") { onDiscard() }

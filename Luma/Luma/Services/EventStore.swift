@@ -3,6 +3,7 @@ import Foundation
 @MainActor
 class EventStore: ObservableObject {
     @Published var events: [Event] = []
+    @Published var ownEventIds: Set<Int> = []
 
     func loadEvents() async {
         do {
@@ -18,6 +19,7 @@ class EventStore: ObservableObject {
         do {
             let created = try await APIClient.shared.createEvent(token: token, event: EventCreate(content: content, mood: "rain", symbol: "✨"))
             await loadEvents()
+            ownEventIds.insert(created.id)
             return created
         } catch {
             print("Failed to create event", error)

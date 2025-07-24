@@ -33,6 +33,7 @@ struct CreateMoodRoomView: View {
                     }
                     .pickerStyle(.menu)
                     .padding(.horizontal)
+                    .padding(.top, 8)
 
                     ZStack(alignment: .topLeading) {
                         if name.isEmpty {

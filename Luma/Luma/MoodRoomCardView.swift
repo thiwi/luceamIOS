@@ -29,7 +29,7 @@ struct MoodRoomCardView: View {
         .frame(width: cardWidth, height: cardHeight)
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(
-            joinable ? nil : Color.gray.opacity(0.4)
+            joinable ? nil : Color.gray.opacity(0.65)
         )
         .allowsHitTesting(joinable)
     }
