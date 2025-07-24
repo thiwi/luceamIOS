@@ -7,8 +7,6 @@ struct ContentView: View {
     @State private var creatingMoment = false
     @State private var creatingMoodRoom = false
     @State private var selectedEvent: Event?
-    @State private var myCreatedEventId: Int?
-    @State private var showMoodRoom = false
     @State private var createdRoomName = ""
     @State private var createdRoomBackground = "MoodRoomHappy"
     @State private var exploringMoodRooms = false
@@ -25,7 +23,7 @@ struct ContentView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(events.events) { event in
                             Button(action: { selectedEvent = event }) {
-                                EventCardView(event: event)
+                                EventCardView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
                             }
                         }
                     }
@@ -58,7 +56,6 @@ struct ContentView: View {
                             if let created = await events.createEvent(token: token, content: text) {
                                 creatingMoment = false
                                 newEventText = ""
-                                myCreatedEventId = created.id
                                 selectedEvent = created
                             }
                         }
@@ -72,17 +69,14 @@ struct ContentView: View {
                 CreateMoodRoomView { name, background in
                     createdRoomName = name
                     createdRoomBackground = background
-                    showMoodRoom = true
+                    exploringMoodRooms = true
                 }
-            }
-            .sheet(isPresented: $showMoodRoom) {
-                MoodRoomView(name: createdRoomName, background: createdRoomBackground)
             }
             .sheet(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
             }
             .sheet(item: $selectedEvent) { event in
-                EventDetailView(event: event, isOwnEvent: event.id == myCreatedEventId)
+                EventDetailView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
             }
             .task {
                 await session.ensureSession()

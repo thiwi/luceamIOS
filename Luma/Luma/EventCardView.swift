@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EventCardView: View {
     let event: Event
+    var isOwnEvent: Bool = false
     @State private var hovering = false
 
     var body: some View {
@@ -9,7 +10,7 @@ struct EventCardView: View {
         let cardHeight = UIScreen.main.bounds.height * 0.25
 
         return ZStack {
-            Image("CardBackground")
+            Image(isOwnEvent ? "OwnMoment" : "CardBackground")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: cardWidth, height: cardHeight)
@@ -30,5 +31,5 @@ struct EventCardView: View {
 }
 
 #Preview {
-    EventCardView(event: Event(id: 1, content: "Hello world", mood: nil, symbol: nil))
+    EventCardView(event: Event(id: 1, content: "Hello world", mood: nil, symbol: nil), isOwnEvent: true)
 }
