@@ -14,6 +14,7 @@ struct CreateMomentView: View {
                 TextEditor(text: $text)
                     .foregroundColor(.clear)
                     .background(Color.clear)
+                    .scrollContentBackground(.hidden)
                     .padding()
                 Text(text)
                     .font(.title)

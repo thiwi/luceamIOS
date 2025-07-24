@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var myCreatedEventId: Int?
     @State private var showMoodRoom = false
     @State private var createdRoomName = ""
+    @State private var exploringMoodRooms = false
 
     var body: some View {
         NavigationStack {
@@ -36,6 +37,7 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
+                        Button("Explore Mood Rooms") { exploringMoodRooms = true }
                         Button("New Mood Room") { creatingMoodRoom = true }
                         Button("New Moment") { creatingMoment = true }
                     } label: {
@@ -73,6 +75,9 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showMoodRoom) {
                 MoodRoomView(name: createdRoomName)
+            }
+            .sheet(isPresented: $exploringMoodRooms) {
+                MoodRoomListView()
             }
             .sheet(item: $selectedEvent) { event in
                 EventDetailView(event: event, isOwnEvent: event.id == myCreatedEventId)
