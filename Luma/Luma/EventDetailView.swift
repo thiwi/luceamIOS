@@ -41,7 +41,9 @@ struct EventDetailView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                     } else {
-                        AnimatedWavesView()
+                        Image("CardBackground")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
                     }
                     Text(event.content)
                         .font(.title)
