@@ -22,7 +22,9 @@ struct MoodRoomListView: View {
 
                         ForEach(MockData.userMoodRooms) { room in
                             if room.isJoinable {
-                                NavigationLink(destination: MoodRoomView(name: room.name, background: room.background)) {
+                                NavigationLink(destination: MoodRoomView(name: room.name,
+                                                                       background: room.background,
+                                                                       isOwnRoom: true)) {
                                     MoodRoomCardView(room: room)
                                 }
                             } else {

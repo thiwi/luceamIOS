@@ -4,7 +4,10 @@ struct MoodRoomView: View {
     let name: String
     var background: String = "MoodRoomHappy"
     var isPreview: Bool = false
+    var isOwnRoom: Bool = false
     @Environment(\.dismiss) private var dismiss
+
+    @State private var people = 0
 
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
@@ -71,8 +74,35 @@ struct MoodRoomView: View {
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
+                } else if isOwnRoom {
+                    Text("There are \(people) people with you in this room.")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 8)
+                } else {
+                    Text("Swipe down to leave this room.")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 20)
                 }
                 Spacer()
+            }
+        }
+        .onAppear {
+            guard isOwnRoom else { return }
+            people = 0
+            incrementPeople()
+        }
+    }
+
+    private func incrementPeople() {
+        guard people < 15 else { return }
+        let delay = Double.random(in: 0...5)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            let addition = Int.random(in: 1...3)
+            people = min(15, people + addition)
+            if people < 15 {
+                incrementPeople()
             }
         }
     }
