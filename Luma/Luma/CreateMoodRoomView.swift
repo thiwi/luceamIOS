@@ -23,6 +23,7 @@ struct CreateMoodRoomView: View {
                 Image(backgrounds[backgroundIndex])
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                let textColor = backgrounds[backgroundIndex] == "MoodRoomNight" ? Color.white : Color.black
                 VStack(spacing: 16) {
                     Picker("Background", selection: $backgroundIndex) {
                         ForEach(0..<backgrounds.count, id: \.self) { idx in
@@ -39,7 +40,7 @@ struct CreateMoodRoomView: View {
                         }
                         TextEditor(text: $name)
                             .background(Color.clear)
-                            .foregroundColor(.primary)
+                            .foregroundColor(textColor)
                             .frame(height: 40)
                     }
 
@@ -70,6 +71,8 @@ struct CreateMoodRoomView: View {
                         }
                     }
                 }
+                .foregroundColor(textColor)
+                .tint(textColor)
                 .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.95,

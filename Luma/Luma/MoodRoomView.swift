@@ -7,10 +7,11 @@ struct MoodRoomView: View {
 
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
+    @State private var duration: Double = 1
 
     var body: some View {
         ZStack {
-            Image("DetailViewBackground")
+            Image(onCreate != nil || onDiscard != nil ? "startscreen" : "DetailViewBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -31,15 +32,17 @@ struct MoodRoomView: View {
                 }
                 .padding()
 
+                let textColor = background == "MoodRoomNight" ? Color.white : Color.black
+
                 Text("Mood room")
                     .font(.headline)
-                    .foregroundColor(Color(.darkGray))
+                    .foregroundColor(textColor)
                     .padding(.bottom, 8)
 
                 ZStack {
                     Text(name)
                         .font(.title)
-                        .foregroundColor(.black)
+                        .foregroundColor(textColor)
                         .padding()
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -57,12 +60,20 @@ struct MoodRoomView: View {
                 .padding()
 
                 if onCreate != nil || onDiscard != nil {
-                    HStack {
-                        if let onDiscard { Button("Discard") { onDiscard() } }
-                        Spacer()
-                        if let onCreate { Button("Create") { onCreate() } }
+                    VStack {
+                        HStack {
+                            Text("Duration: \(Int(duration * 60)) min")
+                            Slider(value: $duration, in: 0.1...3, step: 0.1)
+                        }
+                        .padding(.horizontal)
+
+                        HStack {
+                            if let onDiscard { Button("Discard") { onDiscard() }.foregroundColor(.black) }
+                            Spacer()
+                            if let onCreate { Button("Create") { onCreate() }.foregroundColor(.black) }
+                        }
+                        .padding()
                     }
-                    .padding()
                 }
                 Spacer()
             }
