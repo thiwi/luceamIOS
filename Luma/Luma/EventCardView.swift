@@ -9,9 +9,7 @@ struct EventCardView: View {
         let cardHeight = UIScreen.main.bounds.height * 0.25
 
         return ZStack {
-            Image("CardBackground")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            AnimatedWavesView()
                 .frame(width: cardWidth, height: cardHeight)
                 .clipped()
                 .cornerRadius(16)
