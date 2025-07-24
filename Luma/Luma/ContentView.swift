@@ -41,7 +41,7 @@ struct ContentView: View {
                         Button("New Mood Room") { creatingMoodRoom = true }
                         Button("New Moment") { creatingMoment = true }
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "line.3.horizontal")
                             .resizable()
                             .frame(width: 16, height: 16)
                             .foregroundColor(.white)

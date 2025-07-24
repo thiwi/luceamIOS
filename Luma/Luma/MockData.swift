@@ -13,6 +13,10 @@ class MockData {
         MoodRoom(name: "Saturday for Reflection", schedule: "Every Saturday at 10:00")
     ]
 
+    static func addMoodRoom(name: String, schedule: String) {
+        moodRooms.append(MoodRoom(name: name, schedule: schedule))
+    }
+
     static func addEvent(content: String) -> Event {
         let newId = (events.map { $0.id }.max() ?? 0) + 1
         let event = Event(id: newId, content: content, mood: nil, symbol: nil)

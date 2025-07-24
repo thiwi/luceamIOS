@@ -9,6 +9,7 @@ struct CreateMoodRoomView: View {
     @State private var recurring = false
     @State private var selectedWeekdays: Set<Int> = []
     @State private var time = Date()
+    @State private var durationMinutes = 15
     @State private var showPreview = false
 
     private let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
@@ -34,7 +35,7 @@ struct CreateMoodRoomView: View {
 
                     ZStack(alignment: .topLeading) {
                         if name.isEmpty {
-                            Text("Enter Mood Room name")
+                            Text("Mood Room name")
                                 .foregroundColor(.gray)
                                 .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                         }
@@ -47,28 +48,51 @@ struct CreateMoodRoomView: View {
                     Toggle("Recurring", isOn: $recurring)
 
                     if recurring {
-                        VStack {
-                            HStack {
-                                ForEach(0..<weekdays.count, id: \.self) { idx in
-                                    let day = idx
-                                    Button(action: {
-                                        if selectedWeekdays.contains(day) {
-                                            selectedWeekdays.remove(day)
-                                        } else {
-                                            selectedWeekdays.insert(day)
-                                        }
-                                    }) {
-                                        Text(weekdays[idx])
-                                            .font(.caption)
-                                            .padding(6)
-                                            .background(selectedWeekdays.contains(day) ? Color.blue.opacity(0.2) : Color.clear)
-                                            .cornerRadius(4)
+                        HStack {
+                            ForEach(0..<weekdays.count, id: \.self) { idx in
+                                let day = idx
+                                Button(action: {
+                                    if selectedWeekdays.contains(day) {
+                                        selectedWeekdays.remove(day)
+                                    } else {
+                                        selectedWeekdays.insert(day)
                                     }
+                                }) {
+                                    Text(weekdays[idx])
+                                        .font(.caption)
+                                        .padding(6)
+                                        .background(selectedWeekdays.contains(day) ? Color.blue.opacity(0.2) : Color.clear)
+                                        .cornerRadius(4)
                                 }
                             }
-                            DatePicker("Time", selection: $time, displayedComponents: .hourAndMinute)
-                                .labelsHidden()
                         }
+                    }
+
+                    HStack {
+                        Text("Starting")
+                        DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
+                            .labelsHidden()
+                            .datePickerStyle(.wheel)
+                    }
+
+                    HStack {
+                        Text("Duration")
+                        Picker("", selection: $durationMinutes) {
+                            ForEach(Array(stride(from: 15, through: 180, by: 15)), id: \.self) { minutes in
+                                let hours = minutes / 60
+                                let mins = minutes % 60
+                                if hours > 0 {
+                                    if mins == 0 {
+                                        Text("\(hours)h").tag(minutes)
+                                    } else {
+                                        Text("\(hours)h \(mins)min").tag(minutes)
+                                    }
+                                } else {
+                                    Text("\(mins)min").tag(minutes)
+                                }
+                            }
+                        }
+                        .pickerStyle(.wheel)
                     }
                 }
                 .foregroundColor(textColor)
@@ -88,6 +112,22 @@ struct CreateMoodRoomView: View {
                 Spacer()
                 Button("Preview") { showPreview = true }
                     .padding()
+                Button("Create") {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "HH:mm"
+                    let timeString = formatter.string(from: time)
+                    let schedule: String
+                    if recurring {
+                        let days = selectedWeekdays.sorted().map { weekdays[$0] }.joined(separator: ", ")
+                        schedule = "Every \(days) at \(timeString)"
+                    } else {
+                        schedule = "Once at \(timeString)"
+                    }
+                    MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name, schedule: schedule)
+                    onCreate(name)
+                    dismiss()
+                }
+                .padding()
             }
             .sheet(isPresented: $showPreview) {
                 MoodRoomView(name: name.isEmpty ? "Unnamed" : name,
