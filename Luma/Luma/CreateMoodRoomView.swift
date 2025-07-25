@@ -298,7 +298,9 @@ struct CreateMoodRoomView: View {
     }
 }
 
-#Preview {
-    // Static preview for development.
-    CreateMoodRoomView()
+struct CreateMoodRoomView_Previews: PreviewProvider {
+    static var previews: some View {
+        // Static preview for development.
+        CreateMoodRoomView()
+    }
 }
