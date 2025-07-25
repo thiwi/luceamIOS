@@ -4,19 +4,19 @@ import SwiftUI
 struct CreateMoodRoomView: View {
     /// Dismiss callback supplied by the environment.
     @Environment(\.dismiss) private var dismiss
-
+    
     /// Room being edited, if any.
     var editingRoom: MoodRoom?
-
+    
     /// Invoked after a new room is created.
     var onCreate: (String, String) -> Void = { _, _ in }
-
+    
     /// Invoked when an existing room is updated.
     var onUpdate: (MoodRoom) -> Void = { _ in }
-
+    
     /// Invoked when a room is deleted.
     var onDelete: (MoodRoom) -> Void = { _ in }
-
+    
     /// Entered room name.
     @State private var name: String = ""
     /// Selected background image index.
@@ -37,15 +37,15 @@ struct CreateMoodRoomView: View {
     @State private var textColor: Color = .black
     /// Maximum allowed characters in the name.
     private let maxNameLength = 100
-
+    
     /// Available background asset names.
     private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
     /// Short weekday strings for the recurrence picker.
     private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
+    
     private let backgrounds = Self.backgrounds
     private let weekdays = Self.weekdays
-
+    
     /// Creates the view optionally pre-populated with an existing room.
     init(editingRoom: MoodRoom? = nil,
          onCreate: @escaping (String, String) -> Void = { _, _ in },
@@ -55,14 +55,14 @@ struct CreateMoodRoomView: View {
         self.onCreate = onCreate
         self.onUpdate = onUpdate
         self.onDelete = onDelete
-
+        
         if let room = editingRoom {
             _name = State(initialValue: room.name)
             _backgroundIndex = State(initialValue: Self.backgrounds.firstIndex(of: room.background) ?? 0)
             _textColor = State(initialValue: room.textColor)
             _time = State(initialValue: room.startTime)
             _durationMinutes = State(initialValue: room.durationMinutes)
-
+            
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
             if room.schedule.hasPrefix("Every ") {
@@ -84,221 +84,222 @@ struct CreateMoodRoomView: View {
             _textColor = State(initialValue: .black)
         }
     }
-
+    
     /// Form UI with preview, date pickers and actions.
     var body: some View {
         let interfaceColor: Color = .black
         return ZStack {
             Color(red: 0.96, green: 0.89, blue: 0.76)
                 .ignoresSafeArea()
-
+            
             VStack {
-            Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
-                .font(.headline)
-                .padding()
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    ZStack {
-                        Image(backgrounds[backgroundIndex])
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 120)
-                            .clipped()
-                            .cornerRadius(8)
-                        if !name.isEmpty {
-                            Text(name)
-                                .font(.headline)
-                                .foregroundColor(textColor)
-                                .padding()
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    Picker("Background", selection: $backgroundIndex) {
-                        ForEach(0..<backgrounds.count, id: \.self) { idx in
-                            Text(backgrounds[idx]).tag(idx)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .padding(.horizontal)
-
-                    ColorPicker("Text Color", selection: $textColor)
-                        .padding(.horizontal)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Mood Room Description")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                        ZStack(alignment: .topLeading) {
-                            if name.isEmpty {
-                                Text("Mood Room name")
-                                    .foregroundColor(.gray)
-                                    .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
+                Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
+                    .font(.headline)
+                    .padding()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ZStack {
+                            Image(backgrounds[backgroundIndex])
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 120)
+                                .clipped()
+                                .cornerRadius(8)
+                            if !name.isEmpty {
+                                Text(name)
+                                    .font(.headline)
+                                    .foregroundColor(textColor)
+                                    .padding()
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            TextEditor(text: $name)
-                                .onChange(of: name) { _, newValue in
-                                    if newValue.count > maxNameLength {
-                                        name = String(newValue.prefix(maxNameLength))
-                                    }
-                                }
-                                .background(Color.clear)
-                                .foregroundColor(textColor)
-                                .frame(height: 60)
                         }
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.gray.opacity(0.4))
-                        )
-                    }
-                    .padding(.horizontal)
-
-                    HStack {
-                        Spacer()
-                        Text("\(maxNameLength - name.count) characters left")
-                            .font(.caption2)
-                            .foregroundColor(Color(.darkGray))
-                    }
-                    .padding(.trailing)
-
-                    Toggle("Recurring", isOn: $recurring)
                         .padding(.horizontal)
-
-                    if recurring {
+                        
+                        Picker("Background", selection: $backgroundIndex) {
+                            ForEach(0..<backgrounds.count, id: \.self) { idx in
+                                Text(backgrounds[idx]).tag(idx)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .padding(.horizontal)
+                        
+                        ColorPicker("Text Color", selection: $textColor)
+                            .padding(.horizontal)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Mood Room Description")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            ZStack(alignment: .topLeading) {
+                                if name.isEmpty {
+                                    Text("Mood Room name")
+                                        .foregroundColor(.gray)
+                                        .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
+                                }
+                                TextEditor(text: $name)
+                                    .onChange(of: name) { _, newValue in
+                                        if newValue.count > maxNameLength {
+                                            name = String(newValue.prefix(maxNameLength))
+                                        }
+                                    }
+                                    .background(Color.clear)
+                                    .foregroundColor(textColor)
+                                    .frame(height: 60)
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.4))
+                            )
+                        }
+                        .padding(.horizontal)
+                        
                         HStack {
-                            ForEach(0..<weekdays.count, id: \.self) { idx in
-                                let day = idx
-                                Button(action: {
-                                    if selectedWeekdays.contains(day) {
-                                        selectedWeekdays.remove(day)
-                                    } else {
-                                        selectedWeekdays.insert(day)
+                            Spacer()
+                            Text("\(maxNameLength - name.count) characters left")
+                                .font(.caption2)
+                                .foregroundColor(Color(.darkGray))
+                        }
+                        .padding(.trailing)
+                        
+                        Toggle("Recurring", isOn: $recurring)
+                            .padding(.horizontal)
+                        
+                        if recurring {
+                            HStack {
+                                ForEach(0..<weekdays.count, id: \.self) { idx in
+                                    let day = idx
+                                    Button(action: {
+                                        if selectedWeekdays.contains(day) {
+                                            selectedWeekdays.remove(day)
+                                        } else {
+                                            selectedWeekdays.insert(day)
+                                        }
+                                    }) {
+                                        Text(weekdays[idx])
+                                            .font(.caption)
+                                            .padding(6)
+                                            .background(selectedWeekdays.contains(day) ? Color.blue.opacity(0.2) : Color.clear)
+                                            .cornerRadius(4)
                                     }
-                                }) {
-                                    Text(weekdays[idx])
-                                        .font(.caption)
-                                        .padding(6)
-                                        .background(selectedWeekdays.contains(day) ? Color.blue.opacity(0.2) : Color.clear)
-                                        .cornerRadius(4)
                                 }
                             }
+                            .padding(.horizontal)
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Start")
+                            DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .datePickerStyle(.wheel)
+                                .colorScheme(.light)
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, -8)
+                        
+                        HStack {
+                            Text("Duration")
+                            Picker("", selection: $durationMinutes) {
+                                ForEach(Array(stride(from: 15, through: 180, by: 15)), id: \.self) { minutes in
+                                    let hours = minutes / 60
+                                    let mins = minutes % 60
+                                    if hours > 0 {
+                                        if mins == 0 {
+                                            Text("\(hours)h").tag(minutes)
+                                        } else {
+                                            Text("\(hours)h \(mins)min").tag(minutes)
+                                        }
+                                    } else {
+                                        Text("\(mins)min").tag(minutes)
+                                    }
+                                }
+                            }
+                            .pickerStyle(.wheel)
+                            .colorScheme(.light)
                         }
                         .padding(.horizontal)
                     }
-
-                    VStack(alignment: .leading) {
-                        Text("Start")
-                        DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                            .datePickerStyle(.wheel)
-                            .colorScheme(.light)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, -8)
-
-                    HStack {
-                        Text("Duration")
-                        Picker("", selection: $durationMinutes) {
-                            ForEach(Array(stride(from: 15, through: 180, by: 15)), id: \.self) { minutes in
-                                let hours = minutes / 60
-                                let mins = minutes % 60
-                                if hours > 0 {
-                                    if mins == 0 {
-                                        Text("\(hours)h").tag(minutes)
-                                    } else {
-                                        Text("\(hours)h \(mins)min").tag(minutes)
-                                    }
-                                } else {
-                                    Text("\(mins)min").tag(minutes)
-                                }
-                            }
-                        }
-                        .pickerStyle(.wheel)
-                        .colorScheme(.light)
-                    }
-                    .padding(.horizontal)
+                    .foregroundColor(interfaceColor)
+                    .tint(interfaceColor)
+                    .padding(.vertical)
                 }
-                .foregroundColor(interfaceColor)
-                .tint(interfaceColor)
-                .padding(.vertical)
-            }
-
-            HStack {
-                if editingRoom != nil {
-                    Button("Delete") { confirmDelete = true }
-                        .foregroundColor(.red)
+                
+                HStack {
+                    if editingRoom != nil {
+                        Button("Delete") { confirmDelete = true }
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+                    Button("Cancel") { dismiss() }
                         .padding()
-                }
-                Button("Cancel") { dismiss() }
+                    Spacer()
+                    Button("Preview") { showPreview = true }
+                        .padding()
+                    Button(editingRoom == nil ? "Create" : "Update") {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "HH:mm"
+                        let timeString = formatter.string(from: time)
+                        let schedule: String
+                        if recurring {
+                            let days = selectedWeekdays.sorted().map { weekdays[$0] }.joined(separator: ", ")
+                            schedule = "Every \(days) at \(timeString)"
+                        } else {
+                            schedule = "Once at \(timeString)"
+                        }
+                        if let editing = editingRoom {
+                            MockData.updateMoodRoom(id: editing.id,
+                                                    name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                    schedule: schedule,
+                                                    background: backgrounds[backgroundIndex],
+                                                    textColor: textColor,
+                                                    startTime: time,
+                                                    durationMinutes: durationMinutes)
+                            onUpdate(editing)
+                        } else {
+                            MockData.addMoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                 schedule: schedule,
+                                                 background: backgrounds[backgroundIndex],
+                                                 textColor: textColor,
+                                                 startTime: time,
+                                                 durationMinutes: durationMinutes)
+                            onCreate(name.trimmingCharacters(in: .whitespacesAndNewlines), backgrounds[backgroundIndex])
+                        }
+                        dismiss()
+                    }
+                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .padding()
-                Spacer()
-                Button("Preview") { showPreview = true }
-                    .padding()
-                Button(editingRoom == nil ? "Create" : "Update") {
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "HH:mm"
-                    let timeString = formatter.string(from: time)
-                    let schedule: String
-                    if recurring {
-                        let days = selectedWeekdays.sorted().map { weekdays[$0] }.joined(separator: ", ")
-                        schedule = "Every \(days) at \(timeString)"
-                    } else {
-                        schedule = "Once at \(timeString)"
-                    }
-                    if let editing = editingRoom {
-                        MockData.updateMoodRoom(id: editing.id,
-                                               name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                               schedule: schedule,
-                                               background: backgrounds[backgroundIndex],
-                                               textColor: textColor,
-                                               startTime: time,
-                                               durationMinutes: durationMinutes)
-                        onUpdate(editing)
-                    } else {
-                        MockData.addMoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                             schedule: schedule,
-                                             background: backgrounds[backgroundIndex],
-                                             textColor: textColor,
-                                             startTime: time,
-                                             durationMinutes: durationMinutes)
-                        onCreate(name.trimmingCharacters(in: .whitespacesAndNewlines), backgrounds[backgroundIndex])
-                    }
-                    dismiss()
                 }
-                .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                .padding()
-            }
-            .sheet(isPresented: $showPreview) {
-                MoodRoomView(room: MoodRoom(name: name.isEmpty ? "Unnamed" : name,
-                                            schedule: "Once",
-                                            background: backgrounds[backgroundIndex],
-                                            textColor: textColor,
-                                            startTime: time,
-                                            createdAt: Date(),
-                                            durationMinutes: durationMinutes),
-                            isPreview: true)
-            }
-            .alert("Delete mood room?", isPresented: $confirmDelete) {
-                Button("Delete", role: .destructive) {
-                    if let editing = editingRoom {
-                        MockData.deleteMoodRoom(id: editing.id)
-                        onDelete(editing)
-                    }
-                    dismiss()
+                .sheet(isPresented: $showPreview) {
+                    MoodRoomView(room: MoodRoom(name: name.isEmpty ? "Unnamed" : name,
+                                                schedule: "Once",
+                                                background: backgrounds[backgroundIndex],
+                                                textColor: textColor,
+                                                startTime: time,
+                                                createdAt: Date(),
+                                                durationMinutes: durationMinutes),
+                                 isPreview: true)
                 }
-                Button("Cancel", role: .cancel) {}
+                .alert("Delete mood room?", isPresented: $confirmDelete) {
+                    Button("Delete", role: .destructive) {
+                        if let editing = editingRoom {
+                            MockData.deleteMoodRoom(id: editing.id)
+                            onDelete(editing)
+                        }
+                        dismiss()
+                    }
+                    Button("Cancel", role: .cancel) {}
+                }
             }
+            .foregroundColor(interfaceColor)
+            .tint(interfaceColor)
         }
-        .foregroundColor(interfaceColor)
-        .tint(interfaceColor)
     }
-}
-
-struct CreateMoodRoomView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Static preview for development.
-        CreateMoodRoomView()
+    
+    struct CreateMoodRoomView_Previews: PreviewProvider {
+        static var previews: some View {
+            // Static preview for development.
+            CreateMoodRoomView()
+        }
     }
 }
