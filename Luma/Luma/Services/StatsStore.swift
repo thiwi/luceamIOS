@@ -86,8 +86,8 @@ extension StatsStore {
 
         store.timeInMoments = 60 * 45
         store.timeInMoodRooms = [
-            "MoodRoomSad-recurring": 60 * 30,
-            "MoodRoomNight-recurring": 60 * 60
+            "MoodRoomSad-recurring": TimeInterval(60 * 30),
+            "MoodRoomNight-recurring": TimeInterval(60 * 60)
         ]
 
         store.momentsCreated = 5
