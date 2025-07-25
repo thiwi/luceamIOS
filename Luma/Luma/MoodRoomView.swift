@@ -5,9 +5,12 @@ struct MoodRoomView: View {
     var isPreview: Bool = false
     var isOwnRoom: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var stats: StatsStore
 
     @State private var people = 0
     @State private var closeWork: DispatchWorkItem?
+    @State private var now = Date()
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
@@ -20,24 +23,6 @@ struct MoodRoomView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                HStack {
-                    Button(action: { dismiss() }) {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                            Text("Leave mood room")
-                                .font(.callout)
-                        }
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(Color.black.opacity(0.6))
-                        .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
-                    Spacer()
-                }
-                .padding()
 
                 let textColor = room.background == "MoodRoomNight" ? Color.white : Color.black
 
@@ -106,12 +91,37 @@ struct MoodRoomView: View {
                 people = 0
                 incrementPeople()
             }
+            stats.startMoodRoom(background: room.background, schedule: room.schedule)
         }
         .onDisappear {
             closeWork?.cancel()
+            stats.endMoodRoom()
         }
         .interactiveDismissDisabled(!isPreview)
         .navigationBarBackButtonHidden(true)
+        .onReceive(timer) { _ in
+            now = Date()
+        }
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Button(action: { dismiss() }) {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                        Text("Leave mood room")
+                            .font(.callout)
+                    }
+                    .foregroundColor(.white)
+                    .padding(12)
+                    .background(Color.black.opacity(0.6))
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                Spacer()
+            }
+            .padding()
+        }
     }
 
     private func incrementPeople() {
@@ -139,7 +149,7 @@ struct MoodRoomView: View {
     }
 
     private var remainingTimeText: String {
-        let remaining = room.closeTime.timeIntervalSince(Date())
+        let remaining = room.closeTime.timeIntervalSince(now)
         guard remaining > 0 else { return "0min left" }
         let minutes = Int(remaining / 60)
         let hours = minutes / 60

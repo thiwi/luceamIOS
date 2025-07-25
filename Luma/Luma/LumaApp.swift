@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct LumaApp: App {
     @State private var showSplash = true
+    @StateObject private var stats = StatsStore()
 
     var body: some Scene {
         WindowGroup {
@@ -22,6 +23,7 @@ struct LumaApp: App {
                     }
             } else {
                 ContentView()
+                    .environmentObject(stats)
             }
         }
     }
