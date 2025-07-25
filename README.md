@@ -38,6 +38,10 @@ Mood definitions (animations, colors, ambient audio) should be loaded from the `
 
 The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUITests`. These can be executed from Xcode or via `xcodebuild` to validate the app once implemented.
 
+### Launch performance metrics
+
+UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. Some simulator environments lack the system files needed for these metrics and emit errors like `load_eligibility_plist` during test runs. Metrics collection is therefore disabled by default. Set the environment variable `ENABLE_LAUNCH_METRICS=1` when running tests if you want to record launch metrics.
+
 ## Offline mock mode
 
 By default the app runs without a backend. `APIClient.useMock` is set to `true`,

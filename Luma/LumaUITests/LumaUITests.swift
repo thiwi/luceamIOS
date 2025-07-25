@@ -33,9 +33,15 @@ final class LumaUITests: XCTestCase {
 
     @MainActor
     func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+        let app = XCUIApplication()
+        if ProcessInfo.processInfo.environment["ENABLE_LAUNCH_METRICS"] == "1" {
+            // Only gather launch metrics when explicitly enabled. This avoids
+            // spurious simulator errors like missing eligibility plists.
+            measure(metrics: [XCTApplicationLaunchMetric()]) {
+                app.launch()
+            }
+        } else {
+            app.launch()
         }
     }
 }
