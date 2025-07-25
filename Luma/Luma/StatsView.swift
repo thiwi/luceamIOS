@@ -154,6 +154,6 @@ struct StatsView: View {
 
 struct StatsView_Previews: PreviewProvider {
     static var previews: some View {
-        StatsView().environmentObject(StatsStore())
+        StatsView().environmentObject(StatsStore.sample)
     }
 }
