@@ -7,10 +7,14 @@ struct SplashView: View {
         ZStack {
             Color.black
                 .ignoresSafeArea()
-            Image("startscreen")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            GeometryReader { proxy in
+                Image("startscreen")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: proxy.size.height)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            .ignoresSafeArea()
         }
     }
 }
