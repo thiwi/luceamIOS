@@ -28,9 +28,15 @@ struct MoodRoomCardView: View {
         }
         .frame(width: cardWidth, height: cardHeight)
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
-        .overlay(
-            joinable ? nil : Color.gray.opacity(0.65)
-        )
+        .overlay(alignment: .topTrailing) {
+            if !joinable {
+                let unavailableColor = room.background == "MoodRoomNight" ? Color.white : Color.gray
+                Text("Unavailable at the moment")
+                    .font(.caption2)
+                    .foregroundColor(unavailableColor)
+                    .padding(6)
+            }
+        }
         .allowsHitTesting(joinable)
     }
 }
