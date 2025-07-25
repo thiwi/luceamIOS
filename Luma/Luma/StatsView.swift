@@ -198,7 +198,7 @@ struct StatsView: View {
             }
 
             let currentYear = calendar.component(.yearForWeekOfYear, from: Date())
-            let firstWeek = calendar.date(from: DateComponents(calendar: calendar, yearForWeekOfYear: selectedYear, weekOfYear: 1))!
+            let firstWeek = calendar.date(from: DateComponents(calendar: calendar, weekOfYear: 1, yearForWeekOfYear: selectedYear))!
             let weekCount: Int = {
                 if selectedYear == currentYear {
                     return calendar.component(.weekOfYear, from: Date())
@@ -208,7 +208,7 @@ struct StatsView: View {
             }()
 
             return (1...weekCount).compactMap { w in
-                guard let start = calendar.date(from: DateComponents(calendar: calendar, yearForWeekOfYear: selectedYear, weekOfYear: w)) else { return nil }
+                guard let start = calendar.date(from: DateComponents(calendar: calendar, weekOfYear: w, yearForWeekOfYear: selectedYear)) else { return nil }
                 let tuple = grouped[start] ?? (0, 0)
                 return StatsEntry(date: start, moments: tuple.0, moods: tuple.1)
             }
