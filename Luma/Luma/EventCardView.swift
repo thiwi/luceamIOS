@@ -1,10 +1,17 @@
 import SwiftUI
 
+/// Card view showing a single moment preview.
 struct EventCardView: View {
+    /// Event to display.
     let event: Event
+
+    /// Marks whether the event was created by the current user.
     var isOwnEvent: Bool = false
+
+    /// Hover state used for subtle scaling on macOS/iPad.
     @State private var hovering = false
 
+    /// Rendered view hierarchy.
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
         let cardHeight = UIScreen.main.bounds.height * 0.25
@@ -31,5 +38,6 @@ struct EventCardView: View {
 }
 
 #Preview {
+    // Preview showing the card with example content.
     EventCardView(event: Event(id: 1, content: "Hello world", mood: nil, symbol: nil), isOwnEvent: true)
 }

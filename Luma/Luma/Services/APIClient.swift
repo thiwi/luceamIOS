@@ -1,15 +1,20 @@
 import Foundation
 
+/// Basic REST client used by the app's stores.
 class APIClient {
+    /// Singleton instance used throughout the app.
     static let shared = APIClient()
 
     /// Toggle this flag to use mock data instead of hitting the network.
+    /// When `true` API calls return local ``MockData`` instead of hitting the backend.
     static var useMock = true
 
+    /// Base URL for the backend server.
     private let baseURL = URL(string: "http://localhost:8000/api")!
 
     private init() {}
 
+    /// Creates an anonymous user session on the backend.
     func createSession() async throws -> Session {
         if APIClient.useMock {
             return Session(token: "mock-token")
@@ -21,6 +26,7 @@ class APIClient {
         return try JSONDecoder().decode(Session.self, from: data)
     }
 
+    /// Retrieves the list of available moments from the API.
     func listEvents() async throws -> [Event] {
         if APIClient.useMock {
             return MockData.events
@@ -31,6 +37,7 @@ class APIClient {
         return try JSONDecoder().decode([Event].self, from: data)
     }
 
+    /// Posts a new event using the provided session token.
     func createEvent(token: String, event: EventCreate) async throws -> Event {
         if APIClient.useMock {
             return MockData.addEvent(content: event.content)
@@ -46,6 +53,7 @@ class APIClient {
         return try JSONDecoder().decode(Event.self, from: data)
     }
 
+    /// Fetches the full details for a single event by id.
     func fetchEvent(id: Int) async throws -> Event {
         if APIClient.useMock {
             return MockData.event(id: id) ?? MockData.events.first!

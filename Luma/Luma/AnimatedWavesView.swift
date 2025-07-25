@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// Simple sine wave shape used for the animated splash.
 struct Wave: Shape {
     var phase: CGFloat
 
@@ -28,9 +29,11 @@ struct Wave: Shape {
     }
 }
 
+/// Animated gradient waves used on the splash screen.
 struct AnimatedWavesView: View {
     @State private var phase: CGFloat = 0
 
+    /// Repeating wave animation.
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -59,5 +62,6 @@ struct AnimatedWavesView: View {
 }
 
 #Preview {
+    // Standalone preview of the animation.
     AnimatedWavesView()
 }

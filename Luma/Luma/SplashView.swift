@@ -1,8 +1,11 @@
 import SwiftUI
 
+/// Simple splash screen shown on launch.
 struct SplashView: View {
+    /// Binding used to hide the splash after animation.
     @Binding var showSplash: Bool
 
+    /// Full screen image overlaying a black background.
     var body: some View {
         ZStack {
             Color.black
@@ -19,5 +22,6 @@ struct SplashView: View {
 }
 
 #Preview {
+    // Quick preview of the splash screen.
     SplashView(showSplash: .constant(true))
 }

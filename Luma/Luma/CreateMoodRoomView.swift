@@ -1,29 +1,52 @@
 import SwiftUI
 
+/// Form allowing the user to create or edit a ``MoodRoom``.
 struct CreateMoodRoomView: View {
+    /// Dismiss callback supplied by the environment.
     @Environment(\.dismiss) private var dismiss
+
+    /// Room being edited, if any.
     var editingRoom: MoodRoom?
+
+    /// Invoked after a new room is created.
     var onCreate: (String, String) -> Void = { _, _ in }
+
+    /// Invoked when an existing room is updated.
     var onUpdate: (MoodRoom) -> Void = { _ in }
+
+    /// Invoked when a room is deleted.
     var onDelete: (MoodRoom) -> Void = { _ in }
 
+    /// Entered room name.
     @State private var name: String = ""
+    /// Selected background image index.
     @State private var backgroundIndex = 0
+    /// Flag whether the schedule is recurring.
     @State private var recurring = false
+    /// Weekdays selected for recurrence.
     @State private var selectedWeekdays: Set<Int> = []
+    /// Start time of the room.
     @State private var time = Date()
+    /// Duration in minutes.
     @State private var durationMinutes = 15
+    /// Controls presentation of the preview.
     @State private var showPreview = false
+    /// Shows a confirmation alert when deleting.
     @State private var confirmDelete = false
+    /// Color used for overlay text.
     @State private var textColor: Color = .black
+    /// Maximum allowed characters in the name.
     private let maxNameLength = 100
 
+    /// Available background asset names.
     private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
+    /// Short weekday strings for the recurrence picker.
     private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     private let backgrounds = Self.backgrounds
     private let weekdays = Self.weekdays
 
+    /// Creates the view optionally pre-populated with an existing room.
     init(editingRoom: MoodRoom? = nil,
          onCreate: @escaping (String, String) -> Void = { _, _ in },
          onUpdate: @escaping (MoodRoom) -> Void = { _ in },
@@ -62,6 +85,7 @@ struct CreateMoodRoomView: View {
         }
     }
 
+    /// Form UI with preview, date pickers and actions.
     var body: some View {
         let interfaceColor: Color = backgrounds[backgroundIndex] == "MoodRoomNight" ? .white : .black
         return VStack {
@@ -244,5 +268,6 @@ struct CreateMoodRoomView: View {
 }
 
 #Preview {
+    // Static preview for development.
     CreateMoodRoomView()
 }

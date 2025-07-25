@@ -1,16 +1,37 @@
 import Foundation
 import SwiftUI
 
+/// Data model representing a scheduled mood room.
+///
+/// Mood rooms can recur daily or on specific weekdays. Timing
+/// properties are stored as absolute values but convenience
+/// accessors adjust them to the current day for comparisons.
 struct MoodRoom: Identifiable, Hashable {
+    /// Unique identifier for the mood room.
     var id = UUID()
+
+    /// Display name shown to the user.
     var name: String
+
+    /// Schedule string such as "Every Monday at 17:30" or "Once".
     var schedule: String
+
+    /// Image asset name for the background.
     var background: String
+
+    /// Text color used when rendering overlays.
     var textColor: Color = .black
+
+    /// First start time for the room.
     var startTime: Date
+
+    /// Creation timestamp for analytics.
     var createdAt: Date
+
+    /// Duration in minutes for each session.
     var durationMinutes: Int
 
+    /// End time calculated from the start time and duration.
     var closeTime: Date { startTime.addingTimeInterval(TimeInterval(durationMinutes * 60)) }
 
     /// Start time adjusted for today if the room is recurring.
@@ -29,6 +50,7 @@ struct MoodRoom: Identifiable, Hashable {
         currentStartTime.addingTimeInterval(TimeInterval(durationMinutes * 60))
     }
 
+    /// Returns `true` when the room is currently active and can be joined.
     var isJoinable: Bool {
         let now = Date()
         let cal = Calendar.current
@@ -39,6 +61,7 @@ struct MoodRoom: Identifiable, Hashable {
         }
 
         // Check weekday for recurring schedules like "Every Mon, Tue" or "Daily"
+        // and verify today matches the configured days.
         if schedule.lowercased().hasPrefix("every ") {
             if let range = schedule.range(of: " at ") {
                 let daysPart = schedule[schedule.index(schedule.startIndex, offsetBy: 6)..<range.lowerBound]

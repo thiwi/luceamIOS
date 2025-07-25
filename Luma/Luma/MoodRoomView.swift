@@ -1,20 +1,39 @@
 import SwiftUI
 
+/// Full screen representation of a ``MoodRoom``.
 struct MoodRoomView: View {
+    /// Room configuration to display.
     let room: MoodRoom
+
+    /// Indicates preview mode without presence tracking.
     var isPreview: Bool = false
+
+    /// Marks the room as created by the current user.
     var isOwnRoom: Bool = false
+
+    /// Used to dismiss the screen when finished.
     @Environment(\.dismiss) private var dismiss
+
+    /// Statistics store recording time spent in rooms.
     @EnvironmentObject var stats: StatsStore
 
+    /// Mock participant count when `isOwnRoom` is true.
     @State private var people = 0
+
+    /// Work item scheduled to auto-close the room.
     @State private var closeWork: DispatchWorkItem?
+
+    /// Current timestamp for calculating remaining time.
     @State private var now = Date()
+
+    /// Timer that fires each minute to update `now`.
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
+    /// Callbacks for preview creation flow.
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
 
+    /// Displays the room background, remaining time and participant count.
     var body: some View {
         ZStack {
             Image("DetailViewBackground")
@@ -103,6 +122,7 @@ struct MoodRoomView: View {
         }
     }
 
+    /// Adds random participants over time when previewing your own room.
     private func incrementPeople() {
         guard people < 15 else { return }
         let delay = Double.random(in: 0...5)
@@ -115,6 +135,7 @@ struct MoodRoomView: View {
         }
     }
 
+    /// Schedules automatic dismissal when the room's time expires.
     private func scheduleClose() {
         let closeTime = room.currentCloseTime
         let remaining = closeTime.timeIntervalSince(Date())
@@ -127,6 +148,7 @@ struct MoodRoomView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + remaining, execute: work)
     }
 
+    /// Human readable string describing how much time is left.
     private var remainingTimeText: String {
         let remaining = room.currentCloseTime.timeIntervalSince(now)
         guard remaining > 0 else { return "Less than 1 minute left" }
@@ -149,6 +171,7 @@ struct MoodRoomView: View {
 }
 
 #Preview {
+    // Preview instance used in the Xcode canvas.
     MoodRoomView(room: MoodRoom(name: "Test Room",
                                 schedule: "Once",
                                 background: "MoodRoomHappy",

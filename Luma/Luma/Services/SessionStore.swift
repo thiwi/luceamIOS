@@ -1,14 +1,19 @@
 import Foundation
 
+/// Persists the anonymous session token between launches.
 @MainActor
 class SessionStore: ObservableObject {
+    /// The currently active session token.
     @Published var token: String?
+
+    /// User defaults key used for persistence.
     private let key = "sessionToken"
 
     init() {
         self.token = UserDefaults.standard.string(forKey: key)
     }
 
+    /// Ensures a session token exists, creating one if needed.
     func ensureSession() async {
         if token != nil { return }
         do {
