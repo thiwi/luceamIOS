@@ -95,7 +95,9 @@ struct EnergyRoomView: View {
         VStack {
             Text(content)
                 .padding()
-            Text("\(presence.count) people are with you in this moment.")
+            Text(presence.count == 1 ?
+                 "There is 1 person with you in this moment." :
+                 "There are \(presence.count) persons with you in this moment.")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding()

@@ -138,8 +138,12 @@ struct CreateMoodRoomView: View {
                 .padding()
             }
             .sheet(isPresented: $showPreview) {
-                MoodRoomView(name: name.isEmpty ? "Unnamed" : name,
-                             background: backgrounds[backgroundIndex],
+                MoodRoomView(room: MoodRoom(name: name.isEmpty ? "Unnamed" : name,
+                                            schedule: "Once",
+                                            background: backgrounds[backgroundIndex],
+                                            startTime: time,
+                                            createdAt: Date(),
+                                            durationMinutes: durationMinutes),
                              isPreview: true)
             }
         }
