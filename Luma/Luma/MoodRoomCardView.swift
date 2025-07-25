@@ -2,7 +2,6 @@ import SwiftUI
 
 struct MoodRoomCardView: View {
     let room: MoodRoom
-    var joinable: Bool = true
 
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
@@ -29,7 +28,7 @@ struct MoodRoomCardView: View {
         .frame(width: cardWidth, height: cardHeight)
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(alignment: .topTrailing) {
-            if !joinable {
+            if !room.isJoinable {
                 let unavailableColor = room.background == "MoodRoomNight" ? Color.white : Color.black
                 Text("Unavailable at the moment")
                     .font(.caption2)
@@ -37,7 +36,7 @@ struct MoodRoomCardView: View {
                     .padding(6)
             }
         }
-        .allowsHitTesting(joinable)
+        .allowsHitTesting(room.isJoinable)
     }
 }
 
