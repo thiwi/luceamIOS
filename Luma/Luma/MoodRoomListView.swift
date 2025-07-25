@@ -84,6 +84,9 @@ struct MoodRoomListView: View {
             CreateMoodRoomView(editingRoom: room) { _, _ in } onUpdate: { _ in
                 editingRoom = nil
                 now = Date()
+            } onDelete: { _ in
+                editingRoom = nil
+                now = Date()
             }
         }
     }

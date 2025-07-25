@@ -5,6 +5,7 @@ struct CreateMoodRoomView: View {
     var editingRoom: MoodRoom?
     var onCreate: (String, String) -> Void = { _, _ in }
     var onUpdate: (MoodRoom) -> Void = { _ in }
+    var onDelete: (MoodRoom) -> Void = { _ in }
 
     @State private var name: String = ""
     @State private var backgroundIndex = 0
@@ -13,6 +14,7 @@ struct CreateMoodRoomView: View {
     @State private var time = Date()
     @State private var durationMinutes = 15
     @State private var showPreview = false
+    @State private var confirmDelete = false
 
     private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
     private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -22,10 +24,12 @@ struct CreateMoodRoomView: View {
 
     init(editingRoom: MoodRoom? = nil,
          onCreate: @escaping (String, String) -> Void = { _, _ in },
-         onUpdate: @escaping (MoodRoom) -> Void = { _ in }) {
+         onUpdate: @escaping (MoodRoom) -> Void = { _ in },
+         onDelete: @escaping (MoodRoom) -> Void = { _ in }) {
         self.editingRoom = editingRoom
         self.onCreate = onCreate
         self.onUpdate = onUpdate
+        self.onDelete = onDelete
 
         if let room = editingRoom {
             _name = State(initialValue: room.name)
@@ -149,6 +153,11 @@ struct CreateMoodRoomView: View {
             .padding()
 
             HStack {
+                if editingRoom != nil {
+                    Button("Delete") { confirmDelete = true }
+                        .foregroundColor(.red)
+                        .padding()
+                }
                 Button("Cancel") { dismiss() }
                     .padding()
                 Spacer()
@@ -192,7 +201,17 @@ struct CreateMoodRoomView: View {
                                             startTime: time,
                                             createdAt: Date(),
                                             durationMinutes: durationMinutes),
-                             isPreview: true)
+                            isPreview: true)
+            }
+            .alert("Delete mood room?", isPresented: $confirmDelete) {
+                Button("Delete", role: .destructive) {
+                    if let editing = editingRoom {
+                        MockData.deleteMoodRoom(id: editing.id)
+                        onDelete(editing)
+                    }
+                    dismiss()
+                }
+                Button("Cancel", role: .cancel) {}
             }
         }
     }
