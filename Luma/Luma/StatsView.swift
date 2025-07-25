@@ -21,6 +21,7 @@ struct StatsView: View {
     @EnvironmentObject var stats: StatsStore
 
     @State private var period: Period = .day
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
 
     var body: some View {
         NavigationStack {
@@ -38,12 +39,21 @@ struct StatsView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
+                    Picker("Year", selection: $selectedYear) {
+                        ForEach(availableYears, id: \.self) { year in
+                            Text("\(year)").tag(year)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .padding(.horizontal)
                     chart
                         .frame(height: 220)
                         .animation(.default, value: period)
+                        .animation(.default, value: selectedYear)
                     summary
                 }
                 .frame(maxWidth: .infinity)
+                .padding()
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)
@@ -76,18 +86,20 @@ struct StatsView: View {
     }
 
     private var chart: some View {
-        Chart(aggregatedData) { entry in
-            BarMark(
-                x: .value("Date", entry.date, unit: unitForPeriod()),
-                y: .value("Minutes in moments", entry.moments / 60)
-            )
-            .foregroundStyle(Color.blue.gradient)
+        Chart {
+            ForEach(aggregatedData) { entry in
+                BarMark(
+                    x: .value("Date", entry.date, unit: unitForPeriod()),
+                    y: .value("Minutes in moments", entry.moments / 60)
+                )
+                .foregroundStyle(Color.blue.gradient)
 
-            BarMark(
-                x: .value("Date", entry.date, unit: unitForPeriod()),
-                y: .value("Minutes in mood rooms", entry.moods / 60)
-            )
-            .foregroundStyle(Color.purple.gradient)
+                BarMark(
+                    x: .value("Date", entry.date, unit: unitForPeriod()),
+                    y: .value("Minutes in mood rooms", entry.moods / 60)
+                )
+                .foregroundStyle(Color.purple.gradient)
+            }
         }
     }
 
@@ -97,6 +109,20 @@ struct StatsView: View {
         case .week: return .weekOfYear
         case .month: return .month
         }
+    }
+
+    private var availableYears: [Int] {
+        let df = StatsStore.dayFormatter
+        let calendar = Calendar.current
+        let momentYears = stats.dailyMoments.keys.compactMap { key -> Int? in
+            guard let date = df.date(from: key) else { return nil }
+            return calendar.component(.year, from: date)
+        }
+        let moodYears = stats.dailyMoodRooms.keys.compactMap { key -> Int? in
+            guard let date = df.date(from: key) else { return nil }
+            return calendar.component(.year, from: date)
+        }
+        return Array(Set(momentYears + moodYears)).sorted()
     }
 
     private var aggregatedData: [StatsEntry] {
@@ -112,17 +138,18 @@ struct StatsView: View {
             if let d = df.date(from: k) { dayMoods[d] = v }
         }
         let allDates = Set(dayMoments.keys).union(dayMoods.keys)
+        let filteredDates = allDates.filter { calendar.component(.year, from: $0) == selectedYear }
 
         switch period {
         case .day:
-            return allDates.sorted().map { date in
+            return filteredDates.sorted().map { date in
                 StatsEntry(date: date,
                            moments: dayMoments[date] ?? 0,
                            moods: dayMoods[date] ?? 0)
             }
         case .week:
             var groups: [Date: (Double, Double)] = [:]
-            for date in allDates {
+            for date in filteredDates {
                 let comps = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
                 let start = calendar.date(from: comps) ?? date
                 var tuple = groups[start] ?? (0, 0)
@@ -136,7 +163,7 @@ struct StatsView: View {
             }
         case .month:
             var groups: [Date: (Double, Double)] = [:]
-            for date in allDates {
+            for date in filteredDates {
                 let comps = calendar.dateComponents([.year, .month], from: date)
                 let start = calendar.date(from: comps) ?? date
                 var tuple = groups[start] ?? (0, 0)
