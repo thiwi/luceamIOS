@@ -21,12 +21,18 @@ class StatsStore: ObservableObject {
     }()
 
     init() {
-        self.timeInMoments = UserDefaults.standard.double(forKey: "timeInMoments")
-        self.timeInMoodRooms = (UserDefaults.standard.dictionary(forKey: "timeInMoodRooms") as? [String: TimeInterval]) ?? [:]
-        self.momentsCreated = UserDefaults.standard.integer(forKey: "momentsCreated")
-        self.moodRoomsCreated = UserDefaults.standard.integer(forKey: "moodRoomsCreated")
-        self.dailyMoments = (UserDefaults.standard.dictionary(forKey: "dailyMoments") as? [String: TimeInterval]) ?? [:]
-        self.dailyMoodRooms = (UserDefaults.standard.dictionary(forKey: "dailyMoodRooms") as? [String: TimeInterval]) ?? [:]
+        let defaults = UserDefaults.standard
+        self.timeInMoments = defaults.double(forKey: "timeInMoments")
+        self.timeInMoodRooms = (defaults.dictionary(forKey: "timeInMoodRooms") as? [String: TimeInterval]) ?? [:]
+        self.momentsCreated = defaults.integer(forKey: "momentsCreated")
+        self.moodRoomsCreated = defaults.integer(forKey: "moodRoomsCreated")
+        self.dailyMoments = (defaults.dictionary(forKey: "dailyMoments") as? [String: TimeInterval]) ?? [:]
+        self.dailyMoodRooms = (defaults.dictionary(forKey: "dailyMoodRooms") as? [String: TimeInterval]) ?? [:]
+
+        // Provide example data when there is nothing stored yet
+        if dailyMoments.isEmpty && dailyMoodRooms.isEmpty {
+            (dailyMoments, dailyMoodRooms) = Self.generateLastTwoMonths()
+        }
     }
 
     func startMoment() {
@@ -93,6 +99,13 @@ extension StatsStore {
         store.momentsCreated = 5
         store.moodRoomsCreated = 3
 
+        (store.dailyMoments, store.dailyMoodRooms) = generateLastTwoMonths()
+
+        return store
+    }
+
+    /// Generates random daily stats for the last two months.
+    fileprivate static func generateLastTwoMonths() -> ([String: TimeInterval], [String: TimeInterval]) {
         let today = Date()
         var moments: [String: TimeInterval] = [:]
         var moods: [String: TimeInterval] = [:]
@@ -103,9 +116,6 @@ extension StatsStore {
                 moods[key] = Double.random(in: 120...900)
             }
         }
-        store.dailyMoments = moments
-        store.dailyMoodRooms = moods
-
-        return store
+        return (moments, moods)
     }
 }
