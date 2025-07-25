@@ -24,10 +24,21 @@ struct CreateMomentView: View {
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
             .padding()
 
-            TextEditor(text: $text)
-                .scrollContentBackground(.hidden)
-                .frame(height: 100)
-                .padding([.horizontal])
+            ZStack(alignment: .topLeading) {
+                if text.isEmpty {
+                    Text("Enter new moment")
+                        .foregroundColor(.gray)
+                        .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
+                }
+                TextEditor(text: $text)
+                    .scrollContentBackground(.hidden)
+            }
+            .frame(height: 100)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.4))
+            )
+            .padding([.horizontal])
 
             HStack {
                 Button("Discard") { onDiscard() }
