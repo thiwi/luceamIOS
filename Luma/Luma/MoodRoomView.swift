@@ -14,7 +14,7 @@ struct MoodRoomView: View {
 
     var body: some View {
         ZStack {
-            Image(onCreate != nil || onDiscard != nil ? "startscreen" : "DetailViewBackground")
+            Image(background)
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -42,35 +42,23 @@ struct MoodRoomView: View {
                     .foregroundColor(textColor)
                     .padding(.bottom, 8)
 
-                ZStack(alignment: .bottom) {
-                    Text(name)
-                        .font(.title)
-                        .foregroundColor(textColor)
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(
-                            Image(background)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        )
+                Spacer()
 
-                    if isOwnRoom {
-                        Text("There are \(people) people with you in this room.")
-                            .font(.footnote)
-                            .foregroundColor(textColor)
-                            .padding(6)
-                            .background(Color.black.opacity(0.4))
-                            .cornerRadius(8)
-                            .padding(8)
-                    }
+                Text(name)
+                    .font(.title)
+                    .foregroundColor(textColor)
+                    .padding()
+                    .multilineTextAlignment(.center)
+
+                if isOwnRoom {
+                    Text("There are \(people) people with you in this room.")
+                        .font(.footnote)
+                        .foregroundColor(textColor)
+                        .padding(6)
+                        .background(Color.black.opacity(0.4))
+                        .cornerRadius(8)
+                        .padding(.bottom, 20)
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.95,
-                       height: UIScreen.main.bounds.height * 0.7)
-                .cornerRadius(16)
-                .clipped()
-                .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
-                .padding()
 
                 if onCreate != nil || onDiscard != nil {
                     HStack {
@@ -80,7 +68,7 @@ struct MoodRoomView: View {
                     }
                     .padding()
                 } else if isPreview {
-                    Text("Use the back button to close preview.")
+                    Text("Swipe down to close preview.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
@@ -98,7 +86,7 @@ struct MoodRoomView: View {
             people = 0
             incrementPeople()
         }
-        .interactiveDismissDisabled()
+        .interactiveDismissDisabled(!isPreview)
     }
 
     private func incrementPeople() {
