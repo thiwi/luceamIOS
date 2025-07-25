@@ -40,7 +40,17 @@ The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUIT
 
 ### Launch performance metrics
 
-UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. Some simulator environments lack the system files needed for these metrics and emit errors like `load_eligibility_plist` during test runs. Metrics collection is therefore disabled by default. Set the environment variable `ENABLE_LAUNCH_METRICS=1` when running tests if you want to record launch metrics.
+UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. Some simulator environments lack the system files needed for these metrics and emit errors like `load_eligibility_plist` during test runs. Metrics collection is therefore disabled by default.
+
+If you run the app or UI tests on such a simulator you may also see console warnings like:
+
+```
+load_eligibility_plist: Failed to open ... eligibility.plist: No such file or directory
+Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+```
+
+These messages come from the system trying to collect launch metrics and can safely be ignored. Set the environment variable `ENABLE_LAUNCH_METRICS=1` when running tests if you really want to record launch metrics.
 
 ## Offline mock mode
 
