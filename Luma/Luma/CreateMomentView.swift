@@ -50,6 +50,14 @@ struct CreateMomentView: View {
             .padding([.horizontal])
 
             HStack {
+                Spacer()
+                Text("\(maxLength - text.count) characters left")
+                    .font(.caption2)
+                    .foregroundColor(Color(.darkGray))
+            }
+            .padding(.horizontal)
+
+            HStack {
                 Button("Discard") { onDiscard() }
                     .padding()
                 Spacer()

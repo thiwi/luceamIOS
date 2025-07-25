@@ -102,6 +102,14 @@ struct CreateMoodRoomView: View {
                             .frame(height: 40)
                     }
 
+                    HStack {
+                        Spacer()
+                        Text("\(maxNameLength - name.count) characters left")
+                            .font(.caption2)
+                            .foregroundColor(Color(.darkGray))
+                    }
+                    .padding(.trailing)
+
                     Toggle("Recurring", isOn: $recurring)
 
                     if recurring {
