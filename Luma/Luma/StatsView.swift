@@ -15,6 +15,7 @@ struct StatsView: View {
                     .ignoresSafeArea()
 
                 table
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)

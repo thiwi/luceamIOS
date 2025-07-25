@@ -2,7 +2,9 @@ import SwiftUI
 
 struct CreateMoodRoomView: View {
     @Environment(\.dismiss) private var dismiss
+    var editingRoom: MoodRoom?
     var onCreate: (String, String) -> Void = { _, _ in }
+    var onUpdate: (MoodRoom) -> Void = { _ in }
 
     @State private var name: String = ""
     @State private var backgroundIndex = 0
@@ -12,12 +14,48 @@ struct CreateMoodRoomView: View {
     @State private var durationMinutes = 15
     @State private var showPreview = false
 
-    private let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
-    private let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
+    private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+    private let backgrounds = Self.backgrounds
+    private let weekdays = Self.weekdays
+
+    init(editingRoom: MoodRoom? = nil,
+         onCreate: @escaping (String, String) -> Void = { _, _ in },
+         onUpdate: @escaping (MoodRoom) -> Void = { _ in }) {
+        self.editingRoom = editingRoom
+        self.onCreate = onCreate
+        self.onUpdate = onUpdate
+
+        if let room = editingRoom {
+            _name = State(initialValue: room.name)
+            _backgroundIndex = State(initialValue: Self.backgrounds.firstIndex(of: room.background) ?? 0)
+            _time = State(initialValue: room.startTime)
+            _durationMinutes = State(initialValue: room.durationMinutes)
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            if room.schedule.hasPrefix("Every ") {
+                _recurring = State(initialValue: true)
+                if let range = room.schedule.range(of: " at ") {
+                    let daysPart = room.schedule[room.schedule.index(room.schedule.startIndex, offsetBy: 6)..<range.lowerBound]
+                    let days = daysPart.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                    let indices = days.compactMap { Self.weekdays.firstIndex(of: String($0)) }
+                    _selectedWeekdays = State(initialValue: Set(indices))
+                    let timeString = room.schedule[range.upperBound...]
+                    if let parsed = formatter.date(from: String(timeString)) {
+                        _time = State(initialValue: parsed)
+                    }
+                }
+            } else {
+                _recurring = State(initialValue: false)
+            }
+        }
+    }
 
     var body: some View {
         VStack {
-            Text("Create a new mood room")
+            Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
                 .font(.headline)
                 .padding()
             ZStack {
@@ -116,7 +154,7 @@ struct CreateMoodRoomView: View {
                 Spacer()
                 Button("Preview") { showPreview = true }
                     .padding()
-                Button("Create") {
+                Button(editingRoom == nil ? "Create" : "Update") {
                     let formatter = DateFormatter()
                     formatter.dateFormat = "HH:mm"
                     let timeString = formatter.string(from: time)
@@ -127,12 +165,22 @@ struct CreateMoodRoomView: View {
                     } else {
                         schedule = "Once at \(timeString)"
                     }
-                    MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name,
-                                         schedule: schedule,
-                                         background: backgrounds[backgroundIndex],
-                                         startTime: time,
-                                         durationMinutes: durationMinutes)
-                    onCreate(name, backgrounds[backgroundIndex])
+                    if let editing = editingRoom {
+                        MockData.updateMoodRoom(id: editing.id,
+                                               name: name.isEmpty ? "Unnamed" : name,
+                                               schedule: schedule,
+                                               background: backgrounds[backgroundIndex],
+                                               startTime: time,
+                                               durationMinutes: durationMinutes)
+                        onUpdate(editing)
+                    } else {
+                        MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name,
+                                             schedule: schedule,
+                                             background: backgrounds[backgroundIndex],
+                                             startTime: time,
+                                             durationMinutes: durationMinutes)
+                        onCreate(name, backgrounds[backgroundIndex])
+                    }
                     dismiss()
                 }
                 .padding()

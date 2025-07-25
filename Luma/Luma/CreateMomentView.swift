@@ -7,6 +7,9 @@ struct CreateMomentView: View {
 
     var body: some View {
         VStack {
+            Text("Create a new moment")
+                .font(.headline)
+                .padding()
             ZStack {
                 Image("OwnMoment")
                     .resizable()

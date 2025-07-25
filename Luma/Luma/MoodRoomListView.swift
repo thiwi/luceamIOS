@@ -3,6 +3,7 @@ import SwiftUI
 struct MoodRoomListView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var now = Date()
+    @State private var editingRoom: MoodRoom?
     var body: some View {
         let _ = now
         NavigationStack {
@@ -21,14 +22,24 @@ struct MoodRoomListView: View {
                         }
 
                         ForEach(MockData.userMoodRooms) { room in
-                            if room.isJoinable {
-                                NavigationLink(destination: MoodRoomView(room: room,
-                                                                       isPreview: false,
-                                                                       isOwnRoom: true)) {
-                                    MoodRoomCardView(room: room)
+                            ZStack(alignment: .topLeading) {
+                                if room.isJoinable {
+                                    NavigationLink(destination: MoodRoomView(room: room,
+                                                                           isPreview: false,
+                                                                           isOwnRoom: true)) {
+                                        MoodRoomCardView(room: room)
+                                    }
+                                } else {
+                                    MoodRoomCardView(room: room, joinable: false)
                                 }
-                            } else {
-                                MoodRoomCardView(room: room, joinable: false)
+                                Button(action: { editingRoom = room }) {
+                                    Image(systemName: "pencil")
+                                        .foregroundColor(.black)
+                                        .padding(6)
+                                        .background(Color.white.opacity(0.8))
+                                        .clipShape(Circle())
+                                }
+                                .padding(8)
                             }
                         }
 
@@ -64,6 +75,12 @@ struct MoodRoomListView: View {
         }
         .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
             now = Date()
+        }
+        .sheet(item: $editingRoom) { room in
+            CreateMoodRoomView(editingRoom: room) { _, _ in } onUpdate: { _ in
+                editingRoom = nil
+                now = Date()
+            }
         }
     }
 }
