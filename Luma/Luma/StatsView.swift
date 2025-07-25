@@ -128,7 +128,7 @@ struct StatsView: View {
                 }
             }
             .chartYScale(domain: 0...maxValue)
-            .chartLegend(.visible, position: .bottom, alignment: .center)
+            .chartLegend(position: .bottom, alignment: .center, spacing: nil)
             .frame(minWidth: max(geo.size.width - 32, CGFloat(aggregatedData.count) * 24))
             .padding(.horizontal, 16)
         }
