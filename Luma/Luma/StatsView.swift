@@ -25,7 +25,7 @@ struct StatsView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack(alignment: .top) {
                 Image("DetailViewBackground")
                     .resizable()
                     .scaledToFill()
@@ -46,14 +46,21 @@ struct StatsView: View {
                     }
                     .pickerStyle(.menu)
                     .padding(.horizontal)
-                    chart
-                        .frame(height: 220)
-                        .animation(.default, value: period)
-                        .animation(.default, value: selectedYear)
+                    let _ = print("aggregatedData.count = \(aggregatedData.count)")
+                    if !aggregatedData.isEmpty {
+                        chart
+                            .frame(height: 220)
+                            .animation(.default, value: period)
+                            .animation(.default, value: selectedYear)
+                    } else {
+                        Text("No data available")
+                            .frame(height: 220)
+                    }
                     summary
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)
