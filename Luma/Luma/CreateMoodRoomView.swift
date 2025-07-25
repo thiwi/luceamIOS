@@ -57,13 +57,13 @@ struct CreateMoodRoomView: View {
                 _recurring = State(initialValue: false)
             }
         } else {
-            let defaultColor: Color = Self.backgrounds[0] == "MoodRoomNight" ? .white : .black
-            _textColor = State(initialValue: defaultColor)
+            _textColor = State(initialValue: .black)
         }
     }
 
     var body: some View {
-        VStack {
+        let interfaceColor: Color = backgrounds[backgroundIndex] == "MoodRoomNight" ? .white : .black
+        return VStack {
             Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
                 .font(.headline)
                 .padding()
@@ -148,8 +148,8 @@ struct CreateMoodRoomView: View {
                         .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
                 }
-                .foregroundColor(textColor)
-                .tint(textColor)
+                .foregroundColor(interfaceColor)
+                .tint(interfaceColor)
                 .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.95,
@@ -224,6 +224,8 @@ struct CreateMoodRoomView: View {
                 Button("Cancel", role: .cancel) {}
             }
         }
+        .foregroundColor(interfaceColor)
+        .tint(interfaceColor)
     }
 }
 
