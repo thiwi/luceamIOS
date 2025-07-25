@@ -39,7 +39,7 @@ struct StatsView: View {
 
                     Picker("Year", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
-                            Text("\(year)").tag(year)
+                            Text(String(year)).tag(year)
                         }
                     }
                     .pickerStyle(.menu)
@@ -63,6 +63,9 @@ struct StatsView: View {
                             selectedYear = availableYears.last ?? selectedYear
                         }
                     }
+
+                    colorLegend
+                        .padding(.horizontal, 16)
 
                     summary
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -106,6 +109,23 @@ struct StatsView: View {
         .cornerRadius(12)
     }
 
+    private var colorLegend: some View {
+        HStack(spacing: 16) {
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width: 10, height: 10)
+                Text("Moments")
+            }
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(Color.purple)
+                    .frame(width: 10, height: 10)
+                Text("Mood rooms")
+            }
+        }
+    }
+
     private func chart(in geo: GeometryProxy) -> some View {
         let maxValue = aggregatedData
             .map { max($0.moments, $0.moods) / 60 }
@@ -128,7 +148,6 @@ struct StatsView: View {
                 }
             }
             .chartYScale(domain: 0...maxValue)
-            .chartLegend(position: .bottom, alignment: .center, spacing: nil)
             .frame(minWidth: max(geo.size.width - 32, CGFloat(aggregatedData.count) * 24))
             .padding(.horizontal, 16)
         }

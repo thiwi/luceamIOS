@@ -31,7 +31,7 @@ class StatsStore: ObservableObject {
 
         // Provide example data when there is nothing stored yet
         if dailyMoments.isEmpty && dailyMoodRooms.isEmpty {
-            (dailyMoments, dailyMoodRooms) = Self.generateLastTwoMonths()
+            (dailyMoments, dailyMoodRooms) = Self.generateLastThreeMonths()
         }
     }
 
@@ -99,17 +99,17 @@ extension StatsStore {
         store.momentsCreated = 5
         store.moodRoomsCreated = 3
 
-        (store.dailyMoments, store.dailyMoodRooms) = generateLastTwoMonths()
+        (store.dailyMoments, store.dailyMoodRooms) = generateLastThreeMonths()
 
         return store
     }
 
-    /// Generates random daily stats for the last two months.
-    fileprivate static func generateLastTwoMonths() -> ([String: TimeInterval], [String: TimeInterval]) {
+    /// Generates random daily stats for the last three months.
+    fileprivate static func generateLastThreeMonths() -> ([String: TimeInterval], [String: TimeInterval]) {
         let today = Date()
         var moments: [String: TimeInterval] = [:]
         var moods: [String: TimeInterval] = [:]
-        for offset in stride(from: -59, through: 0, by: 1) {
+        for offset in stride(from: -89, through: 0, by: 1) {
             if let date = Calendar.current.date(byAdding: .day, value: offset, to: today) {
                 let key = dayFormatter.string(from: date)
                 moments[key] = Double.random(in: 300...1800)
