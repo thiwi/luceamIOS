@@ -89,9 +89,7 @@ struct CreateMoodRoomView: View {
     var body: some View {
         let interfaceColor: Color = .black
         return ZStack {
-            Image("MainViewBackground")
-                .resizable()
-                .scaledToFill()
+            Color(red: 0.96, green: 0.89, blue: 0.76)
                 .ignoresSafeArea()
 
             VStack {
