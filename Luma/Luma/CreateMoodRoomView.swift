@@ -135,6 +135,7 @@ struct CreateMoodRoomView: View {
                     .padding(.trailing)
 
                     Toggle("Recurring", isOn: $recurring)
+                        .padding(.leading)
 
                     if recurring {
                         HStack {
@@ -186,14 +187,14 @@ struct CreateMoodRoomView: View {
                         .pickerStyle(.wheel)
                         .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
+                    .padding(.leading)
                 }
                 .foregroundColor(interfaceColor)
                 .tint(interfaceColor)
                 .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * (recurring ? 0.8 : 0.7))
-            .animation(.easeInOut, value: recurring)
+                   height: UIScreen.main.bounds.height * 0.7)
             .cornerRadius(16)
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
