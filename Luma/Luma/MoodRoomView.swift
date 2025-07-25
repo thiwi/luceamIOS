@@ -14,7 +14,7 @@ struct MoodRoomView: View {
 
     var body: some View {
         ZStack {
-            Image(background)
+            Image("DetailViewBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -44,11 +44,25 @@ struct MoodRoomView: View {
 
                 Spacer()
 
-                Text(name)
-                    .font(.title)
-                    .foregroundColor(textColor)
-                    .padding()
+                ZStack {
+                    Image(background)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+
+                    VStack {
+                        Text(name)
+                            .font(.title2)
+                            .foregroundColor(textColor)
+                    }
                     .multilineTextAlignment(.center)
+                    .padding()
+                }
+                .frame(width: UIScreen.main.bounds.width * 0.95,
+                       height: UIScreen.main.bounds.height * 0.7)
+                .cornerRadius(16)
+                .clipped()
+                .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
+                .padding()
 
                 if isOwnRoom {
                     Text("There are \(people) people with you in this room.")
