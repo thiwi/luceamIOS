@@ -96,7 +96,7 @@ extension StatsStore {
         let today = Date()
         var moments: [String: TimeInterval] = [:]
         var moods: [String: TimeInterval] = [:]
-        for offset in -6...0 {
+        for offset in stride(from: -59, through: 0, by: 1) {
             if let date = Calendar.current.date(byAdding: .day, value: offset, to: today) {
                 let key = dayFormatter.string(from: date)
                 moments[key] = Double.random(in: 300...1800)
