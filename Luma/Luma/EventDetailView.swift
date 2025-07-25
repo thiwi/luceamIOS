@@ -5,6 +5,7 @@ struct EventDetailView: View {
     var isOwnEvent: Bool = false
     @Environment(\.dismiss) private var dismiss
     @State private var people = 0
+    @EnvironmentObject var stats: StatsStore
 
     var body: some View {
         ZStack {
@@ -75,9 +76,13 @@ struct EventDetailView: View {
             }
         }
         .onAppear {
+            stats.startMoment()
             guard isOwnEvent else { return }
             people = 0
             incrementPeople()
+        }
+        .onDisappear {
+            stats.endMoment()
         }
     }
 

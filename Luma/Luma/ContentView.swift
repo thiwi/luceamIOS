@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var session = SessionStore()
     @StateObject private var events = EventStore()
+    @EnvironmentObject var stats: StatsStore
     @State private var newEventText = ""
     @State private var creatingMoment = false
     @State private var creatingMoodRoom = false
@@ -10,6 +11,7 @@ struct ContentView: View {
     @State private var createdRoomName = ""
     @State private var createdRoomBackground = "MoodRoomHappy"
     @State private var exploringMoodRooms = false
+    @State private var showStats = false
 
     var body: some View {
         NavigationStack {
@@ -39,6 +41,7 @@ struct ContentView: View {
                         Button("Explore Mood Rooms") { exploringMoodRooms = true }
                         Button("New Mood Room") { creatingMoodRoom = true }
                         Button("New Moment") { creatingMoment = true }
+                        Button("Statistics") { showStats = true }
                     } label: {
                         Image(systemName: "line.3.horizontal")
                             .resizable()
@@ -57,6 +60,7 @@ struct ContentView: View {
                                 creatingMoment = false
                                 newEventText = ""
                                 selectedEvent = created
+                                stats.recordMomentCreated()
                             }
                         }
                     }
@@ -70,10 +74,15 @@ struct ContentView: View {
                     createdRoomName = name
                     createdRoomBackground = background
                     exploringMoodRooms = true
+                    stats.recordMoodRoomCreated()
                 }
             }
             .fullScreenCover(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
+            }
+            .sheet(isPresented: $showStats) {
+                StatsView()
+                    .environmentObject(stats)
             }
             .sheet(item: $selectedEvent) { event in
                 EventDetailView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
