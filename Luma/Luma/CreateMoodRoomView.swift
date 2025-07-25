@@ -92,7 +92,7 @@ struct CreateMoodRoomView: View {
                                 .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                         }
                         TextEditor(text: $name)
-                            .onChange(of: name) { newValue in
+                            .onChange(of: name) { _, newValue in
                                 if newValue.count > maxNameLength {
                                     name = String(newValue.prefix(maxNameLength))
                                 }
