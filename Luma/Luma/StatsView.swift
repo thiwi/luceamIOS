@@ -25,12 +25,7 @@ struct StatsView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
-                Image("DetailViewBackground")
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
-
+            GeometryReader { geo in
                 VStack(spacing: 16) {
                     Picker("Period", selection: $period) {
                         ForEach(Period.allCases) { p in
@@ -39,6 +34,7 @@ struct StatsView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
+
                     Picker("Year", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
                             Text("\(year)").tag(year)
@@ -46,21 +42,36 @@ struct StatsView: View {
                     }
                     .pickerStyle(.menu)
                     .padding(.horizontal)
-                    let _ = print("aggregatedData.count = \(aggregatedData.count)")
-                    if !aggregatedData.isEmpty {
-                        chart
-                            .frame(height: 220)
-                            .animation(.default, value: period)
-                            .animation(.default, value: selectedYear)
-                    } else {
-                        Text("No data available")
-                            .frame(height: 220)
+
+                    Group {
+                        if !aggregatedData.isEmpty {
+                            chart
+                                .frame(height: 220)
+                                .animation(.default, value: period)
+                                .animation(.default, value: selectedYear)
+                        } else {
+                            Text("No data available")
+                                .frame(height: 220)
+                                .frame(maxWidth: .infinity)
+                        }
                     }
+                    .onAppear {
+                        print("aggregatedData.count = \(aggregatedData.count)")
+                        if !availableYears.contains(selectedYear) {
+                            selectedYear = availableYears.last ?? selectedYear
+                        }
+                    }
+
                     summary
                 }
-                .frame(maxWidth: .infinity)
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
                 .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .background(
+                    Image("DetailViewBackground")
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                )
             }
             .navigationTitle("Statistics")
             .navigationBarTitleDisplayMode(.inline)
