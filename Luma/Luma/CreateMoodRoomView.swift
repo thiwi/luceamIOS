@@ -191,7 +191,8 @@ struct CreateMoodRoomView: View {
                 .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * 0.7)
+                   height: UIScreen.main.bounds.height * (recurring ? 0.8 : 0.7))
+            .animation(.easeInOut, value: recurring)
             .cornerRadius(16)
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
