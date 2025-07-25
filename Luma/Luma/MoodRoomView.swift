@@ -105,15 +105,10 @@ struct MoodRoomView: View {
         .safeAreaInset(edge: .top) {
             HStack {
                 Button(action: { dismiss() }) {
-                    HStack {
-                        Image(systemName: "chevron.backward")
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                        Text("Leave mood room")
-                            .font(.callout)
-                    }
-                    .foregroundColor(room.background == "MoodRoomNight" ? .white : .black)
-                    .padding(12)
+                    Image(systemName: "chevron.backward")
+                        .imageScale(.large)
+                        .foregroundColor(room.background == "MoodRoomNight" ? .white : .black)
+                        .padding(12)
                 }
                 .buttonStyle(.plain)
                 Spacer()

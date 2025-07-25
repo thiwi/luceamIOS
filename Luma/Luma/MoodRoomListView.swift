@@ -28,9 +28,11 @@ struct MoodRoomListView: View {
                                                                            isPreview: false,
                                                                            isOwnRoom: true)) {
                                         MoodRoomCardView(room: room)
+                                            .id(room)
                                     }
                                 } else {
-                                    MoodRoomCardView(room: room, joinable: false)
+                                    MoodRoomCardView(room: room)
+                                        .id(room)
                                 }
                                 Button(action: { editingRoom = room }) {
                                     Image(systemName: "pencil")
@@ -54,9 +56,11 @@ struct MoodRoomListView: View {
                             if room.isJoinable {
                                 NavigationLink(destination: MoodRoomView(room: room)) {
                                     MoodRoomCardView(room: room)
+                                        .id(room)
                                 }
                             } else {
-                                MoodRoomCardView(room: room, joinable: false)
+                                MoodRoomCardView(room: room)
+                                    .id(room)
                             }
                         }
                     }
