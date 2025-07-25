@@ -87,8 +87,14 @@ struct CreateMoodRoomView: View {
 
     /// Form UI with preview, date pickers and actions.
     var body: some View {
-        let interfaceColor: Color = backgrounds[backgroundIndex] == "MoodRoomNight" ? .white : .black
-        return VStack {
+        let interfaceColor: Color = .black
+        return ZStack {
+            Image("MainViewBackground")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+
+            VStack {
             Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
                 .font(.headline)
                 .padding()
@@ -189,7 +195,7 @@ struct CreateMoodRoomView: View {
                         DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
                             .labelsHidden()
                             .datePickerStyle(.wheel)
-                            .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
+                            .colorScheme(.light)
                     }
                     .padding(.horizontal)
                     .padding(.bottom, -8)
@@ -212,7 +218,7 @@ struct CreateMoodRoomView: View {
                             }
                         }
                         .pickerStyle(.wheel)
-                        .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
+                        .colorScheme(.light)
                     }
                     .padding(.horizontal)
                 }
