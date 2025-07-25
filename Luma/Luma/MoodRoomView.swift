@@ -44,6 +44,9 @@ struct MoodRoomView: View {
                 Text("Mood room")
                     .font(.headline)
                     .foregroundColor(textColor)
+                Text("\(room.schedule) | \(remainingTimeText)")
+                    .font(.footnote)
+                    .foregroundColor(textColor)
                     .padding(.bottom, 8)
 
                 Spacer()
@@ -69,9 +72,6 @@ struct MoodRoomView: View {
                              "There are \(people) persons with you in this mood room.")
                             .font(.footnote)
                             .foregroundColor(textColor)
-                            .padding(6)
-                            .background(Color.black)
-                            .cornerRadius(8)
                             .padding(8)
                     }
                 }
@@ -111,6 +111,7 @@ struct MoodRoomView: View {
             closeWork?.cancel()
         }
         .interactiveDismissDisabled(!isPreview)
+        .navigationBarBackButtonHidden(true)
     }
 
     private func incrementPeople() {
@@ -135,6 +136,23 @@ struct MoodRoomView: View {
         let work = DispatchWorkItem { dismiss() }
         closeWork = work
         DispatchQueue.main.asyncAfter(deadline: .now() + remaining, execute: work)
+    }
+
+    private var remainingTimeText: String {
+        let remaining = room.closeTime.timeIntervalSince(Date())
+        guard remaining > 0 else { return "0min left" }
+        let minutes = Int(remaining / 60)
+        let hours = minutes / 60
+        let mins = minutes % 60
+        if hours > 0 {
+            if mins > 0 {
+                return "\(hours)h \(mins)min left"
+            } else {
+                return "\(hours)h left"
+            }
+        } else {
+            return "\(mins)min left"
+        }
     }
 }
 
