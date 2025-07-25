@@ -5,10 +5,12 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
+            Color.black
+                .ignoresSafeArea()
             Image("startscreen")
                 .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
