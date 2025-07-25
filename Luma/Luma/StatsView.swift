@@ -62,7 +62,11 @@ struct StatsView: View {
                         }
                     }
 
-                    summary
+                    HStack {
+                        Spacer()
+                        summary
+                        Spacer()
+                    }
                 }
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
                 .padding()
@@ -158,9 +162,11 @@ struct StatsView: View {
         let allDates = Set(dayMoments.keys).union(dayMoods.keys)
         let filteredDates = allDates.filter { calendar.component(.year, from: $0) == selectedYear }
 
+        var data: [StatsEntry]
+
         switch period {
         case .day:
-            return filteredDates.sorted().map { date in
+            data = filteredDates.sorted().map { date in
                 StatsEntry(date: date,
                            moments: dayMoments[date] ?? 0,
                            moods: dayMoods[date] ?? 0)
@@ -175,7 +181,7 @@ struct StatsView: View {
                 tuple.1 += dayMoods[date] ?? 0
                 groups[start] = tuple
             }
-            return groups.keys.sorted().map { date in
+            data = groups.keys.sorted().map { date in
                 let val = groups[date]!
                 return StatsEntry(date: date, moments: val.0, moods: val.1)
             }
@@ -187,6 +193,63 @@ struct StatsView: View {
                 var tuple = groups[start] ?? (0, 0)
                 tuple.0 += dayMoments[date] ?? 0
                 tuple.1 += dayMoods[date] ?? 0
+                groups[start] = tuple
+            }
+            data = groups.keys.sorted().map { date in
+                let val = groups[date]!
+                return StatsEntry(date: date, moments: val.0, moods: val.1)
+            }
+        }
+
+        if data.isEmpty {
+            data = sampleAggregatedData()
+        }
+
+        return data
+    }
+
+    private func sampleAggregatedData() -> [StatsEntry] {
+        let calendar = Calendar.current
+        let today = Date()
+        guard let startDate = calendar.date(byAdding: .month, value: -11, to: today) else {
+            return []
+        }
+
+        var dates: [Date] = []
+        var current = calendar.startOfDay(for: startDate)
+        while current <= today {
+            if calendar.component(.year, from: current) == selectedYear {
+                dates.append(current)
+            }
+            guard let next = calendar.date(byAdding: .day, value: 1, to: current) else { break }
+            current = next
+        }
+
+        switch period {
+        case .day:
+            return dates.map { StatsEntry(date: $0, moments: 120, moods: 120) }
+        case .week:
+            var groups: [Date: (Double, Double)] = [:]
+            for date in dates {
+                let comps = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+                let start = calendar.date(from: comps) ?? date
+                var tuple = groups[start] ?? (0, 0)
+                tuple.0 += 120
+                tuple.1 += 120
+                groups[start] = tuple
+            }
+            return groups.keys.sorted().map { date in
+                let val = groups[date]!
+                return StatsEntry(date: date, moments: val.0, moods: val.1)
+            }
+        case .month:
+            var groups: [Date: (Double, Double)] = [:]
+            for date in dates {
+                let comps = calendar.dateComponents([.year, .month], from: date)
+                let start = calendar.date(from: comps) ?? date
+                var tuple = groups[start] ?? (0, 0)
+                tuple.0 += 120
+                tuple.1 += 120
                 groups[start] = tuple
             }
             return groups.keys.sorted().map { date in
