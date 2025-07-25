@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard" version="3.0" toolsVersion="21504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES">
+    <scenes>
+        <!--Launch Screen-->
+        <scene sceneID="LaunchScreenScene">
+            <objects>
+                <viewController id="LaunchScreenViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LaunchScreenView">
+                        <rect key="frame" x="0" y="0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView contentMode="scaleAspectFill" image="startscreen" translatesAutoresizingMaskIntoConstraints="NO" id="StartImage">
+                                <rect key="frame" x="0" y="0" width="375" height="667"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="StartImage" firstAttribute="leading" secondItem="LaunchScreenView" secondAttribute="leading" id="constraint0"/>
+                            <constraint firstItem="StartImage" firstAttribute="trailing" secondItem="LaunchScreenView" secondAttribute="trailing" id="constraint1"/>
+                            <constraint firstItem="StartImage" firstAttribute="top" secondItem="LaunchScreenView" secondAttribute="top" id="constraint2"/>
+                            <constraint firstItem="StartImage" firstAttribute="bottom" secondItem="LaunchScreenView" secondAttribute="bottom" id="constraint3"/>
+                        </constraints>
+                    </view>
+                </viewController>
+            </objects>
+        </scene>
+    </scenes>
+</document>
