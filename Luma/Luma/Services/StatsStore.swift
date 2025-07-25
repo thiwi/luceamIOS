@@ -13,7 +13,7 @@ class StatsStore: ObservableObject {
     private var momentStart: Date?
     private var moodStart: Date?
     private var currentMoodKey: String?
-    private static let dayFormatter: DateFormatter = {
+    static let dayFormatter: DateFormatter = {
         let df = DateFormatter()
         df.calendar = Calendar(identifier: .iso8601)
         df.dateFormat = "yyyy-MM-dd"
@@ -76,5 +76,36 @@ class StatsStore: ObservableObject {
     func recordMoodRoomCreated() {
         moodRoomsCreated += 1
         UserDefaults.standard.set(moodRoomsCreated, forKey: "moodRoomsCreated")
+    }
+}
+
+extension StatsStore {
+    /// Returns a store populated with sample data for previews.
+    static var sample: StatsStore {
+        let store = StatsStore()
+
+        store.timeInMoments = 60 * 45
+        store.timeInMoodRooms = [
+            "MoodRoomSad-recurring": 60 * 30,
+            "MoodRoomNight-recurring": 60 * 60
+        ]
+
+        store.momentsCreated = 5
+        store.moodRoomsCreated = 3
+
+        let today = Date()
+        var moments: [String: TimeInterval] = [:]
+        var moods: [String: TimeInterval] = [:]
+        for offset in -6...0 {
+            if let date = Calendar.current.date(byAdding: .day, value: offset, to: today) {
+                let key = dayFormatter.string(from: date)
+                moments[key] = Double.random(in: 300...1800)
+                moods[key] = Double.random(in: 120...900)
+            }
+        }
+        store.dailyMoments = moments
+        store.dailyMoodRooms = moods
+
+        return store
     }
 }
