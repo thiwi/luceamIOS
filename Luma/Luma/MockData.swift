@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 class MockData {
     static var events: [Event] = [
@@ -11,18 +12,21 @@ class MockData {
         MoodRoom(name: "Monday Blues",
                  schedule: "Every Monday at 17:30",
                  background: "MoodRoomSad",
+                 textColor: .black,
                  startTime: Date().addingTimeInterval(600),
                  createdAt: Date(),
                  durationMinutes: 30),
         MoodRoom(name: "Mindful night routine",
                  schedule: "Daily at 22:00",
                  background: "MoodRoomNight",
+                 textColor: .white,
                  startTime: Date().addingTimeInterval(900),
                  createdAt: Date(),
                  durationMinutes: 30),
         MoodRoom(name: "Saturday for Reflection",
                  schedule: "Every Saturday at 10:00",
                  background: "MoodRoomNature",
+                 textColor: .black,
                  startTime: Date().addingTimeInterval(1200),
                  createdAt: Date(),
                  durationMinutes: 30)
@@ -37,11 +41,13 @@ class MockData {
     static func addMoodRoom(name: String,
                              schedule: String,
                              background: String,
+                             textColor: Color = .black,
                              startTime: Date,
                              durationMinutes: Int) {
         userMoodRooms.insert(MoodRoom(name: name,
                                       schedule: schedule,
                                       background: background,
+                                     textColor: textColor,
                                       startTime: startTime,
                                       createdAt: Date(),
                                       durationMinutes: durationMinutes),
@@ -52,6 +58,7 @@ class MockData {
                                name: String,
                                schedule: String,
                                background: String,
+                               textColor: Color = .black,
                                startTime: Date,
                                durationMinutes: Int) {
         if let index = userMoodRooms.firstIndex(where: { $0.id == id }) {
@@ -59,6 +66,7 @@ class MockData {
                                            name: name,
                                            schedule: schedule,
                                            background: background,
+                                           textColor: textColor,
                                            startTime: startTime,
                                            createdAt: userMoodRooms[index].createdAt,
                                            durationMinutes: durationMinutes)

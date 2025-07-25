@@ -6,6 +6,7 @@ struct MoodRoom: Identifiable, Hashable {
     var name: String
     var schedule: String
     var background: String
+    var textColor: Color = .black
     var startTime: Date
     var createdAt: Date
     var durationMinutes: Int

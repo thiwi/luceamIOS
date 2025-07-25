@@ -15,6 +15,7 @@ struct CreateMoodRoomView: View {
     @State private var durationMinutes = 15
     @State private var showPreview = false
     @State private var confirmDelete = false
+    @State private var textColor: Color = .black
 
     private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
     private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -34,6 +35,7 @@ struct CreateMoodRoomView: View {
         if let room = editingRoom {
             _name = State(initialValue: room.name)
             _backgroundIndex = State(initialValue: Self.backgrounds.firstIndex(of: room.background) ?? 0)
+            _textColor = State(initialValue: room.textColor)
             _time = State(initialValue: room.startTime)
             _durationMinutes = State(initialValue: room.durationMinutes)
 
@@ -54,6 +56,9 @@ struct CreateMoodRoomView: View {
             } else {
                 _recurring = State(initialValue: false)
             }
+        } else {
+            let defaultColor: Color = Self.backgrounds[0] == "MoodRoomNight" ? .white : .black
+            _textColor = State(initialValue: defaultColor)
         }
     }
 
@@ -66,7 +71,6 @@ struct CreateMoodRoomView: View {
                 Image(backgrounds[backgroundIndex])
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                let textColor = backgrounds[backgroundIndex] == "MoodRoomNight" ? Color.white : Color.black
                 VStack(spacing: 16) {
                     Picker("Background", selection: $backgroundIndex) {
                         ForEach(0..<backgrounds.count, id: \.self) { idx in
@@ -76,6 +80,9 @@ struct CreateMoodRoomView: View {
                     .pickerStyle(.menu)
                     .padding(.horizontal)
                     .padding(.top, 8)
+
+                    ColorPicker("Text Color", selection: $textColor)
+                        .padding(.horizontal)
 
                     ZStack(alignment: .topLeading) {
                         if name.isEmpty {
@@ -179,6 +186,7 @@ struct CreateMoodRoomView: View {
                                                name: name.isEmpty ? "Unnamed" : name,
                                                schedule: schedule,
                                                background: backgrounds[backgroundIndex],
+                                               textColor: textColor,
                                                startTime: time,
                                                durationMinutes: durationMinutes)
                         onUpdate(editing)
@@ -186,6 +194,7 @@ struct CreateMoodRoomView: View {
                         MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name,
                                              schedule: schedule,
                                              background: backgrounds[backgroundIndex],
+                                             textColor: textColor,
                                              startTime: time,
                                              durationMinutes: durationMinutes)
                         onCreate(name, backgrounds[backgroundIndex])
@@ -198,6 +207,7 @@ struct CreateMoodRoomView: View {
                 MoodRoomView(room: MoodRoom(name: name.isEmpty ? "Unnamed" : name,
                                             schedule: "Once",
                                             background: backgrounds[backgroundIndex],
+                                            textColor: textColor,
                                             startTime: time,
                                             createdAt: Date(),
                                             durationMinutes: durationMinutes),
