@@ -14,7 +14,7 @@ struct MoodRoomCardView: View {
                 .clipped()
                 .cornerRadius(16)
             VStack {
-                let textColor = room.background == "MoodRoomNight" ? Color.white : Color.black
+                let textColor = room.textColor
                 Text(room.name)
                     .font(.title2)
                     .foregroundColor(textColor)
@@ -29,10 +29,9 @@ struct MoodRoomCardView: View {
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(alignment: .topTrailing) {
             if !room.isJoinable {
-                let unavailableColor = room.background == "MoodRoomNight" ? Color.white : Color.black
                 Text("Unavailable at the moment")
                     .font(.caption2)
-                    .foregroundColor(unavailableColor)
+                    .foregroundColor(room.textColor)
                     .padding(6)
             }
         }
@@ -44,6 +43,7 @@ struct MoodRoomCardView: View {
     MoodRoomCardView(room: MoodRoom(name: "Test",
                                    schedule: "Daily",
                                    background: "MoodRoomHappy",
+                                   textColor: .black,
                                    startTime: Date(),
                                    createdAt: Date(),
                                    durationMinutes: 30))

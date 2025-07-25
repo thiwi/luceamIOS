@@ -24,7 +24,7 @@ struct MoodRoomView: View {
 
             VStack(spacing: 0) {
 
-                let textColor = room.background == "MoodRoomNight" ? Color.white : Color.black
+                let textColor = room.textColor
 
                 Text("Mood room")
                     .font(.headline)
@@ -152,6 +152,7 @@ struct MoodRoomView: View {
     MoodRoomView(room: MoodRoom(name: "Test Room",
                                 schedule: "Once",
                                 background: "MoodRoomHappy",
+                                textColor: .black,
                                 startTime: Date(),
                                 createdAt: Date(),
                                 durationMinutes: 15),
