@@ -28,10 +28,10 @@ struct MoodRoomView: View {
 
                 Text("Mood room")
                     .font(.headline)
-                    .foregroundColor(textColor)
+                    .foregroundColor(.black)
                 Text("\(room.schedule) | \(remainingTimeText)")
                     .font(.footnote)
-                    .foregroundColor(textColor)
+                    .foregroundColor(.black)
                     .padding(.bottom, 8)
 
                 Spacer()
@@ -56,7 +56,7 @@ struct MoodRoomView: View {
                              "There is 1 person with you in this mood room." :
                              "There are \(people) persons with you in this mood room.")
                             .font(.footnote)
-                            .foregroundColor(textColor)
+                            .foregroundColor(.black)
                             .padding(8)
                     }
                 }
