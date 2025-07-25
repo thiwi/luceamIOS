@@ -164,6 +164,7 @@ struct CreateMoodRoomView: View {
                             .datePickerStyle(.wheel)
                             .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
+                    .padding(.bottom, -8)
 
                     HStack {
                         Text("Duration")
@@ -191,8 +192,7 @@ struct CreateMoodRoomView: View {
                 .padding()
             }
             .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * (recurring ? 0.8 : 0.7))
-            .animation(.easeInOut, value: recurring)
+                   height: UIScreen.main.bounds.height * 0.8)
             .cornerRadius(16)
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
