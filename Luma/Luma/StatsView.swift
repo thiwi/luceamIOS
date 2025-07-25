@@ -69,7 +69,8 @@ struct StatsView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.horizontal, 16)
                 }
-                .frame(width: width, maxHeight: .infinity, alignment: .top)
+                .frame(width: width, alignment: .top)
+                .frame(maxHeight: .infinity, alignment: .top)
                 .padding()
                 .background(
                     Image("DetailViewBackground")
