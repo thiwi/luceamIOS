@@ -12,6 +12,22 @@ struct MoodRoom: Identifiable, Hashable {
 
     var closeTime: Date { startTime.addingTimeInterval(TimeInterval(durationMinutes * 60)) }
 
+    /// Start time adjusted for today if the room is recurring.
+    var currentStartTime: Date {
+        if schedule.lowercased().hasPrefix("once") { return startTime }
+        let cal = Calendar.current
+        let comps = cal.dateComponents([.hour, .minute], from: startTime)
+        return cal.date(bySettingHour: comps.hour ?? 0,
+                        minute: comps.minute ?? 0,
+                        second: 0,
+                        of: Date()) ?? startTime
+    }
+
+    /// Close time for the current occurrence.
+    var currentCloseTime: Date {
+        currentStartTime.addingTimeInterval(TimeInterval(durationMinutes * 60))
+    }
+
     var isJoinable: Bool {
         let now = Date()
         let cal = Calendar.current
@@ -39,12 +55,8 @@ struct MoodRoom: Identifiable, Hashable {
         }
 
         // Daily schedules and matching weekdays use today's time components
-        let comps = cal.dateComponents([.hour, .minute], from: startTime)
-        guard let startToday = cal.date(bySettingHour: comps.hour ?? 0,
-                                        minute: comps.minute ?? 0,
-                                        second: 0,
-                                        of: now) else { return false }
-        let endToday = startToday.addingTimeInterval(TimeInterval(durationMinutes * 60))
+        let startToday = currentStartTime
+        let endToday = currentCloseTime
         return now >= startToday && now <= endToday
     }
 }

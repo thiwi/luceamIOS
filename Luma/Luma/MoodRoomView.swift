@@ -101,13 +101,6 @@ struct MoodRoomView: View {
         .onReceive(timer) { _ in
             now = Date()
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.backward")
-                }
-            }
-        }
     }
 
     private func incrementPeople() {
@@ -123,7 +116,7 @@ struct MoodRoomView: View {
     }
 
     private func scheduleClose() {
-        let closeTime = room.startTime.addingTimeInterval(TimeInterval(room.durationMinutes * 60))
+        let closeTime = room.currentCloseTime
         let remaining = closeTime.timeIntervalSince(Date())
         guard remaining > 0 else {
             dismiss()
@@ -135,7 +128,7 @@ struct MoodRoomView: View {
     }
 
     private var remainingTimeText: String {
-        let remaining = room.closeTime.timeIntervalSince(now)
+        let remaining = room.currentCloseTime.timeIntervalSince(now)
         guard remaining > 0 else { return "Less than 1 minute left" }
         if remaining < 60 {
             return "Less than 1 minute left"

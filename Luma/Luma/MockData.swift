@@ -65,6 +65,12 @@ class MockData {
         }
     }
 
+    static func deleteMoodRoom(id: UUID) {
+        if let index = userMoodRooms.firstIndex(where: { $0.id == id }) {
+            userMoodRooms.remove(at: index)
+        }
+    }
+
     static func addEvent(content: String) -> Event {
         let newId = (events.map { $0.id }.max() ?? 0) + 1
         let event = Event(id: newId, content: content, mood: nil, symbol: nil)
