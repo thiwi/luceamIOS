@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CreateMomentView: View {
     @Binding var text: String
+    private let maxLength = 100
     var onCreate: (String) -> Void
     var onDiscard: () -> Void
 
@@ -34,6 +35,11 @@ struct CreateMomentView: View {
                         .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                 }
                 TextEditor(text: $text)
+                    .onChange(of: text) { newValue in
+                        if newValue.count > maxLength {
+                            text = String(newValue.prefix(maxLength))
+                        }
+                    }
                     .scrollContentBackground(.hidden)
             }
             .frame(height: 100)
@@ -47,7 +53,8 @@ struct CreateMomentView: View {
                 Button("Discard") { onDiscard() }
                     .padding()
                 Spacer()
-                Button("Create") { onCreate(text) }
+                Button("Create") { onCreate(text.trimmingCharacters(in: .whitespacesAndNewlines)) }
+                    .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .padding()
             }
         }
