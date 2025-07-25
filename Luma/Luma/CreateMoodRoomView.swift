@@ -92,11 +92,27 @@ struct CreateMoodRoomView: View {
             Text(editingRoom == nil ? "Create a new mood room" : "Edit mood room")
                 .font(.headline)
                 .padding()
-            ZStack {
-                Image(backgrounds[backgroundIndex])
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                VStack(spacing: 16) {
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    ZStack {
+                        Image(backgrounds[backgroundIndex])
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 120)
+                            .clipped()
+                            .cornerRadius(8)
+                        if !name.isEmpty {
+                            Text(name)
+                                .font(.headline)
+                                .foregroundColor(textColor)
+                                .padding()
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                    }
+                    .padding(.horizontal)
+
                     Picker("Background", selection: $backgroundIndex) {
                         ForEach(0..<backgrounds.count, id: \.self) { idx in
                             Text(backgrounds[idx]).tag(idx)
@@ -104,27 +120,36 @@ struct CreateMoodRoomView: View {
                     }
                     .pickerStyle(.menu)
                     .padding(.horizontal)
-                    .padding(.top, 8)
 
                     ColorPicker("Text Color", selection: $textColor)
                         .padding(.horizontal)
 
-                    ZStack(alignment: .topLeading) {
-                        if name.isEmpty {
-                            Text("Mood Room name")
-                                .foregroundColor(.gray)
-                                .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
-                        }
-                        TextEditor(text: $name)
-                            .onChange(of: name) { _, newValue in
-                                if newValue.count > maxNameLength {
-                                    name = String(newValue.prefix(maxNameLength))
-                                }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Mood Room Description")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        ZStack(alignment: .topLeading) {
+                            if name.isEmpty {
+                                Text("Mood Room name")
+                                    .foregroundColor(.gray)
+                                    .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                             }
-                            .background(Color.clear)
-                            .foregroundColor(textColor)
-                            .frame(height: 40)
+                            TextEditor(text: $name)
+                                .onChange(of: name) { _, newValue in
+                                    if newValue.count > maxNameLength {
+                                        name = String(newValue.prefix(maxNameLength))
+                                    }
+                                }
+                                .background(Color.clear)
+                                .foregroundColor(textColor)
+                                .frame(height: 60)
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.4))
+                        )
                     }
+                    .padding(.horizontal)
 
                     HStack {
                         Spacer()
@@ -135,7 +160,7 @@ struct CreateMoodRoomView: View {
                     .padding(.trailing)
 
                     Toggle("Recurring", isOn: $recurring)
-                        .padding(.leading)
+                        .padding(.horizontal)
 
                     if recurring {
                         HStack {
@@ -156,6 +181,7 @@ struct CreateMoodRoomView: View {
                                 }
                             }
                         }
+                        .padding(.horizontal)
                     }
 
                     VStack(alignment: .leading) {
@@ -165,6 +191,7 @@ struct CreateMoodRoomView: View {
                             .datePickerStyle(.wheel)
                             .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
+                    .padding(.horizontal)
                     .padding(.bottom, -8)
 
                     HStack {
@@ -187,18 +214,12 @@ struct CreateMoodRoomView: View {
                         .pickerStyle(.wheel)
                         .colorScheme(backgrounds[backgroundIndex] == "MoodRoomNight" ? .dark : .light)
                     }
-                    .padding(.leading)
+                    .padding(.horizontal)
                 }
                 .foregroundColor(interfaceColor)
                 .tint(interfaceColor)
-                .padding()
+                .padding(.vertical)
             }
-            .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * 0.7)
-            .cornerRadius(16)
-            .clipped()
-            .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
-            .padding()
 
             HStack {
                 if editingRoom != nil {
