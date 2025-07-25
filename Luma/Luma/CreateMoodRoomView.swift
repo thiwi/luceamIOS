@@ -16,6 +16,7 @@ struct CreateMoodRoomView: View {
     @State private var showPreview = false
     @State private var confirmDelete = false
     @State private var textColor: Color = .black
+    private let maxNameLength = 100
 
     private static let backgrounds = ["MoodRoomHappy", "MoodRoomNight", "MoodRoomNature", "MoodRoomSad"]
     private static let weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -91,6 +92,11 @@ struct CreateMoodRoomView: View {
                                 .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                         }
                         TextEditor(text: $name)
+                            .onChange(of: name) { newValue in
+                                if newValue.count > maxNameLength {
+                                    name = String(newValue.prefix(maxNameLength))
+                                }
+                            }
                             .background(Color.clear)
                             .foregroundColor(textColor)
                             .frame(height: 40)
@@ -183,7 +189,7 @@ struct CreateMoodRoomView: View {
                     }
                     if let editing = editingRoom {
                         MockData.updateMoodRoom(id: editing.id,
-                                               name: name.isEmpty ? "Unnamed" : name,
+                                               name: name.trimmingCharacters(in: .whitespacesAndNewlines),
                                                schedule: schedule,
                                                background: backgrounds[backgroundIndex],
                                                textColor: textColor,
@@ -191,16 +197,17 @@ struct CreateMoodRoomView: View {
                                                durationMinutes: durationMinutes)
                         onUpdate(editing)
                     } else {
-                        MockData.addMoodRoom(name: name.isEmpty ? "Unnamed" : name,
+                        MockData.addMoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
                                              schedule: schedule,
                                              background: backgrounds[backgroundIndex],
                                              textColor: textColor,
                                              startTime: time,
                                              durationMinutes: durationMinutes)
-                        onCreate(name, backgrounds[backgroundIndex])
+                        onCreate(name.trimmingCharacters(in: .whitespacesAndNewlines), backgrounds[backgroundIndex])
                     }
                     dismiss()
                 }
+                .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 .padding()
             }
             .sheet(isPresented: $showPreview) {
