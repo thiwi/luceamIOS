@@ -62,11 +62,7 @@ struct StatsView: View {
                         }
                     }
 
-                    HStack {
-                        Spacer()
-                        summary
-                        Spacer()
-                    }
+                    summary
                 }
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
                 .padding()
@@ -105,23 +101,32 @@ struct StatsView: View {
         .background(Color.white.opacity(0.6))
         .cornerRadius(12)
         .padding([.horizontal, .bottom])
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     private var chart: some View {
-        Chart {
-            ForEach(aggregatedData) { entry in
-                BarMark(
-                    x: .value("Date", entry.date, unit: unitForPeriod()),
-                    y: .value("Minutes in moments", entry.moments / 60)
-                )
-                .foregroundStyle(Color.blue.gradient)
+        let maxValue = aggregatedData
+            .map { max($0.moments, $0.moods) / 60 }
+            .max() ?? 0
 
-                BarMark(
-                    x: .value("Date", entry.date, unit: unitForPeriod()),
-                    y: .value("Minutes in mood rooms", entry.moods / 60)
-                )
-                .foregroundStyle(Color.purple.gradient)
+        return ScrollView(.horizontal, showsIndicators: false) {
+            Chart {
+                ForEach(aggregatedData) { entry in
+                    BarMark(
+                        x: .value("Date", entry.date, unit: unitForPeriod()),
+                        y: .value("Minutes in moments", entry.moments / 60)
+                    )
+                    .foregroundStyle(Color.blue.gradient)
+
+                    BarMark(
+                        x: .value("Date", entry.date, unit: unitForPeriod()),
+                        y: .value("Minutes in mood rooms", entry.moods / 60)
+                    )
+                    .foregroundStyle(Color.purple.gradient)
+                }
             }
+            .chartYScale(domain: 0...maxValue)
+            .frame(minWidth: CGFloat(aggregatedData.count) * 32)
         }
     }
 
@@ -210,20 +215,10 @@ struct StatsView: View {
 
     private func sampleAggregatedData() -> [StatsEntry] {
         let calendar = Calendar.current
-        let today = Date()
-        guard let startDate = calendar.date(byAdding: .month, value: -11, to: today) else {
-            return []
-        }
-
-        var dates: [Date] = []
-        var current = calendar.startOfDay(for: startDate)
-        while current <= today {
-            if calendar.component(.year, from: current) == selectedYear {
-                dates.append(current)
-            }
-            guard let next = calendar.date(byAdding: .day, value: 1, to: current) else { break }
-            current = next
-        }
+        let today = calendar.startOfDay(for: Date())
+        let dates: [Date] = stride(from: 0, through: 6, by: 1).compactMap { offset in
+            calendar.date(byAdding: .day, value: -offset, to: today)
+        }.reversed()
 
         switch period {
         case .day:
