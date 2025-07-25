@@ -72,7 +72,7 @@ struct ContentView: View {
                     exploringMoodRooms = true
                 }
             }
-            .sheet(isPresented: $exploringMoodRooms) {
+            .fullScreenCover(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
             }
             .sheet(item: $selectedEvent) { event in
