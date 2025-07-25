@@ -26,7 +26,7 @@ struct MoodRoomView: View {
                             Image(systemName: "chevron.backward")
                                 .resizable()
                                 .frame(width: 16, height: 16)
-                            Text("Leave")
+                            Text("Leave mood room")
                                 .font(.callout)
                         }
                         .foregroundColor(.white)
@@ -54,12 +54,14 @@ struct MoodRoomView: View {
                         .aspectRatio(contentMode: .fill)
 
                     VStack {
+                        Spacer()
                         Text(room.name)
                             .font(.title2)
                             .foregroundColor(textColor)
+                        Spacer()
                     }
                     .multilineTextAlignment(.center)
-                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                     if isOwnRoom {
                         Text(people == 1 ?
@@ -68,7 +70,7 @@ struct MoodRoomView: View {
                             .font(.footnote)
                             .foregroundColor(textColor)
                             .padding(6)
-                            .background(Color.black.opacity(0.4))
+                            .background(Color.black)
                             .cornerRadius(8)
                             .padding(8)
                     }
@@ -93,10 +95,7 @@ struct MoodRoomView: View {
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
                 } else {
-                    Text("Use the Leave button to exit this room.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 20)
+                    Spacer().frame(height: 20)
                 }
                 Spacer()
             }
