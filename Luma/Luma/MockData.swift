@@ -48,6 +48,23 @@ class MockData {
                              at: 0)
     }
 
+    static func updateMoodRoom(id: UUID,
+                               name: String,
+                               schedule: String,
+                               background: String,
+                               startTime: Date,
+                               durationMinutes: Int) {
+        if let index = userMoodRooms.firstIndex(where: { $0.id == id }) {
+            userMoodRooms[index] = MoodRoom(id: id,
+                                           name: name,
+                                           schedule: schedule,
+                                           background: background,
+                                           startTime: startTime,
+                                           createdAt: userMoodRooms[index].createdAt,
+                                           durationMinutes: durationMinutes)
+        }
+    }
+
     static func addEvent(content: String) -> Event {
         let newId = (events.map { $0.id }.max() ?? 0) + 1
         let event = Event(id: newId, content: content, mood: nil, symbol: nil)

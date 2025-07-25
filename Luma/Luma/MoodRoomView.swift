@@ -112,10 +112,8 @@ struct MoodRoomView: View {
                         Text("Leave mood room")
                             .font(.callout)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(room.background == "MoodRoomNight" ? .white : .black)
                     .padding(12)
-                    .background(Color.black.opacity(0.6))
-                    .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)
                 Spacer()

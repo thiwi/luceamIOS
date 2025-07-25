@@ -30,7 +30,7 @@ struct MoodRoomCardView: View {
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(alignment: .topTrailing) {
             if !joinable {
-                let unavailableColor = room.background == "MoodRoomNight" ? Color.white : Color.gray
+                let unavailableColor = room.background == "MoodRoomNight" ? Color.white : Color.black
                 Text("Unavailable at the moment")
                     .font(.caption2)
                     .foregroundColor(unavailableColor)
