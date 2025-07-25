@@ -106,9 +106,12 @@ struct MoodRoomView: View {
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.backward")
-                        .imageScale(.large)
-                        .foregroundColor(room.background == "MoodRoomNight" ? .white : .black)
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.white)
                         .padding(12)
+                        .background(Color.black.opacity(0.6))
+                        .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
                 Spacer()
