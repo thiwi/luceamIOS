@@ -33,7 +33,8 @@ struct StatsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top)
 
                     Picker("Year", selection: $selectedYear) {
                         ForEach(availableYears, id: \.self) { year in
@@ -45,7 +46,7 @@ struct StatsView: View {
 
                     Group {
                         if !aggregatedData.isEmpty {
-                            chart
+                            chart(in: geo)
                                 .frame(height: 220)
                                 .animation(.default, value: period)
                                 .animation(.default, value: selectedYear)
@@ -63,6 +64,8 @@ struct StatsView: View {
                     }
 
                     summary
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.horizontal)
                 }
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
                 .padding()
@@ -100,11 +103,9 @@ struct StatsView: View {
         .padding()
         .background(Color.white.opacity(0.6))
         .cornerRadius(12)
-        .padding([.horizontal, .bottom])
-        .frame(maxWidth: .infinity, alignment: .center)
     }
 
-    private var chart: some View {
+    private func chart(in geo: GeometryProxy) -> some View {
         let maxValue = aggregatedData
             .map { max($0.moments, $0.moods) / 60 }
             .max() ?? 0
@@ -126,7 +127,8 @@ struct StatsView: View {
                 }
             }
             .chartYScale(domain: 0...maxValue)
-            .frame(minWidth: CGFloat(aggregatedData.count) * 32)
+            .frame(minWidth: geo.size.width - 32)
+            .padding(.horizontal, 16)
         }
     }
 
@@ -158,98 +160,79 @@ struct StatsView: View {
 
         var dayMoments: [Date: Double] = [:]
         for (k, v) in stats.dailyMoments {
-            if let d = df.date(from: k) { dayMoments[d] = v }
+            if let d = df.date(from: k) {
+                let date = calendar.startOfDay(for: d)
+                dayMoments[date] = v
+            }
         }
+
         var dayMoods: [Date: Double] = [:]
         for (k, v) in stats.dailyMoodRooms {
-            if let d = df.date(from: k) { dayMoods[d] = v }
+            if let d = df.date(from: k) {
+                let date = calendar.startOfDay(for: d)
+                dayMoods[date] = v
+            }
         }
-        let allDates = Set(dayMoments.keys).union(dayMoods.keys)
-        let filteredDates = allDates.filter { calendar.component(.year, from: $0) == selectedYear }
-
-        var data: [StatsEntry]
 
         switch period {
         case .day:
-            data = filteredDates.sorted().map { date in
-                StatsEntry(date: date,
-                           moments: dayMoments[date] ?? 0,
-                           moods: dayMoods[date] ?? 0)
+            let today = calendar.startOfDay(for: Date())
+            guard let start = calendar.date(byAdding: .day, value: -6, to: today) else { return [] }
+            return (0..<7).compactMap { offset in
+                guard let date = calendar.date(byAdding: .day, value: offset, to: start) else { return nil }
+                let m = dayMoments[date] ?? 0
+                let mood = dayMoods[date] ?? 0
+                return StatsEntry(date: date, moments: m, moods: mood)
             }
+
         case .week:
-            var groups: [Date: (Double, Double)] = [:]
-            for date in filteredDates {
-                let comps = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
-                let start = calendar.date(from: comps) ?? date
-                var tuple = groups[start] ?? (0, 0)
-                tuple.0 += dayMoments[date] ?? 0
-                tuple.1 += dayMoods[date] ?? 0
-                groups[start] = tuple
+            var grouped: [Date: (Double, Double)] = [:]
+            for date in Set(dayMoments.keys).union(dayMoods.keys) {
+                if calendar.component(.yearForWeekOfYear, from: date) == selectedYear {
+                    let startWeek = calendar.dateInterval(of: .weekOfYear, for: date)?.start ?? date
+                    var tuple = grouped[startWeek] ?? (0, 0)
+                    tuple.0 += dayMoments[date] ?? 0
+                    tuple.1 += dayMoods[date] ?? 0
+                    grouped[startWeek] = tuple
+                }
             }
-            data = groups.keys.sorted().map { date in
-                let val = groups[date]!
-                return StatsEntry(date: date, moments: val.0, moods: val.1)
+
+            let currentYear = calendar.component(.yearForWeekOfYear, from: Date())
+            let firstWeek = calendar.date(from: DateComponents(calendar: calendar, yearForWeekOfYear: selectedYear, weekOfYear: 1))!
+            let weekCount: Int = {
+                if selectedYear == currentYear {
+                    return calendar.component(.weekOfYear, from: Date())
+                } else {
+                    return calendar.range(of: .weekOfYear, in: .yearForWeekOfYear, for: firstWeek)?.count ?? 52
+                }
+            }()
+
+            return (1...weekCount).compactMap { w in
+                guard let start = calendar.date(from: DateComponents(calendar: calendar, yearForWeekOfYear: selectedYear, weekOfYear: w)) else { return nil }
+                let tuple = grouped[start] ?? (0, 0)
+                return StatsEntry(date: start, moments: tuple.0, moods: tuple.1)
             }
+
         case .month:
-            var groups: [Date: (Double, Double)] = [:]
-            for date in filteredDates {
-                let comps = calendar.dateComponents([.year, .month], from: date)
-                let start = calendar.date(from: comps) ?? date
-                var tuple = groups[start] ?? (0, 0)
-                tuple.0 += dayMoments[date] ?? 0
-                tuple.1 += dayMoods[date] ?? 0
-                groups[start] = tuple
+            var grouped: [Date: (Double, Double)] = [:]
+            for date in Set(dayMoments.keys).union(dayMoods.keys) {
+                if calendar.component(.year, from: date) == selectedYear {
+                    let comps = calendar.dateComponents([.year, .month], from: date)
+                    let startMonth = calendar.date(from: comps) ?? date
+                    var tuple = grouped[startMonth] ?? (0, 0)
+                    tuple.0 += dayMoments[date] ?? 0
+                    tuple.1 += dayMoods[date] ?? 0
+                    grouped[startMonth] = tuple
+                }
             }
-            data = groups.keys.sorted().map { date in
-                let val = groups[date]!
-                return StatsEntry(date: date, moments: val.0, moods: val.1)
-            }
-        }
 
-        if data.isEmpty {
-            data = sampleAggregatedData()
-        }
+            let currentYear = calendar.component(.year, from: Date())
+            let monthCount = selectedYear == currentYear ? calendar.component(.month, from: Date()) : 12
 
-        return data
-    }
-
-    private func sampleAggregatedData() -> [StatsEntry] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let dates: [Date] = stride(from: 0, through: 6, by: 1).compactMap { offset in
-            calendar.date(byAdding: .day, value: -offset, to: today)
-        }.reversed()
-
-        switch period {
-        case .day:
-            return dates.map { StatsEntry(date: $0, moments: 120, moods: 120) }
-        case .week:
-            var groups: [Date: (Double, Double)] = [:]
-            for date in dates {
-                let comps = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
-                let start = calendar.date(from: comps) ?? date
-                var tuple = groups[start] ?? (0, 0)
-                tuple.0 += 120
-                tuple.1 += 120
-                groups[start] = tuple
-            }
-            return groups.keys.sorted().map { date in
-                let val = groups[date]!
-                return StatsEntry(date: date, moments: val.0, moods: val.1)
-            }
-        case .month:
-            var groups: [Date: (Double, Double)] = [:]
-            for date in dates {
-                let comps = calendar.dateComponents([.year, .month], from: date)
-                let start = calendar.date(from: comps) ?? date
-                var tuple = groups[start] ?? (0, 0)
-                tuple.0 += 120
-                tuple.1 += 120
-                groups[start] = tuple
-            }
-            return groups.keys.sorted().map { date in
-                let val = groups[date]!
-                return StatsEntry(date: date, moments: val.0, moods: val.1)
+            return (1...monthCount).compactMap { m in
+                guard let start = calendar.date(from: DateComponents(calendar: calendar, year: selectedYear, month: m)) else { return nil }
+                let tuple = grouped[start] ?? (0, 0)
+                return StatsEntry(date: start, moments: tuple.0, moods: tuple.1)
             }
         }
     }
