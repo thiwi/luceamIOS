@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 
+/// In-memory structures used when ``APIClient.useMock`` is `true`.
 class MockData {
     static var events: [Event] = [
         Event(id: 1, content: "A sunny walk in the park", mood: nil, symbol: nil),
@@ -38,6 +39,7 @@ class MockData {
         userMoodRooms + presetMoodRooms
     }
 
+    /// Inserts a new mood room at the top of the user's list.
     static func addMoodRoom(name: String,
                              schedule: String,
                              background: String,
@@ -54,6 +56,7 @@ class MockData {
                              at: 0)
     }
 
+    /// Replaces an existing mood room with updated details.
     static func updateMoodRoom(id: UUID,
                                name: String,
                                schedule: String,
@@ -73,12 +76,14 @@ class MockData {
         }
     }
 
+    /// Removes a mood room from the user's list.
     static func deleteMoodRoom(id: UUID) {
         if let index = userMoodRooms.firstIndex(where: { $0.id == id }) {
             userMoodRooms.remove(at: index)
         }
     }
 
+    /// Adds and returns a new event with a unique identifier.
     static func addEvent(content: String) -> Event {
         let newId = (events.map { $0.id }.max() ?? 0) + 1
         let event = Event(id: newId, content: content, mood: nil, symbol: nil)
@@ -86,6 +91,7 @@ class MockData {
         return event
     }
 
+    /// Returns an event matching the given identifier if present.
     static func event(id: Int) -> Event? {
         events.first { $0.id == id }
     }

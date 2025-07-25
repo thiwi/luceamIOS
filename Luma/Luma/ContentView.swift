@@ -1,18 +1,45 @@
 import SwiftUI
 
+/// Main view displaying the list of available moments and
+/// entry points to mood rooms and statistics.
+///
+/// This view owns several pieces of UI state for modal
+/// presentation and loads events via ``EventStore``. It also
+/// ensures that a ``SessionStore`` exists so the backend APIs
+/// can be called.
 struct ContentView: View {
+    /// Manages the anonymous session token used for API calls.
     @StateObject private var session = SessionStore()
+
+    /// Fetches and creates moment events.
     @StateObject private var events = EventStore()
+
+    /// Usage statistics shared across the app.
     @EnvironmentObject var stats: StatsStore
+
+    /// Text typed into the new moment composer.
     @State private var newEventText = ""
+
+    /// Whether the "create moment" sheet is shown.
     @State private var creatingMoment = false
+
+    /// Whether the "create mood room" sheet is shown.
     @State private var creatingMoodRoom = false
+
+    /// The event currently displayed in a detail sheet.
     @State private var selectedEvent: Event?
+
+    /// Temporary state for newly created mood room info.
     @State private var createdRoomName = ""
     @State private var createdRoomBackground = "MoodRoomHappy"
+
+    /// Controls presentation of the mood room list.
     @State private var exploringMoodRooms = false
+
+    /// Controls presentation of the statistics screen.
     @State private var showStats = false
 
+    /// Main screen with a list of moments and toolbar actions.
     var body: some View {
         NavigationStack {
             ZStack {
@@ -87,6 +114,8 @@ struct ContentView: View {
             .sheet(item: $selectedEvent) { event in
                 EventDetailView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
             }
+            // Establish a session token and load moments as soon
+            // as the view appears.
             .task {
                 await session.ensureSession()
                 await events.loadEvents()
@@ -95,6 +124,7 @@ struct ContentView: View {
     }
 }
 
+/// Simple view used to preview the presence WebSocket service.
 struct EnergyRoomView: View {
     let event: Event
     @StateObject private var presence = PresenceService()
@@ -111,6 +141,8 @@ struct EnergyRoomView: View {
                 .foregroundColor(.secondary)
                 .padding()
         }
+        // Connect to the presence WebSocket when the preview appears
+        // and fetch the full event text for display.
         .onAppear {
             Task {
                 presence.connect(eventId: event.id)
@@ -120,6 +152,7 @@ struct EnergyRoomView: View {
                 } catch {}
             }
         }
+        // Stop listening when the view is dismissed.
         .onDisappear {
             presence.disconnect()
         }
@@ -127,5 +160,6 @@ struct EnergyRoomView: View {
 }
 
 #Preview {
+    // Basic preview for Xcode canvas.
     ContentView()
 }

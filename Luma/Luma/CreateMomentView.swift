@@ -1,11 +1,20 @@
 import SwiftUI
 
+/// Sheet for composing a new moment event.
 struct CreateMomentView: View {
+    /// Two-way binding for the user's typed text.
     @Binding var text: String
+
+    /// Maximum characters allowed in the text field.
     private let maxLength = 100
+
+    /// Called when the user confirms creation.
     var onCreate: (String) -> Void
+
+    /// Called when the user discards the moment.
     var onDiscard: () -> Void
 
+    /// Main UI with a card preview and text editor.
     var body: some View {
         VStack {
             Text("Create a new moment")
@@ -70,5 +79,6 @@ struct CreateMomentView: View {
 }
 
 #Preview {
+    // Preview with an empty text binding.
     CreateMomentView(text: .constant("")) { _ in } onDiscard: {}
 }

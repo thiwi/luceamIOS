@@ -1,9 +1,17 @@
 import SwiftUI
 
+/// List of both user created and preset mood rooms.
 struct MoodRoomListView: View {
+    /// Allows the view to dismiss itself when done.
     @Environment(\.dismiss) private var dismiss
+
+    /// Timer updated so the joinability of rooms updates live.
     @State private var now = Date()
+
+    /// Currently edited room.
     @State private var editingRoom: MoodRoom?
+
+    /// View body listing all mood rooms.
     var body: some View {
         let _ = now
         NavigationStack {
@@ -77,6 +85,7 @@ struct MoodRoomListView: View {
                 }
             }
         }
+        // Update the `now` state every minute so joinability recalculates.
         .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
             now = Date()
         }
@@ -93,5 +102,6 @@ struct MoodRoomListView: View {
 }
 
 #Preview {
+    // Preview showing all mock mood rooms.
     MoodRoomListView()
 }

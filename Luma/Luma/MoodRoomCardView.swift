@@ -1,8 +1,11 @@
 import SwiftUI
 
+/// Compact card displaying a ``MoodRoom`` in lists.
 struct MoodRoomCardView: View {
+    /// Room to visualise.
     let room: MoodRoom
 
+    /// View body showing the background image and text.
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
         let cardHeight = UIScreen.main.bounds.height * 0.2
@@ -40,6 +43,7 @@ struct MoodRoomCardView: View {
 }
 
 #Preview {
+    // Preview with static data for design time.
     MoodRoomCardView(room: MoodRoom(name: "Test",
                                    schedule: "Daily",
                                    background: "MoodRoomHappy",

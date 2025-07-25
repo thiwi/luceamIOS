@@ -1,12 +1,23 @@
 import SwiftUI
 
+/// Full screen view showing a single moment in detail.
 struct EventDetailView: View {
+    /// Event being displayed.
     let event: Event
+
+    /// Indicates whether this event belongs to the current session.
     var isOwnEvent: Bool = false
+
+    /// Used to close the sheet.
     @Environment(\.dismiss) private var dismiss
+
+    /// Simulated participant count for the preview.
     @State private var people = 0
+
+    /// Statistics store to track time spent.
     @EnvironmentObject var stats: StatsStore
 
+    /// Complete modal screen for an individual moment.
     var body: some View {
         ZStack {
             Image("DetailViewBackground")
@@ -75,17 +86,22 @@ struct EventDetailView: View {
                 Spacer()
             }
         }
+        // Start counting time and simulate participants when
+        // the view appears.
         .onAppear {
             stats.startMoment()
             guard isOwnEvent else { return }
             people = 0
             incrementPeople()
         }
+        // Persist time spent once the view is dismissed.
         .onDisappear {
             stats.endMoment()
         }
     }
 
+    /// Adds random participants over time to simulate activity in
+    /// the preview and statistics demo.
     private func incrementPeople() {
         guard people < 15 else { return }
         let delay = Double.random(in: 0...5)
@@ -100,5 +116,6 @@ struct EventDetailView: View {
 }
 
 #Preview {
+    // Preview used in SwiftUI canvas.
     EventDetailView(event: MockData.events.first!)
 }

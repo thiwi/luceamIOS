@@ -1,9 +1,14 @@
 import Foundation
 
+/// Connects to the presence WebSocket to show participant counts.
 class PresenceService: ObservableObject {
+    /// Current number of participants in the room.
     @Published var count: Int = 1
+
+    /// Active web socket task.
     private var task: URLSessionWebSocketTask?
 
+    /// Opens the WebSocket for the specified event.
     func connect(eventId: Int) {
         disconnect()
 
@@ -24,11 +29,13 @@ class PresenceService: ObservableObject {
         listen()
     }
 
+    /// Terminates the WebSocket connection.
     func disconnect() {
         task?.cancel(with: .goingAway, reason: nil)
         task = nil
     }
 
+    /// Continuously receives presence messages and updates ``count``.
     private func listen() {
         task?.receive { [weak self] result in
             switch result {

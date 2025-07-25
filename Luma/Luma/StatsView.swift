@@ -1,6 +1,7 @@
 import SwiftUI
 import Charts
 
+/// Visualises usage statistics collected in ``StatsStore``.
 struct StatsView: View {
     enum Period: String, CaseIterable, Identifiable {
         case day = "Day"
@@ -17,12 +18,19 @@ struct StatsView: View {
         var id: Date { date }
     }
 
+    /// Used to close the sheet when the Done button is tapped.
     @Environment(\.dismiss) private var dismiss
+
+    /// Observed statistics store with accumulated metrics.
     @EnvironmentObject var stats: StatsStore
 
+    /// Granularity for the chart (day, week, month).
     @State private var period: Period = .day
+
+    /// The year currently selected in the chart.
     @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
 
+    /// Renders the interactive charts and summary information.
     var body: some View {
         NavigationStack {
             GeometryReader { geo in

@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 
+/// Tracks time spent in moments and mood rooms across launches.
 @MainActor
 class StatsStore: ObservableObject {
     @Published var timeInMoments: TimeInterval
