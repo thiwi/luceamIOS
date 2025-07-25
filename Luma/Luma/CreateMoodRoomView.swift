@@ -166,8 +166,7 @@ struct CreateMoodRoomView: View {
                 .tint(interfaceColor)
                 .padding()
             }
-            .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * 0.6)
+            .frame(width: UIScreen.main.bounds.width * 0.95)
             .cornerRadius(16)
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
