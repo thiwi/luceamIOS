@@ -16,5 +16,6 @@ struct LumaApp: App {
             ContentView()
                 .environmentObject(stats)
         }
+        .supportedOrientations(.portrait)
     }
 }
