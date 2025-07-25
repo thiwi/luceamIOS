@@ -80,7 +80,7 @@ struct ContentView: View {
             .fullScreenCover(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
             }
-            .sheet(isPresented: $showStats) {
+            .fullScreenCover(isPresented: $showStats) {
                 StatsView()
                     .environmentObject(stats)
             }
