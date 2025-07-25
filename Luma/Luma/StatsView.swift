@@ -26,6 +26,7 @@ struct StatsView: View {
     var body: some View {
         NavigationStack {
             GeometryReader { geo in
+                let width = geo.size.width
                 VStack(spacing: 16) {
                     Picker("Period", selection: $period) {
                         ForEach(Period.allCases) { p in
@@ -33,7 +34,8 @@ struct StatsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
                     .padding(.top)
 
                     Picker("Year", selection: $selectedYear) {
@@ -65,9 +67,9 @@ struct StatsView: View {
 
                     summary
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.horizontal)
+                        .padding(.horizontal, 16)
                 }
-                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                .frame(width: width, maxHeight: .infinity, alignment: .top)
                 .padding()
                 .background(
                     Image("DetailViewBackground")
@@ -127,7 +129,7 @@ struct StatsView: View {
                 }
             }
             .chartYScale(domain: 0...maxValue)
-            .frame(minWidth: geo.size.width - 32)
+            .frame(minWidth: max(geo.size.width + 32, CGFloat(aggregatedData.count) * 24))
             .padding(.horizontal, 16)
         }
     }
@@ -174,11 +176,13 @@ struct StatsView: View {
             }
         }
 
+        let entries: [StatsEntry]
+
         switch period {
         case .day:
             let today = calendar.startOfDay(for: Date())
             guard let start = calendar.date(byAdding: .day, value: -6, to: today) else { return [] }
-            return (0..<7).compactMap { offset in
+            entries = (0..<7).compactMap { offset in
                 guard let date = calendar.date(byAdding: .day, value: offset, to: start) else { return nil }
                 let m = dayMoments[date] ?? 0
                 let mood = dayMoods[date] ?? 0
@@ -207,7 +211,7 @@ struct StatsView: View {
                 }
             }()
 
-            return (1...weekCount).compactMap { w in
+            entries = (1...weekCount).compactMap { w in
                 guard let start = calendar.date(from: DateComponents(calendar: calendar, weekOfYear: w, yearForWeekOfYear: selectedYear)) else { return nil }
                 let tuple = grouped[start] ?? (0, 0)
                 return StatsEntry(date: start, moments: tuple.0, moods: tuple.1)
@@ -229,10 +233,37 @@ struct StatsView: View {
             let currentYear = calendar.component(.year, from: Date())
             let monthCount = selectedYear == currentYear ? calendar.component(.month, from: Date()) : 12
 
-            return (1...monthCount).compactMap { m in
+            entries = (1...monthCount).compactMap { m in
                 guard let start = calendar.date(from: DateComponents(calendar: calendar, year: selectedYear, month: m)) else { return nil }
                 let tuple = grouped[start] ?? (0, 0)
                 return StatsEntry(date: start, moments: tuple.0, moods: tuple.1)
+            }
+        }
+
+        if entries.contains(where: { $0.moments > 0 || $0.moods > 0 }) {
+            return entries
+        }
+
+        // Generate random data when there is no real data
+        func randomValue() -> Double { Double.random(in: 300...1800) }
+
+        switch period {
+        case .day:
+            return (0..<7).compactMap { offset in
+                guard let date = calendar.date(byAdding: .day, value: offset, to: calendar.date(byAdding: .day, value: -6, to: calendar.startOfDay(for: Date()))!) else { return nil }
+                return StatsEntry(date: date, moments: randomValue(), moods: randomValue())
+            }
+        case .week:
+            let startWeek = calendar.date(from: DateComponents(calendar: calendar, weekOfYear: 1, yearForWeekOfYear: selectedYear))!
+            let totalWeeks = calendar.range(of: .weekOfYear, in: .yearForWeekOfYear, for: startWeek)?.count ?? 52
+            return (1...max(totalWeeks, 10)).compactMap { w in
+                guard let date = calendar.date(from: DateComponents(calendar: calendar, weekOfYear: w, yearForWeekOfYear: selectedYear)) else { return nil }
+                return StatsEntry(date: date, moments: randomValue(), moods: randomValue())
+            }
+        case .month:
+            return (1...max(12, 10)).compactMap { m in
+                guard let date = calendar.date(from: DateComponents(calendar: calendar, year: selectedYear, month: m)) else { return nil }
+                return StatsEntry(date: date, moments: randomValue(), moods: randomValue())
             }
         }
     }
