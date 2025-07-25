@@ -120,6 +120,7 @@ struct MoodRoomView: View {
                 .buttonStyle(.plain)
                 Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
         }
     }
@@ -150,7 +151,10 @@ struct MoodRoomView: View {
 
     private var remainingTimeText: String {
         let remaining = room.closeTime.timeIntervalSince(now)
-        guard remaining > 0 else { return "0min left" }
+        guard remaining > 0 else { return "Less than 1 minute left" }
+        if remaining < 60 {
+            return "Less than 1 minute left"
+        }
         let minutes = Int(remaining / 60)
         let hours = minutes / 60
         let mins = minutes % 60
