@@ -59,7 +59,9 @@ struct EventDetailView: View {
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
                 if isOwnEvent {
-                    Text("There are \(people) people with you in this moment.")
+                    Text(people == 1 ?
+                         "There is 1 person with you in this moment." :
+                         "There are \(people) persons with you in this moment.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 8)

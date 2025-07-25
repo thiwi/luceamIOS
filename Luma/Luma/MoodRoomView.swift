@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct MoodRoomView: View {
-    let name: String
-    var background: String = "MoodRoomHappy"
+    let room: MoodRoom
     var isPreview: Bool = false
     var isOwnRoom: Bool = false
     @Environment(\.dismiss) private var dismiss
 
     @State private var people = 0
+    @State private var closeWork: DispatchWorkItem?
 
     var onCreate: (() -> Void)? = nil
     var onDiscard: (() -> Void)? = nil
@@ -22,20 +22,24 @@ struct MoodRoomView: View {
             VStack(spacing: 0) {
                 HStack {
                     Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.backward")
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.white)
-                            .padding(12)
-                            .background(Color.black.opacity(0.6))
-                            .clipShape(Circle())
+                        HStack {
+                            Image(systemName: "chevron.backward")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                            Text("Leave")
+                                .font(.callout)
+                        }
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(Color.black.opacity(0.6))
+                        .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
                     Spacer()
                 }
                 .padding()
 
-                let textColor = background == "MoodRoomNight" ? Color.white : Color.black
+                let textColor = room.background == "MoodRoomNight" ? Color.white : Color.black
 
                 Text("Mood room")
                     .font(.headline)
@@ -44,18 +48,30 @@ struct MoodRoomView: View {
 
                 Spacer()
 
-                ZStack {
-                    Image(background)
+                ZStack(alignment: .bottom) {
+                    Image(room.background)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
 
                     VStack {
-                        Text(name)
+                        Text(room.name)
                             .font(.title2)
                             .foregroundColor(textColor)
                     }
                     .multilineTextAlignment(.center)
                     .padding()
+
+                    if isOwnRoom {
+                        Text(people == 1 ?
+                             "There is 1 person with you in this mood room." :
+                             "There are \(people) persons with you in this mood room.")
+                            .font(.footnote)
+                            .foregroundColor(textColor)
+                            .padding(6)
+                            .background(Color.black.opacity(0.4))
+                            .cornerRadius(8)
+                            .padding(8)
+                    }
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
@@ -63,16 +79,6 @@ struct MoodRoomView: View {
                 .clipped()
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
-
-                if isOwnRoom {
-                    Text("There are \(people) people with you in this room.")
-                        .font(.footnote)
-                        .foregroundColor(textColor)
-                        .padding(6)
-                        .background(Color.black.opacity(0.4))
-                        .cornerRadius(8)
-                        .padding(.bottom, 20)
-                }
 
                 if onCreate != nil || onDiscard != nil {
                     HStack {
@@ -87,7 +93,7 @@ struct MoodRoomView: View {
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
                 } else {
-                    Text("Use the back button to leave this room.")
+                    Text("Use the Leave button to exit this room.")
                         .font(.footnote)
                         .foregroundColor(.gray)
                         .padding(.bottom, 20)
@@ -96,9 +102,14 @@ struct MoodRoomView: View {
             }
         }
         .onAppear {
-            guard isOwnRoom else { return }
-            people = 0
-            incrementPeople()
+            scheduleClose()
+            if isOwnRoom {
+                people = 0
+                incrementPeople()
+            }
+        }
+        .onDisappear {
+            closeWork?.cancel()
         }
         .interactiveDismissDisabled(!isPreview)
     }
@@ -114,8 +125,26 @@ struct MoodRoomView: View {
             }
         }
     }
+
+    private func scheduleClose() {
+        let closeTime = room.startTime.addingTimeInterval(TimeInterval(room.durationMinutes * 60))
+        let remaining = closeTime.timeIntervalSince(Date())
+        guard remaining > 0 else {
+            dismiss()
+            return
+        }
+        let work = DispatchWorkItem { dismiss() }
+        closeWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + remaining, execute: work)
+    }
 }
 
 #Preview {
-    MoodRoomView(name: "Test Room", isPreview: true)
+    MoodRoomView(room: MoodRoom(name: "Test Room",
+                                schedule: "Once",
+                                background: "MoodRoomHappy",
+                                startTime: Date(),
+                                createdAt: Date(),
+                                durationMinutes: 15),
+                 isPreview: true)
 }
