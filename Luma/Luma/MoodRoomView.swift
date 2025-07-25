@@ -98,26 +98,15 @@ struct MoodRoomView: View {
             stats.endMoodRoom()
         }
         .interactiveDismissDisabled(!isPreview)
-        .navigationBarBackButtonHidden(true)
         .onReceive(timer) { _ in
             now = Date()
         }
-        .safeAreaInset(edge: .top) {
-            HStack {
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.backward")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(Color.black.opacity(0.6))
-                        .clipShape(Circle())
                 }
-                .buttonStyle(.plain)
-                Spacer()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
         }
     }
 
