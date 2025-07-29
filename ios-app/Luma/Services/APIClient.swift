@@ -10,7 +10,7 @@ class APIClient {
     static var useMock = true
 
     /// Base URL for the backend server.
-    private let baseURL = URL(string: "http://localhost:8000/api")!
+    private let baseURL = URL(string: BASE_API_URL)!
 
     private init() {}
 
@@ -32,7 +32,7 @@ class APIClient {
             return MockData.events
         }
 
-        let url = baseURL.appendingPathComponent("events")
+        let url = baseURL.appendingPathComponent("moments")
         let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode([Event].self, from: data)
     }
@@ -43,7 +43,7 @@ class APIClient {
             return MockData.addEvent(content: event.content)
         }
 
-        var components = URLComponents(url: baseURL.appendingPathComponent("events"), resolvingAgainstBaseURL: false)!
+        var components = URLComponents(url: baseURL.appendingPathComponent("moments"), resolvingAgainstBaseURL: false)!
         components.queryItems = [URLQueryItem(name: "session_token", value: token)]
         var request = URLRequest(url: components.url!)
         request.httpMethod = "POST"
@@ -59,7 +59,7 @@ class APIClient {
             return MockData.event(id: id) ?? MockData.events.first!
         }
 
-        let url = baseURL.appendingPathComponent("events/\(id)")
+        let url = baseURL.appendingPathComponent("moments/\(id)")
         let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(Event.self, from: data)
     }

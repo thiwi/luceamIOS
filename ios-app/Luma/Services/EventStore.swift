@@ -3,6 +3,7 @@ import Foundation
 /// Observable store for listing and creating moments.
 @MainActor
 class EventStore: ObservableObject {
+    private let momentService = MomentService()
     /// All events loaded from the backend or mock store.
     @Published var events: [Event] = []
 
@@ -12,21 +13,21 @@ class EventStore: ObservableObject {
     /// Fetches events from the backend into ``events``.
     func loadEvents() async {
         do {
-            events = try await APIClient.shared.listEvents()
+            events = try await momentService.fetchMoments().map { moment in
+                Event(id: moment.id, content: moment.content, mood: nil, symbol: nil)
+            }
         } catch {
             print("Failed to load events", error)
-            // Fallback to local mock data when the backend is unavailable
-            events = MockData.events
+            events = []
         }
     }
 
     /// Creates a new event and refreshes the list on success.
-    func createEvent(token: String, content: String) async -> Event? {
+    func createEvent(content: String) async -> Event? {
         do {
-            let created = try await APIClient.shared.createEvent(token: token, event: EventCreate(content: content, mood: "rain", symbol: "✨"))
+            try await momentService.postMoment(text: content)
             await loadEvents()
-            ownEventIds.insert(created.id)
-            return created
+            return events.first
         } catch {
             print("Failed to create event", error)
             return nil
