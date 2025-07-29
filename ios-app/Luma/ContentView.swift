@@ -49,15 +49,21 @@ struct ContentView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(events.events) { event in
-                            Button(action: { selectedEvent = event }) {
-                                EventCardView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
+                    if events.events.isEmpty {
+                        Text("No entries")
+                            .foregroundColor(.secondary)
+                            .padding()
+                    } else {
+                        LazyVStack(spacing: 16) {
+                            ForEach(events.events) { event in
+                                Button(action: { selectedEvent = event }) {
+                                    EventCardView(event: event, isOwnEvent: events.ownEventIds.contains(event.id))
+                                }
                             }
                         }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical)
                 }
             }
             .navigationTitle("Moments")
@@ -82,13 +88,11 @@ struct ContentView: View {
             }
             .sheet(isPresented: $creatingMoment) { CreateMomentView(text: $newEventText) { text in
                     Task {
-                        if let token = session.token {
-                            if let created = await events.createEvent(token: token, content: text) {
-                                creatingMoment = false
-                                newEventText = ""
-                                selectedEvent = created
-                                stats.recordMomentCreated()
-                            }
+                        if let created = await events.createEvent(content: text) {
+                            creatingMoment = false
+                            newEventText = ""
+                            selectedEvent = created
+                            stats.recordMomentCreated()
                         }
                     }
                 } onDiscard: {
