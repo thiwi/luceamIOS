@@ -11,10 +11,62 @@ struct NetworkMoodRoom: Codable {
     var createdAt: Date
     var durationMinutes: Int
     var sessionToken: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, schedule, background, textColor, startTime, createdAt, durationMinutes, sessionToken, session
+    }
+
+    enum SessionKeys: String, CodingKey {
+        case token
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        schedule = try container.decode(String.self, forKey: .schedule)
+        background = try container.decode(String.self, forKey: .background)
+        textColor = try container.decode(String.self, forKey: .textColor)
+        startTime = try container.decode(Date.self, forKey: .startTime)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        durationMinutes = try container.decode(Int.self, forKey: .durationMinutes)
+        if let token = try container.decodeIfPresent(String.self, forKey: .sessionToken) {
+            sessionToken = token
+        } else if container.contains(.session) {
+            let nested = try container.nestedContainer(keyedBy: SessionKeys.self, forKey: .session)
+            sessionToken = try nested.decodeIfPresent(String.self, forKey: .token)
+        } else {
+            sessionToken = nil
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(schedule, forKey: .schedule)
+        try container.encode(background, forKey: .background)
+        try container.encode(textColor, forKey: .textColor)
+        try container.encode(startTime, forKey: .startTime)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(durationMinutes, forKey: .durationMinutes)
+        try container.encodeIfPresent(sessionToken, forKey: .sessionToken)
+    }
 }
 
 class MoodRoomService {
     private let base = URL(string: BASE_API_URL)!
+    private let decoder: JSONDecoder = {
+        let d = JSONDecoder()
+        d.dateDecodingStrategy = .iso8601
+        return d
+    }()
+
+    private let encoder: JSONEncoder = {
+        let e = JSONEncoder()
+        e.dateEncodingStrategy = .iso8601
+        return e
+    }()
 
     func fetchRooms() async throws -> [MoodRoom] {
         if APIClient.useMock {
@@ -22,7 +74,7 @@ class MoodRoomService {
         }
         let url = base.appendingPathComponent("moodrooms")
         let (data, _) = try await URLSession.shared.data(from: url)
-        let decoded = try JSONDecoder().decode([NetworkMoodRoom].self, from: data)
+        let decoded = try decoder.decode([NetworkMoodRoom].self, from: data)
         return decoded.map { MoodRoom(id: $0.id,
                                       name: $0.name,
                                       schedule: $0.schedule,
@@ -58,9 +110,9 @@ class MoodRoomService {
                                   createdAt: room.createdAt,
                                   durationMinutes: room.durationMinutes,
                                   sessionToken: nil)
-        request.httpBody = try JSONEncoder().encode(enc)
+        request.httpBody = try encoder.encode(enc)
         let (data, _) = try await URLSession.shared.data(for: request)
-        let saved = try JSONDecoder().decode(NetworkMoodRoom.self, from: data)
+        let saved = try decoder.decode(NetworkMoodRoom.self, from: data)
         return MoodRoom(id: saved.id,
                         name: saved.name,
                         schedule: saved.schedule,
