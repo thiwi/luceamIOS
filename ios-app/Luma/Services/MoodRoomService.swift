@@ -12,6 +12,26 @@ struct NetworkMoodRoom: Codable {
     var durationMinutes: Int
     var sessionToken: String?
 
+    init(id: UUID,
+         name: String,
+         schedule: String,
+         background: String,
+         textColor: String,
+         startTime: Date,
+         createdAt: Date,
+         durationMinutes: Int,
+         sessionToken: String?) {
+        self.id = id
+        self.name = name
+        self.schedule = schedule
+        self.background = background
+        self.textColor = textColor
+        self.startTime = startTime
+        self.createdAt = createdAt
+        self.durationMinutes = durationMinutes
+        self.sessionToken = sessionToken
+    }
+
     enum CodingKeys: String, CodingKey {
         case id, name, schedule, background, textColor, startTime, createdAt, durationMinutes, sessionToken, session
     }
