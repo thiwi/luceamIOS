@@ -9,7 +9,7 @@ class PresenceService: ObservableObject {
     private var task: URLSessionWebSocketTask?
 
     /// Opens the WebSocket for the specified event.
-    func connect(eventId: Int) {
+    func connect(eventId: UUID) {
         disconnect()
 
         guard !APIClient.useMock else {
@@ -22,7 +22,7 @@ class PresenceService: ObservableObject {
         urlComponents.scheme = "ws"
         urlComponents.host = "localhost"
         urlComponents.port = 8000
-        urlComponents.path = "/ws/presence/\(eventId)"
+        urlComponents.path = "/ws/presence/\(eventId.uuidString)"
         guard let url = urlComponents.url else { return }
         task = URLSession(configuration: .default).webSocketTask(with: url)
         task?.resume()

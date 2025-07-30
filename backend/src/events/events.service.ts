@@ -31,7 +31,7 @@ export class EventsService {
     return this.events.save(event);
   }
 
-  async find(id: number): Promise<Event | null> {
+  async find(id: string): Promise<Event | null> {
     return this.events.findOne({ where: { id } });
   }
 }
