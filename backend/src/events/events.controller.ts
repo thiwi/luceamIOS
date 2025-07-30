@@ -11,7 +11,10 @@ export class EventsController {
   }
 
   @Post()
-  create(@Query('session_token') token: string, @Body('content') content: string) {
+  create(
+    @Query('session_token') token: string,
+    @Body('content') content: string,
+  ) {
     return this.eventsService.create(token, content);
   }
 

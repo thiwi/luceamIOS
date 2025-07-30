@@ -7,7 +7,9 @@ export class Resonance {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Session, (session) => session.resonances, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Session, (session) => session.resonances, {
+    onDelete: 'CASCADE',
+  })
   session: Session;
 
   @ManyToOne(() => Event, { onDelete: 'CASCADE' })

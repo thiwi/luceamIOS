@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MoodRoom } from './moodroom.entity';
 import { Session } from '../sessions/session.entity';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class MoodRoomsService {
@@ -16,6 +17,9 @@ export class MoodRoomsService {
   }
 
   async create(token: string, data: Partial<MoodRoom>): Promise<MoodRoom> {
+    if (!isUUID(token)) {
+      throw new BadRequestException('Invalid session token');
+    }
     let session = await this.sessions.findOne({ where: { token } });
     if (!session) {
       session = this.sessions.create({ token });
