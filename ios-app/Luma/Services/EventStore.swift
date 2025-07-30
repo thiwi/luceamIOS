@@ -23,9 +23,9 @@ class EventStore: ObservableObject {
     }
 
     /// Creates a new event and refreshes the list on success.
-    func createEvent(content: String) async -> Event? {
+    func createEvent(token: String, content: String) async -> Event? {
         do {
-            let created = try await momentService.postMoment(text: content)
+            let created = try await momentService.postMoment(token: token, text: content)
             await loadEvents()
             ownEventIds.insert(created.id)
             return Event(id: created.id, content: created.content, mood: nil, symbol: nil)
