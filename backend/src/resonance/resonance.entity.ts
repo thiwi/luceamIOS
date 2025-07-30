@@ -4,8 +4,8 @@ import { Event } from '../events/event.entity';
 
 @Entity()
 export class Resonance {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Session, (session) => session.resonances, {
     onDelete: 'CASCADE',
