@@ -243,41 +243,43 @@ struct CreateMoodRoomView: View {
                     Button("Preview") { showPreview = true }
                         .padding()
                     Button(editingRoom == nil ? "Create" : "Update") {
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = "HH:mm"
-                        let timeString = formatter.string(from: time)
-                        let schedule: String
-                        if recurring {
-                            let days = selectedWeekdays.sorted().map { weekdays[$0] }.joined(separator: ", ")
-                            schedule = "Every \(days) at \(timeString)"
-                        } else {
-                            schedule = "Once at \(timeString)"
+                        Task {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "HH:mm"
+                            let timeString = formatter.string(from: time)
+                            let schedule: String
+                            if recurring {
+                                let days = selectedWeekdays.sorted().map { weekdays[$0] }.joined(separator: ", ")
+                                schedule = "Every \(days) at \(timeString)"
+                            } else {
+                                schedule = "Once at \(timeString)"
+                            }
+                            if let editing = editingRoom {
+                                let updated = MoodRoom(id: editing.id,
+                                                       name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                       schedule: schedule,
+                                                       background: backgrounds[backgroundIndex],
+                                                       textColor: textColor,
+                                                       startTime: time,
+                                                       createdAt: editing.createdAt,
+                                                       durationMinutes: durationMinutes,
+                                                       sessionToken: session.token)
+                                await store.create(token: session.token ?? "", room: updated)
+                                onUpdate(updated)
+                            } else {
+                                let newRoom = MoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                       schedule: schedule,
+                                                       background: backgrounds[backgroundIndex],
+                                                       textColor: textColor,
+                                                       startTime: time,
+                                                       createdAt: Date(),
+                                                       durationMinutes: durationMinutes,
+                                                       sessionToken: session.token)
+                                await store.create(token: session.token ?? "", room: newRoom)
+                                onCreate(newRoom.name, newRoom.background)
+                            }
+                            dismiss()
                         }
-                        if let editing = editingRoom {
-                            let updated = MoodRoom(id: editing.id,
-                                                   name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                                   schedule: schedule,
-                                                   background: backgrounds[backgroundIndex],
-                                                   textColor: textColor,
-                                                   startTime: time,
-                                                   createdAt: editing.createdAt,
-                                                   durationMinutes: durationMinutes,
-                                                   sessionToken: session.token)
-                            await store.create(token: session.token ?? "", room: updated)
-                            onUpdate(updated)
-                        } else {
-                            let newRoom = MoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                                   schedule: schedule,
-                                                   background: backgrounds[backgroundIndex],
-                                                   textColor: textColor,
-                                                   startTime: time,
-                                                   createdAt: Date(),
-                                                   durationMinutes: durationMinutes,
-                                                   sessionToken: session.token)
-                            await store.create(token: session.token ?? "", room: newRoom)
-                            onCreate(newRoom.name, newRoom.background)
-                        }
-                        dismiss()
                     }
                     .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .padding()
