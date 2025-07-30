@@ -11,6 +11,11 @@ services:
       - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U luma"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
   backend:
     build: ./backend
     command: node dist/main.js
@@ -18,12 +23,15 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - db
-      - seed
+      db:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
   seed:
     build: ./backend
     command: node dist/seed.js
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 volumes:
   db-data:
