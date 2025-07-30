@@ -54,12 +54,12 @@ class APIClient {
     }
 
     /// Fetches the full details for a single event by id.
-    func fetchEvent(id: Int) async throws -> Event {
+    func fetchEvent(id: UUID) async throws -> Event {
         if APIClient.useMock {
             return MockData.event(id: id) ?? MockData.events.first!
         }
 
-        let url = baseURL.appendingPathComponent("moments/\(id)")
+        let url = baseURL.appendingPathComponent("moments/\(id.uuidString)")
         let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(Event.self, from: data)
     }
