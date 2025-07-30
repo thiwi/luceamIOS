@@ -6,7 +6,7 @@ import SwiftUI
 /// Mood rooms can recur daily or on specific weekdays. Timing
 /// properties are stored as absolute values but convenience
 /// accessors adjust them to the current day for comparisons.
-struct MoodRoom: Identifiable, Hashable {
+struct MoodRoom: Identifiable, Hashable, Codable {
     /// Unique identifier for the mood room.
     var id = UUID()
 
@@ -30,6 +30,9 @@ struct MoodRoom: Identifiable, Hashable {
 
     /// Duration in minutes for each session.
     var durationMinutes: Int
+
+    /// Session token of the creator when loaded from the backend.
+    var sessionToken: String? = nil
 
     /// End time calculated from the start time and duration.
     var closeTime: Date { startTime.addingTimeInterval(TimeInterval(durationMinutes * 60)) }
@@ -82,5 +85,38 @@ struct MoodRoom: Identifiable, Hashable {
         let startToday = currentStartTime
         let endToday = currentCloseTime
         return now >= startToday && now <= endToday
+    }
+}
+
+extension MoodRoom {
+    enum CodingKeys: String, CodingKey {
+        case id, name, schedule, background, textColor, startTime, createdAt, durationMinutes, sessionToken
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        schedule = try container.decode(String.self, forKey: .schedule)
+        background = try container.decode(String.self, forKey: .background)
+        let color = try container.decodeIfPresent(String.self, forKey: .textColor) ?? "black"
+        textColor = color.lowercased() == "white" ? .white : .black
+        startTime = try container.decode(Date.self, forKey: .startTime)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        durationMinutes = try container.decode(Int.self, forKey: .durationMinutes)
+        sessionToken = try container.decodeIfPresent(String.self, forKey: .sessionToken)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(schedule, forKey: .schedule)
+        try container.encode(background, forKey: .background)
+        try container.encode(textColor == .white ? "white" : "black", forKey: .textColor)
+        try container.encode(startTime, forKey: .startTime)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(durationMinutes, forKey: .durationMinutes)
+        try container.encodeIfPresent(sessionToken, forKey: .sessionToken)
     }
 }
