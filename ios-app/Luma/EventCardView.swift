@@ -39,5 +39,5 @@ struct EventCardView: View {
 
 #Preview {
     // Preview showing the card with example content.
-    EventCardView(event: Event(id: UUID(), content: "Hello world", mood: nil, symbol: nil), isOwnEvent: true)
+    EventCardView(event: Event(id: UUID().uuidString, content: "Hello world", mood: nil, symbol: nil), isOwnEvent: true)
 }

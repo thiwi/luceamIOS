@@ -4,9 +4,9 @@ import SwiftUI
 /// In-memory structures used when ``APIClient.useMock`` is `true`.
 class MockData {
     static var events: [Event] = [
-        Event(id: UUID(), content: "A sunny walk in the park", mood: nil, symbol: nil),
-        Event(id: UUID(), content: "Coffee with friends", mood: nil, symbol: nil),
-        Event(id: UUID(), content: "Reading a good book", mood: nil, symbol: nil)
+        Event(id: UUID().uuidString, content: "A sunny walk in the park", mood: nil, symbol: nil),
+        Event(id: UUID().uuidString, content: "Coffee with friends", mood: nil, symbol: nil),
+        Event(id: UUID().uuidString, content: "Reading a good book", mood: nil, symbol: nil)
     ]
 
     static var presetMoodRooms: [MoodRoom] = [
@@ -85,13 +85,13 @@ class MockData {
 
     /// Adds and returns a new event with a unique identifier.
     static func addEvent(content: String) -> Event {
-        let event = Event(id: UUID(), content: content, mood: nil, symbol: nil)
+        let event = Event(id: UUID().uuidString, content: content, mood: nil, symbol: nil)
         events.append(event)
         return event
     }
 
     /// Returns an event matching the given identifier if present.
-    static func event(id: UUID) -> Event? {
+    static func event(id: String) -> Event? {
         events.first { $0.id == id }
     }
 }
