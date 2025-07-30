@@ -25,7 +25,7 @@ class MomentService {
         var request = URLRequest(url: base.appendingPathComponent("moments"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["text": text])
+        request.httpBody = try JSONEncoder().encode(["content": text])
         _ = try await URLSession.shared.data(for: request)
     }
 
