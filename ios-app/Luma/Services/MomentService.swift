@@ -17,16 +17,16 @@ class MomentService {
         return try JSONDecoder().decode([Moment].self, from: data)
     }
 
-    func postMoment(text: String) async throws {
+    func postMoment(text: String) async throws -> Moment {
         if APIClient.useMock {
-            _ = MockData.addEvent(content: text)
-            return
+            return MockData.addEvent(content: text).toMoment()
         }
         var request = URLRequest(url: base.appendingPathComponent("moments"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(["content": text])
-        _ = try await URLSession.shared.data(for: request)
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(Moment.self, from: data)
     }
 
     func postResonance(momentId: UUID) async throws {

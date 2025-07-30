@@ -11,6 +11,13 @@ struct Event: Codable, Identifiable {
     let symbol: String?
 }
 
+extension Event {
+    /// Convenience helper to convert an ``Event`` into ``Moment``.
+    func toMoment() -> Moment {
+        Moment(id: id, content: content)
+    }
+}
+
 struct EventCreate: Codable {
     let content: String
     let mood: String
