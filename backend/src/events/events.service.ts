@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { Session } from '../sessions/session.entity';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class EventsService {
@@ -16,7 +17,12 @@ export class EventsService {
   }
 
   async create(sessionToken: string, content: string): Promise<Event> {
-    let session = await this.sessions.findOne({ where: { token: sessionToken } });
+    if (!isUUID(sessionToken)) {
+      throw new BadRequestException('Invalid session token');
+    }
+    let session = await this.sessions.findOne({
+      where: { token: sessionToken },
+    });
     if (!session) {
       session = this.sessions.create({ token: sessionToken });
       await this.sessions.save(session);

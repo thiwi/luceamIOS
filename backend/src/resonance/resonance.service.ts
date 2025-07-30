@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Resonance } from './resonance.entity';
 import { Session } from '../sessions/session.entity';
 import { Event } from '../events/event.entity';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class ResonanceService {
@@ -14,6 +15,9 @@ export class ResonanceService {
   ) {}
 
   async create(token: string, eventId: number) {
+    if (!isUUID(token)) {
+      throw new BadRequestException('Invalid session token');
+    }
     let session = await this.sessions.findOne({ where: { token } });
     if (!session) {
       session = this.sessions.create({ token });

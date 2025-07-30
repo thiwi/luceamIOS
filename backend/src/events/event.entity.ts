@@ -15,6 +15,8 @@ export class Event {
   @Column({ nullable: true })
   symbol?: string;
 
-  @ManyToOne(() => Session, (session) => session.events, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Session, (session) => session.events, {
+    onDelete: 'CASCADE',
+  })
   session: Session;
 }
