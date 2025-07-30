@@ -1,7 +1,8 @@
 import Foundation
 
 struct Moment: Codable, Identifiable {
-    let id: UUID
+    /// Unique identifier represented as a GUID string.
+    let id: String
     let content: String
 }
 
@@ -31,12 +32,12 @@ class MomentService {
         return try JSONDecoder().decode(Moment.self, from: data)
     }
 
-    func postResonance(momentId: UUID) async throws {
+    func postResonance(momentId: String) async throws {
         if APIClient.useMock { return }
         var request = URLRequest(url: base.appendingPathComponent("resonance"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["momentId": momentId.uuidString])
+        request.httpBody = try JSONEncoder().encode(["momentId": momentId])
         _ = try await URLSession.shared.data(for: request)
     }
 }

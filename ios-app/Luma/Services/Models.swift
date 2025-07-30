@@ -5,7 +5,8 @@ struct Session: Codable {
 }
 
 struct Event: Codable, Identifiable {
-    let id: UUID
+    /// Unique identifier represented as a GUID string.
+    let id: String
     let content: String
     let mood: String?
     let symbol: String?
