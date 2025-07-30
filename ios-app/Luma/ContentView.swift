@@ -91,7 +91,8 @@ struct ContentView: View {
             }
             .sheet(isPresented: $creatingMoment) { CreateMomentView(text: $newEventText) { text in
                     Task {
-                        if let created = await events.createEvent(content: text) {
+                        if let token = session.token,
+                           let created = await events.createEvent(token: token, content: text) {
                             creatingMoment = false
                             newEventText = ""
                             selectedEvent = created
