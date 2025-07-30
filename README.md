@@ -34,6 +34,19 @@ The API is identical to the prototype's FastAPI backend. Highlights include:
 
 Mood definitions (animations, colors, ambient audio) should be loaded from the `public/moods` directory, matching the web prototype's configuration format.
 
+## Running with Docker Compose
+
+The repository includes a `docker-compose.yml` file that starts PostgreSQL and the
+NestJS backend. Bringing the stack up will also run the seeding script so the
+database contains the default moments and mood rooms:
+
+```bash
+docker-compose up --build
+```
+
+After the services are up, the iOS app can interact with the API at
+`http://localhost:3000`.
+
 ## Running tests
 
 The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUITests`. These can be executed from Xcode or via `xcodebuild` to validate the app once implemented.
@@ -44,8 +57,7 @@ UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. 
 
 ## Offline mock mode
 
-By default the app runs without a backend. `APIClient.useMock` is set to `true`,
-causing all API calls and presence updates to return local mock data defined in
-`MockData.swift`. Set this flag to `false` when you want to connect to a real
-server.
+`APIClient.useMock` is set to `false` so the app always communicates with the
+NestJS backend. If you want to run the app without the backend, set this flag to
+`true` to return local mock data from `MockData.swift`.
 
