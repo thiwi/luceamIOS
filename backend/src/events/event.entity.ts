@@ -3,8 +3,8 @@ import { Session } from '../sessions/session.entity';
 
 @Entity()
 export class Event {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   content: string;

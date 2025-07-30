@@ -20,6 +20,6 @@ export class EventsController {
 
   @Get(':id')
   fetch(@Param('id') id: string) {
-    return this.eventsService.find(parseInt(id, 10));
+    return this.eventsService.find(id);
   }
 }

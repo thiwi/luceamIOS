@@ -14,7 +14,7 @@ export class ResonanceService {
     @InjectRepository(Event) private events: Repository<Event>,
   ) {}
 
-  async create(token: string, eventId: number) {
+  async create(token: string, eventId: string) {
     if (!isUUID(token)) {
       throw new BadRequestException('Invalid session token');
     }

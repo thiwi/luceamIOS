@@ -8,7 +8,7 @@ export class ResonanceController {
   @Post()
   create(
     @Query('session_token') token: string,
-    @Body('momentId') momentId: number,
+    @Body('momentId') momentId: string,
   ) {
     return this.service.create(token, momentId);
   }

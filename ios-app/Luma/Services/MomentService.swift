@@ -1,7 +1,7 @@
 import Foundation
 
 struct Moment: Codable, Identifiable {
-    let id: Int
+    let id: UUID
     let content: String
 }
 

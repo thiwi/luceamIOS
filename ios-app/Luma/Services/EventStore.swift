@@ -8,7 +8,7 @@ class EventStore: ObservableObject {
     @Published var events: [Event] = []
 
     /// Identifiers of events created by the current session.
-    @Published var ownEventIds: Set<Int> = []
+    @Published var ownEventIds: Set<UUID> = []
 
     /// Fetches events from the backend into ``events``.
     func loadEvents() async {
