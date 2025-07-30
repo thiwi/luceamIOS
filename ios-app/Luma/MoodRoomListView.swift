@@ -5,6 +5,12 @@ struct MoodRoomListView: View {
     /// Allows the view to dismiss itself when done.
     @Environment(\.dismiss) private var dismiss
 
+    /// Access to the current session token.
+    @EnvironmentObject private var session: SessionStore
+
+    /// Loads rooms from the backend.
+    @StateObject private var store = MoodRoomStore()
+
     /// Timer updated so the joinability of rooms updates live.
     @State private var now = Date()
 
@@ -23,13 +29,15 @@ struct MoodRoomListView: View {
 
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        if !MockData.userMoodRooms.isEmpty {
+                        let ownRooms = store.rooms.filter { $0.sessionToken == session.token }
+                        let otherRooms = store.rooms.filter { $0.sessionToken != session.token }
+                        if !ownRooms.isEmpty {
                             Text("Your mood rooms")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
 
-                        ForEach(MockData.userMoodRooms) { room in
+                        ForEach(ownRooms) { room in
                             ZStack(alignment: .topLeading) {
                                 if room.isJoinable {
                                     NavigationLink(destination: MoodRoomView(room: room,
@@ -53,14 +61,14 @@ struct MoodRoomListView: View {
                             }
                         }
 
-                        if !MockData.userMoodRooms.isEmpty {
+                        if !ownRooms.isEmpty {
                             Divider()
                             Text("Mood rooms created by others")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
 
-                        ForEach(MockData.presetMoodRooms) { room in
+                        ForEach(otherRooms) { room in
                             if room.isJoinable {
                                 NavigationLink(destination: MoodRoomView(room: room)) {
                                     MoodRoomCardView(room: room)
@@ -97,6 +105,9 @@ struct MoodRoomListView: View {
                 editingRoom = nil
                 now = Date()
             }
+        }
+        .task {
+            await store.load(token: session.token)
         }
     }
 }

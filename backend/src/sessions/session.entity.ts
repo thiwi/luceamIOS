@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Event } from '../events/event.entity';
 import { Resonance } from '../resonance/resonance.entity';
+import { MoodRoom } from '../moodrooms/moodroom.entity';
 
 @Entity()
 export class Session {
@@ -15,4 +16,7 @@ export class Session {
 
   @OneToMany(() => Resonance, (resonance) => resonance.session)
   resonances: Resonance[];
+
+  @OneToMany(() => MoodRoom, (room) => room.session)
+  moodRooms: MoodRoom[];
 }

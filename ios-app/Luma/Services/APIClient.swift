@@ -7,7 +7,7 @@ class APIClient {
 
     /// Toggle this flag to use mock data instead of hitting the network.
     /// When `true` API calls return local ``MockData`` instead of hitting the backend.
-    static var useMock = true
+    static var useMock = false
 
     /// Base URL for the backend server.
     private let baseURL = URL(string: BASE_API_URL)!

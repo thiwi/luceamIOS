@@ -14,6 +14,9 @@ struct ContentView: View {
     /// Fetches and creates moment events.
     @StateObject private var events = EventStore()
 
+    /// Stores mood rooms loaded from the backend.
+    @StateObject private var moodRooms = MoodRoomStore()
+
     /// Usage statistics shared across the app.
     @EnvironmentObject var stats: StatsStore
 
@@ -107,9 +110,13 @@ struct ContentView: View {
                     exploringMoodRooms = true
                     stats.recordMoodRoomCreated()
                 }
+                .environmentObject(moodRooms)
+                .environmentObject(session)
             }
             .fullScreenCover(isPresented: $exploringMoodRooms) {
                 MoodRoomListView()
+                    .environmentObject(moodRooms)
+                    .environmentObject(session)
             }
             .fullScreenCover(isPresented: $showStats) {
                 StatsView()
@@ -123,6 +130,7 @@ struct ContentView: View {
             .task {
                 await session.ensureSession()
                 await events.loadEvents()
+                await moodRooms.load(token: session.token)
             }
         }
     }

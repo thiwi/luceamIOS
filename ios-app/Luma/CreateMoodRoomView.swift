@@ -4,6 +4,12 @@ import SwiftUI
 struct CreateMoodRoomView: View {
     /// Dismiss callback supplied by the environment.
     @Environment(\.dismiss) private var dismiss
+
+    /// Store used to persist rooms.
+    @EnvironmentObject private var store: MoodRoomStore
+
+    /// Session token used when saving.
+    @EnvironmentObject private var session: SessionStore
     
     /// Room being edited, if any.
     var editingRoom: MoodRoom?
@@ -248,22 +254,28 @@ struct CreateMoodRoomView: View {
                             schedule = "Once at \(timeString)"
                         }
                         if let editing = editingRoom {
-                            MockData.updateMoodRoom(id: editing.id,
-                                                    name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                                    schedule: schedule,
-                                                    background: backgrounds[backgroundIndex],
-                                                    textColor: textColor,
-                                                    startTime: time,
-                                                    durationMinutes: durationMinutes)
-                            onUpdate(editing)
+                            let updated = MoodRoom(id: editing.id,
+                                                   name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                   schedule: schedule,
+                                                   background: backgrounds[backgroundIndex],
+                                                   textColor: textColor,
+                                                   startTime: time,
+                                                   createdAt: editing.createdAt,
+                                                   durationMinutes: durationMinutes,
+                                                   sessionToken: session.token)
+                            await store.create(token: session.token ?? "", room: updated)
+                            onUpdate(updated)
                         } else {
-                            MockData.addMoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
-                                                 schedule: schedule,
-                                                 background: backgrounds[backgroundIndex],
-                                                 textColor: textColor,
-                                                 startTime: time,
-                                                 durationMinutes: durationMinutes)
-                            onCreate(name.trimmingCharacters(in: .whitespacesAndNewlines), backgrounds[backgroundIndex])
+                            let newRoom = MoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                   schedule: schedule,
+                                                   background: backgrounds[backgroundIndex],
+                                                   textColor: textColor,
+                                                   startTime: time,
+                                                   createdAt: Date(),
+                                                   durationMinutes: durationMinutes,
+                                                   sessionToken: session.token)
+                            await store.create(token: session.token ?? "", room: newRoom)
+                            onCreate(newRoom.name, newRoom.background)
                         }
                         dismiss()
                     }
@@ -283,7 +295,7 @@ struct CreateMoodRoomView: View {
                 .alert("Delete mood room?", isPresented: $confirmDelete) {
                     Button("Delete", role: .destructive) {
                         if let editing = editingRoom {
-                            MockData.deleteMoodRoom(id: editing.id)
+                            // No dedicated delete endpoint yet; just dismiss.
                             onDelete(editing)
                         }
                         dismiss()
