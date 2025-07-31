@@ -17,7 +17,7 @@ class APIClient {
     /// Creates an anonymous user session on the backend.
     func createSession() async throws -> Session {
         if APIClient.useMock {
-            return Session(token: "mock-token")
+            return Session(token: UUID().uuidString)
         }
 
         var request = URLRequest(url: baseURL.appendingPathComponent("session"))
