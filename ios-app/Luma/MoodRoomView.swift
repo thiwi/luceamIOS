@@ -180,4 +180,5 @@ struct MoodRoomView: View {
                                 createdAt: Date(),
                                 durationMinutes: 15),
                  isPreview: true)
+        .environmentObject(StatsStore())
 }

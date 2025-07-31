@@ -8,6 +8,9 @@ struct MoodRoomListView: View {
     /// Access to the current session token.
     @EnvironmentObject private var session: SessionStore
 
+    /// Favourite mood rooms store.
+    @EnvironmentObject private var favourites: FavoritesStore
+
     /// Loads rooms from the backend.
     @StateObject private var store = MoodRoomStore()
 
@@ -115,4 +118,6 @@ struct MoodRoomListView: View {
 #Preview {
     // Preview showing all mood rooms.
     MoodRoomListView()
+        .environmentObject(SessionStore())
+        .environmentObject(FavoritesStore())
 }

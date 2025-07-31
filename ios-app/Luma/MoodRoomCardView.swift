@@ -5,6 +5,9 @@ struct MoodRoomCardView: View {
     /// Room to visualise.
     let room: MoodRoom
 
+    /// Provides access to favourite state.
+    @EnvironmentObject private var favourites: FavoritesStore
+
     /// View body showing the background image and text.
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
@@ -31,11 +34,20 @@ struct MoodRoomCardView: View {
         .frame(width: cardWidth, height: cardHeight)
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(alignment: .topTrailing) {
-            if !room.isJoinable {
-                Text("Unavailable at the moment")
-                    .font(.caption2)
-                    .foregroundColor(room.textColor)
-                    .padding(6)
+            VStack(alignment: .trailing, spacing: 2) {
+                Button(action: { favourites.toggle(room) }) {
+                    Image(systemName: favourites.isFavorite(room) ? "star.fill" : "star")
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(favourites.isFavorite(room) ? (room.background == "MoodRoomNight" ? .white : .black) : .black)
+                        .padding(6)
+                }
+                if !room.isJoinable {
+                    Text("Unavailable at the moment")
+                        .font(.caption2)
+                        .foregroundColor(room.textColor)
+                        .padding(6)
+                }
             }
         }
         .allowsHitTesting(room.isJoinable)
@@ -51,4 +63,5 @@ struct MoodRoomCardView: View {
                                    startTime: Date(),
                                    createdAt: Date(),
                                    durationMinutes: 30))
+        .environmentObject(FavoritesStore())
 }
