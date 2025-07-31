@@ -1,6 +1,11 @@
 import { Controller, Get, Post, Param, Body, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 
+class CreateEventDto {
+  content: string;
+  session_token: string;
+}
+
 @Controller('moments')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
@@ -11,11 +16,8 @@ export class EventsController {
   }
 
   @Post()
-  async create(
-    @Query('session_token') token: string,
-    @Body('content') content: string,
-  ) {
-    const created = await this.eventsService.create(token, content);
+  async create(@Body() dto: CreateEventDto) {
+    const created = await this.eventsService.create({ content: dto.content, session_token: dto.session_token ?? "" });
     return created;
   }
 

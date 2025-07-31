@@ -29,6 +29,7 @@ class MomentService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(["content": text])
         let (data, _) = try await URLSession.shared.data(for: request)
+        print("📥 Raw response:", String(data: data, encoding: .utf8) ?? "nil")
         return try JSONDecoder().decode(Moment.self, from: data)
     }
 

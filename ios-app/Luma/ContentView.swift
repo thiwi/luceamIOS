@@ -91,8 +91,12 @@ struct ContentView: View {
             }
             .sheet(isPresented: $creatingMoment) { CreateMomentView(text: $newEventText) { text in
                     Task {
-                        if let token = session.token,
-                           let created = await events.createEvent(token: token, content: text) {
+                        guard let token = session.token, !token.isEmpty else {
+                            print("❌ Kein Session-Token verfügbar – Event wird nicht erstellt.")
+                            return
+                        }
+                        print("📤 Sending event with session token: \(token)")
+                        if let created = await events.createEvent(dto: CreateEventDto(content: text, session_token: token)) {
                             creatingMoment = false
                             newEventText = ""
                             selectedEvent = created
