@@ -26,6 +26,6 @@ export class ResonanceService {
     const event = await this.events.findOne({ where: { id: eventId } });
     if (!event) return null;
     const res = this.resonances.create({ session, event });
-    return this.resonances.save(res);
+    return event;
   }
 }
