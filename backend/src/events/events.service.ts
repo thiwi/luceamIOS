@@ -29,7 +29,12 @@ export class EventsService {
       await this.sessions.save(session);
     }
     const event = this.events.create({ content, session, id: crypto.randomUUID() });
-    return this.events.save(event);
+    const saved = await this.events.save(event);
+    const found = await this.events.findOne({ where: { id: saved.id } });
+    if (!found) {
+      throw new Error('Event not found after saving');
+    }
+    return found;
   }
 
   async find(id: string): Promise<Event | null> {
