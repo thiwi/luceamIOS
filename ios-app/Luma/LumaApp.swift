@@ -17,6 +17,7 @@ struct LumaApp: App {
     /// Shared statistics store available throughout the app.
     @StateObject private var stats = StatsStore()
     @StateObject private var sessionStore = SessionStore()
+    @StateObject private var favoritesStore = FavoritesStore()
 
     /// Top-level scene hosting the content view.
     var body: some Scene {
@@ -26,6 +27,7 @@ struct LumaApp: App {
             ContentView()
                 .environmentObject(stats)
                 .environmentObject(sessionStore)
+                .environmentObject(favoritesStore)
                 .task {
                     await sessionStore.ensureSession()
                 }
