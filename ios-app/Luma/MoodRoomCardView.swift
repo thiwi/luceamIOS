@@ -65,7 +65,6 @@ struct MoodRoomCardView: View {
                 }
             }
         }
-        .allowsHitTesting(room.isJoinable)
     }
 }
 
