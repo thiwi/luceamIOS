@@ -3,13 +3,19 @@ import SwiftUI
 
 @MainActor
 class FavoritesStore: ObservableObject {
-    @Published private(set) var favoriteIds: Set<UUID>
-    private let key = "favoriteMoodRooms"
+    @Published private(set) var favoriteIds: Set<UUID> = []
+    @Published var rooms: [MoodRoom] = []
 
-    init() {
-        if let stored = UserDefaults.standard.array(forKey: key) as? [String] {
-            favoriteIds = Set(stored.compactMap { UUID(uuidString: $0) })
-        } else {
+    private let service = FavoritesService()
+    private let userId = HARDCODED_USER_ID
+
+    func loadFavorites() async {
+        do {
+            rooms = try await service.fetchFavorites(userId: userId)
+            favoriteIds = Set(rooms.map { $0.id })
+        } catch {
+            print("Failed to load favorites", error)
+            rooms = []
             favoriteIds = []
         }
     }
@@ -18,17 +24,20 @@ class FavoritesStore: ObservableObject {
         favoriteIds.contains(room.id)
     }
 
-    func toggle(_ room: MoodRoom) {
-        if favoriteIds.contains(room.id) {
-            favoriteIds.remove(room.id)
-        } else {
-            favoriteIds.insert(room.id)
+    func toggle(_ room: MoodRoom) async {
+        do {
+            let newState = try await service.toggleFavorite(userId: userId, moodRoomId: room.id)
+            if newState {
+                favoriteIds.insert(room.id)
+                if !rooms.contains(where: { $0.id == room.id }) {
+                    rooms.append(room)
+                }
+            } else {
+                favoriteIds.remove(room.id)
+                rooms.removeAll { $0.id == room.id }
+            }
+        } catch {
+            print("Failed to toggle favorite", error)
         }
-        save()
-    }
-
-    private func save() {
-        let arr = favoriteIds.map { $0.uuidString }
-        UserDefaults.standard.set(arr, forKey: key)
     }
 }

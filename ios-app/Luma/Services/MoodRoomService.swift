@@ -71,6 +71,18 @@ struct NetworkMoodRoom: Codable {
         try container.encode(durationMinutes, forKey: .durationMinutes)
         try container.encodeIfPresent(sessionToken, forKey: .sessionToken)
     }
+
+    func toMoodRoom() -> MoodRoom {
+        MoodRoom(id: id,
+                 name: name,
+                 schedule: schedule,
+                 background: background,
+                 textColor: textColor.lowercased() == "white" ? .white : .black,
+                 startTime: startTime,
+                 createdAt: createdAt,
+                 durationMinutes: durationMinutes,
+                 sessionToken: sessionToken)
+    }
 }
 
 class MoodRoomService {
@@ -104,19 +116,17 @@ class MoodRoomService {
         return e
     }()
 
-    func fetchRooms() async throws -> [MoodRoom] {
-        let url = base.appendingPathComponent("moodrooms")
+    func fetchRooms(userId: String? = nil) async throws -> [MoodRoom] {
+        let path: String
+        if let id = userId {
+            path = "moodrooms/\(id)"
+        } else {
+            path = "moodrooms"
+        }
+        let url = base.appendingPathComponent(path)
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoded = try decoder.decode([NetworkMoodRoom].self, from: data)
-        return decoded.map { MoodRoom(id: $0.id,
-                                      name: $0.name,
-                                      schedule: $0.schedule,
-                                      background: $0.background,
-                                      textColor: $0.textColor.lowercased() == "white" ? .white : .black,
-                                      startTime: $0.startTime,
-                                      createdAt: $0.createdAt,
-                                      durationMinutes: $0.durationMinutes,
-                                      sessionToken: $0.sessionToken) }
+        return decoded.map { $0.toMoodRoom() }
     }
 
     func postRoom(token: String, room: MoodRoom) async throws -> MoodRoom {

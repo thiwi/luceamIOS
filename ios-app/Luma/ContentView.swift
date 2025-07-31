@@ -44,6 +44,8 @@ struct ContentView: View {
 
     /// Controls presentation of the statistics screen.
     @State private var showStats = false
+    /// Controls presentation of the scheduled rooms list.
+    @State private var showScheduled = false
 
     /// Main screen with a list of moments and toolbar actions.
     var body: some View {
@@ -99,6 +101,7 @@ struct ContentView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
                         Button("Explore Mood Rooms") { exploringMoodRooms = true }
+                        Button("Scheduled MoodRooms") { showScheduled = true }
                         Button("New Mood Room") { creatingMoodRoom = true }
                         Button("New Moment") { creatingMoment = true }
                         Button("Statistics") { showStats = true }
@@ -148,6 +151,11 @@ struct ContentView: View {
                     .environmentObject(session)
                     .environmentObject(favourites)
             }
+            .fullScreenCover(isPresented: $showScheduled) {
+                ScheduledMoodRoomListView()
+                    .environmentObject(favourites)
+                    .environmentObject(session)
+            }
             .fullScreenCover(isPresented: $showStats) {
                 StatsView()
                     .environmentObject(stats)
@@ -160,7 +168,8 @@ struct ContentView: View {
             .task {
                 await session.ensureSession()
                 await events.loadEvents()
-                await moodRooms.load(token: session.token)
+                await moodRooms.load(token: session.token, userId: HARDCODED_USER_ID)
+                await favourites.loadFavorites()
             }
         }
     }

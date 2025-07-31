@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
 import { MoodRoomsService } from './moodrooms.service';
 import { MoodRoom } from './moodroom.entity';
 
@@ -9,6 +9,11 @@ export class MoodRoomsController {
   @Get()
   list() {
     return this.service.list();
+  }
+
+  @Get(':userId')
+  listForUser(@Param('userId') userId: string) {
+    return this.service.listWithFavorites(userId);
   }
 
   @Post()

@@ -110,7 +110,8 @@ struct MoodRoomListView: View {
             }
         }
         .task {
-            await store.load(token: session.token)
+            await store.load(token: session.token, userId: HARDCODED_USER_ID)
+            await favourites.loadFavorites()
         }
     }
 }
