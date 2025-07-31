@@ -44,7 +44,7 @@ struct CreateMomentView: View {
                         .padding(EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0))
                 }
                 TextEditor(text: $text)
-                    .onChange(of: text) { _, newValue in
+                    .onChange(of: text) { newValue in
                         if newValue.count > maxLength {
                             text = String(newValue.prefix(maxLength))
                         }

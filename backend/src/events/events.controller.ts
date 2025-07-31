@@ -11,11 +11,12 @@ export class EventsController {
   }
 
   @Post()
-  create(
+  async create(
     @Query('session_token') token: string,
     @Body('content') content: string,
   ) {
-    return this.eventsService.create(token, content);
+    const created = await this.eventsService.create(token, content);
+    return created;
   }
 
   @Get(':id')
