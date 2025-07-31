@@ -14,7 +14,8 @@ struct ScheduledMoodRoomListView: View {
                     .ignoresSafeArea()
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(favourites.rooms) { room in
+                        let rooms = favourites.rooms.sorted { $0.startTime < $1.startTime }
+                        ForEach(rooms) { room in
                             if room.isJoinable {
                                 NavigationLink(destination: MoodRoomView(room: room)) {
                                     MoodRoomCardView(room: room)
