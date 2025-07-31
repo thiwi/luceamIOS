@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,7 +28,7 @@ export class EventsService {
       session = this.sessions.create({ token: sessionToken });
       await this.sessions.save(session);
     }
-    const event = this.events.create({ content, session });
+    const event = this.events.create({ content, session, id: crypto.randomUUID() });
     return this.events.save(event);
   }
 
