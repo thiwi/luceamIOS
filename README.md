@@ -55,9 +55,4 @@ The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUIT
 
 UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. Some simulator environments lack the system files needed for these metrics and emit errors like `load_eligibility_plist` during test runs. Metrics collection is therefore disabled by default. Set the environment variable `ENABLE_LAUNCH_METRICS=1` when running tests if you want to record launch metrics.
 
-## Offline mock mode
-
-`APIClient.useMock` is set to `false` so the app always communicates with the
-NestJS backend. If you want to run the app without the backend, set this flag to
-`true` to return local mock data from `MockData.swift`.
 

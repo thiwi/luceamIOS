@@ -117,5 +117,8 @@ struct EventDetailView: View {
 
 #Preview {
     // Preview used in SwiftUI canvas.
-    EventDetailView(event: MockData.events.first!)
+    EventDetailView(event: Event(id: UUID().uuidString,
+                                 content: "Sample moment",
+                                 mood: nil,
+                                 symbol: nil))
 }
