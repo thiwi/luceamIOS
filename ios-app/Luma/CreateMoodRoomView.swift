@@ -254,6 +254,10 @@ struct CreateMoodRoomView: View {
                             } else {
                                 schedule = "Once at \(timeString)"
                             }
+                            guard let token = session.token, !token.isEmpty else {
+                                print("❌ Kein Session-Token verfügbar – Mood Room wird nicht erstellt.")
+                                return
+                            }
                             if let editing = editingRoom {
                                 let updated = MoodRoom(id: editing.id,
                                                        name: name.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -263,8 +267,8 @@ struct CreateMoodRoomView: View {
                                                        startTime: time,
                                                        createdAt: editing.createdAt,
                                                        durationMinutes: durationMinutes,
-                                                       sessionToken: session.token)
-                                await store.create(token: session.token ?? "", room: updated)
+                                                       sessionToken: token)
+                                await store.create(token: token, room: updated)
                                 onUpdate(updated)
                             } else {
                                 let newRoom = MoodRoom(name: name.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -274,8 +278,8 @@ struct CreateMoodRoomView: View {
                                                        startTime: time,
                                                        createdAt: Date(),
                                                        durationMinutes: durationMinutes,
-                                                       sessionToken: session.token)
-                                await store.create(token: session.token ?? "", room: newRoom)
+                                                       sessionToken: token)
+                                await store.create(token: token, room: newRoom)
                                 onCreate(newRoom.name, newRoom.background)
                             }
                             dismiss()

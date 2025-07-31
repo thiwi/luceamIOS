@@ -15,6 +15,9 @@ export class ResonanceService {
   ) {}
 
   async create(token: string, eventId: string) {
+    if (!token) {
+      throw new BadRequestException('No session token available');
+    }
     if (!isUUID(token)) {
       throw new BadRequestException('Invalid session token');
     }

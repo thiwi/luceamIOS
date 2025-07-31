@@ -17,6 +17,9 @@ export class MoodRoomsService {
   }
 
   async create(token: string, data: Partial<MoodRoom>): Promise<MoodRoom> {
+    if (!token) {
+      throw new BadRequestException('No session token available');
+    }
     if (!isUUID(token)) {
       throw new BadRequestException('Invalid session token');
     }

@@ -22,10 +22,6 @@ class SessionStore: ObservableObject {
             UserDefaults.standard.set(sess.token, forKey: key)
         } catch {
             print("Session creation failed", error)
-            // Only fall back to a mock token when the app is in mock mode
-            if APIClient.useMock {
-                token = "mock-token"
-            }
         }
     }
 }
