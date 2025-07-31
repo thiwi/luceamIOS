@@ -8,6 +8,9 @@ struct MoodRoomCardView: View {
     /// Provides access to favourite state.
     @EnvironmentObject private var favourites: FavoritesStore
 
+    /// Controls display of the remove confirmation alert.
+    @State private var confirmRemove = false
+
     /// View body showing the background image and text.
     var body: some View {
         let cardWidth = UIScreen.main.bounds.width * 0.95
@@ -36,13 +39,23 @@ struct MoodRoomCardView: View {
         .overlay(alignment: .topTrailing) {
             VStack(alignment: .trailing, spacing: 2) {
                 Button(action: {
-                    Task { await favourites.toggle(room) }
+                    if favourites.isFavorite(room) {
+                        confirmRemove = true
+                    } else {
+                        Task { await favourites.toggle(room) }
+                    }
                 }) {
                     Image(systemName: favourites.isFavorite(room) ? "star.fill" : "star")
                         .resizable()
                         .frame(width: 16, height: 16)
                         .foregroundColor(favourites.isFavorite(room) ? (room.background == "MoodRoomNight" ? .white : .black) : .black)
                         .padding(6)
+                }
+                .alert("Remove this MoodRoom from your favorites?", isPresented: $confirmRemove) {
+                    Button("Yes") {
+                        Task { await favourites.toggle(room) }
+                    }
+                    Button("Cancel", role: .cancel) {}
                 }
                 if !room.isJoinable {
                     Text("Unavailable at the moment")

@@ -57,27 +57,6 @@ struct ContentView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    let favRooms = moodRooms.rooms.filter { favourites.isFavorite($0) }
-                    if !favRooms.isEmpty {
-                        LazyVStack(spacing: 16) {
-                            Text("Scheduled MoodRooms")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            ForEach(favRooms) { room in
-                                if room.isJoinable {
-                                    NavigationLink(destination: MoodRoomView(room: room)) {
-                                        MoodRoomCardView(room: room)
-                                            .id(room)
-                                    }
-                                } else {
-                                    MoodRoomCardView(room: room)
-                                        .id(room)
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical)
-                    }
                     if events.events.isEmpty {
                         Text("No entries")
                             .foregroundColor(.secondary)
