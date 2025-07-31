@@ -17,6 +17,9 @@ struct ContentView: View {
     /// Stores mood rooms loaded from the backend.
     @StateObject private var moodRooms = MoodRoomStore()
 
+    /// Persists favourite mood rooms.
+    @StateObject private var favourites = FavoritesStore()
+
     /// Usage statistics shared across the app.
     @EnvironmentObject var stats: StatsStore
 
@@ -52,6 +55,27 @@ struct ContentView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
+                    let favRooms = moodRooms.rooms.filter { favourites.isFavorite($0) }
+                    if !favRooms.isEmpty {
+                        LazyVStack(spacing: 16) {
+                            Text("Scheduled MoodRooms")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                            ForEach(favRooms) { room in
+                                if room.isJoinable {
+                                    NavigationLink(destination: MoodRoomView(room: room)) {
+                                        MoodRoomCardView(room: room)
+                                            .id(room)
+                                    }
+                                } else {
+                                    MoodRoomCardView(room: room)
+                                        .id(room)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical)
+                    }
                     if events.events.isEmpty {
                         Text("No entries")
                             .foregroundColor(.secondary)
@@ -122,6 +146,7 @@ struct ContentView: View {
                 MoodRoomListView()
                     .environmentObject(moodRooms)
                     .environmentObject(session)
+                    .environmentObject(favourites)
             }
             .fullScreenCover(isPresented: $showStats) {
                 StatsView()
@@ -179,4 +204,7 @@ struct EnergyRoomView: View {
 #Preview {
     // Basic preview for Xcode canvas.
     ContentView()
+        .environmentObject(StatsStore())
+        .environmentObject(SessionStore())
+        .environmentObject(FavoritesStore())
 }
