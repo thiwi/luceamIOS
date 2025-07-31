@@ -28,12 +28,12 @@ class APIClient {
 
     /// Posts a new event using the provided session token.
     func createEvent(token: String, event: EventCreate) async throws -> Event {
-        var components = URLComponents(url: baseURL.appendingPathComponent("moments"), resolvingAgainstBaseURL: false)!
-        components.queryItems = [URLQueryItem(name: "session_token", value: token)]
-        var request = URLRequest(url: components.url!)
+        let url = baseURL.appendingPathComponent("moments")
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(event)
+        let payload = ["content": event.content, "mood": event.mood, "symbol": event.symbol, "session_token": token]
+        request.httpBody = try JSONEncoder().encode(payload)
         let (data, _) = try await URLSession.shared.data(for: request)
         return try JSONDecoder().decode(Event.self, from: data)
     }
