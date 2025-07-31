@@ -16,12 +16,11 @@ class MomentService {
     }
 
     func postMoment(token: String, text: String) async throws -> Moment {
-        var components = URLComponents(url: base.appendingPathComponent("moments"), resolvingAgainstBaseURL: false)!
-        components.queryItems = [URLQueryItem(name: "session_token", value: token)]
-        var request = URLRequest(url: components.url!)
+        let url = base.appendingPathComponent("moments")
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["content": text])
+        request.httpBody = try JSONEncoder().encode(["content": text, "session_token": token])
         let (data, _) = try await URLSession.shared.data(for: request)
         print("📥 Raw response:", String(data: data, encoding: .utf8) ?? "nil")
         return try JSONDecoder().decode(Moment.self, from: data)
