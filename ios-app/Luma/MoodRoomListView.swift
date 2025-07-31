@@ -113,6 +113,6 @@ struct MoodRoomListView: View {
 }
 
 #Preview {
-    // Preview showing all mock mood rooms.
+    // Preview showing all mood rooms.
     MoodRoomListView()
 }

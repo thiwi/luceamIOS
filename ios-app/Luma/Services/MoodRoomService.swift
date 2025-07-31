@@ -89,9 +89,6 @@ class MoodRoomService {
     }()
 
     func fetchRooms() async throws -> [MoodRoom] {
-        if APIClient.useMock {
-            return MockData.moodRooms
-        }
         let url = base.appendingPathComponent("moodrooms")
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoded = try decoder.decode([NetworkMoodRoom].self, from: data)
@@ -107,15 +104,6 @@ class MoodRoomService {
     }
 
     func postRoom(token: String, room: MoodRoom) async throws -> MoodRoom {
-        if APIClient.useMock {
-            MockData.addMoodRoom(name: room.name,
-                                 schedule: room.schedule,
-                                 background: room.background,
-                                 textColor: room.textColor,
-                                 startTime: room.startTime,
-                                 durationMinutes: room.durationMinutes)
-            return MockData.userMoodRooms.first!
-        }
         var comps = URLComponents(url: base.appendingPathComponent("moodrooms"), resolvingAgainstBaseURL: false)!
         comps.queryItems = [URLQueryItem(name: "session_token", value: token)]
         var request = URLRequest(url: comps.url!)

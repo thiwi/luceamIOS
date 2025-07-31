@@ -10,7 +10,7 @@ struct CreateEventDto {
 @MainActor
 class EventStore: ObservableObject {
     private let momentService = MomentService()
-    /// All events loaded from the backend or mock store.
+    /// All events loaded from the backend.
     @Published var events: [Event] = []
 
     /// Identifiers of events created by the current session.
