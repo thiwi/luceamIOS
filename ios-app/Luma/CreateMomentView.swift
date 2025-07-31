@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Sheet for composing a new moment event.
 struct CreateMomentView: View {
+    @EnvironmentObject var sessionStore: SessionStore
+
     /// Two-way binding for the user's typed text.
     @Binding var text: String
 
@@ -70,7 +72,13 @@ struct CreateMomentView: View {
                 Button("Discard") { onDiscard() }
                     .padding()
                 Spacer()
-                Button("Create") { onCreate(text.trimmingCharacters(in: .whitespacesAndNewlines)) }
+                Button("Create") {
+                    if sessionStore.token != nil {
+                        onCreate(text.trimmingCharacters(in: .whitespacesAndNewlines))
+                    } else {
+                        print("❌ No session token available")
+                    }
+                }
                     .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .padding()
             }
@@ -81,4 +89,5 @@ struct CreateMomentView: View {
 #Preview {
     // Preview with an empty text binding.
     CreateMomentView(text: .constant("")) { _ in } onDiscard: {}
+        .environmentObject(SessionStore())
 }

@@ -52,8 +52,7 @@ struct NetworkMoodRoom: Codable {
         durationMinutes = try container.decode(Int.self, forKey: .durationMinutes)
         if let token = try container.decodeIfPresent(String.self, forKey: .sessionToken) {
             sessionToken = token
-        } else if container.contains(.session) {
-            let nested = try container.nestedContainer(keyedBy: SessionKeys.self, forKey: .session)
+        } else if let nested = try? container.nestedContainer(keyedBy: SessionKeys.self, forKey: .session) {
             sessionToken = try nested.decodeIfPresent(String.self, forKey: .token)
         } else {
             sessionToken = nil
@@ -78,7 +77,24 @@ class MoodRoomService {
     private let base = URL(string: BASE_API_URL)!
     private let decoder: JSONDecoder = {
         let d = JSONDecoder()
-        d.dateDecodingStrategy = .iso8601
+        let formatterWithMS = ISO8601DateFormatter()
+        formatterWithMS.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        let formatterWithoutMS = ISO8601DateFormatter()
+        formatterWithoutMS.formatOptions = [.withInternetDateTime]
+
+        d.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateStr = try container.decode(String.self)
+
+            if let date = formatterWithMS.date(from: dateStr) {
+                return date
+            } else if let date = formatterWithoutMS.date(from: dateStr) {
+                return date
+            } else {
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid ISO8601 date: \(dateStr)")
+            }
+        }
         return d
     }()
 

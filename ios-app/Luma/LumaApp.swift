@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 /// Entry point for the Luma application.
 ///
@@ -15,6 +16,7 @@ import SwiftUI
 struct LumaApp: App {
     /// Shared statistics store available throughout the app.
     @StateObject private var stats = StatsStore()
+    @StateObject private var sessionStore = SessionStore()
 
     /// Top-level scene hosting the content view.
     var body: some Scene {
@@ -23,6 +25,10 @@ struct LumaApp: App {
             // child views can record analytics.
             ContentView()
                 .environmentObject(stats)
+                .environmentObject(sessionStore)
+                .task {
+                    await sessionStore.ensureSession()
+                }
         }
     }
 }
