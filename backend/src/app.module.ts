@@ -9,6 +9,10 @@ import { Event } from './events/event.entity';
 import { Resonance } from './resonance/resonance.entity';
 import { MoodRoomsModule } from './moodrooms/moodrooms.module';
 import { MoodRoom } from './moodrooms/moodroom.entity';
+import { FavoritesModule } from './favorites/favorites.module';
+import { FavoriteMoodRoom } from './favorites/favorite-moodroom.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
@@ -21,12 +25,14 @@ import { MoodRoom } from './moodrooms/moodroom.entity';
       password: process.env.DB_PASS || 'luma',
       database: process.env.DB_NAME || 'luma',
       synchronize: true,
-      entities: [Session, Event, Resonance, MoodRoom],
+      entities: [Session, Event, Resonance, MoodRoom, FavoriteMoodRoom, User],
     }),
     SessionsModule,
     EventsModule,
     ResonanceModule,
     MoodRoomsModule,
+    FavoritesModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

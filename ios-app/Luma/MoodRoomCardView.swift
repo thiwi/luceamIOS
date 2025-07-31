@@ -35,7 +35,9 @@ struct MoodRoomCardView: View {
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
         .overlay(alignment: .topTrailing) {
             VStack(alignment: .trailing, spacing: 2) {
-                Button(action: { favourites.toggle(room) }) {
+                Button(action: {
+                    Task { await favourites.toggle(room) }
+                }) {
                     Image(systemName: favourites.isFavorite(room) ? "star.fill" : "star")
                         .resizable()
                         .frame(width: 16, height: 16)

@@ -6,9 +6,9 @@ class MoodRoomStore: ObservableObject {
     private let service = MoodRoomService()
     @Published var rooms: [MoodRoom] = []
 
-    func load(token: String?) async {
+    func load(token: String?, userId: String) async {
         do {
-            rooms = try await service.fetchRooms()
+            rooms = try await service.fetchRooms(userId: userId)
         } catch {
             print("Failed to load mood rooms", error)
             rooms = []
@@ -18,7 +18,7 @@ class MoodRoomStore: ObservableObject {
     func create(token: String, room: MoodRoom) async {
         do {
             _ = try await service.postRoom(token: token, room: room)
-            await load(token: token)
+            await load(token: token, userId: HARDCODED_USER_ID)
         } catch {
             print("Failed to create mood room", error)
         }
