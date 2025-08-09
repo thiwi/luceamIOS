@@ -60,12 +60,23 @@ struct EventDetailView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                     }
-                    Text(event.content)
-                        .font(.title)
-                        .foregroundColor(.black)
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    VStack {
+                        Spacer()
+                        Text(event.content)
+                            .font(.title)
+                            .foregroundColor(.black)
+                            .padding()
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                        Spacer()
+                        if isOwnEvent {
+                            Text(countText)
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
@@ -73,7 +84,7 @@ struct EventDetailView: View {
                 .clipped()
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
-                Text(countText)
+                Text("Swipe down to leave this moment")
                     .font(.footnote)
                     .foregroundColor(.gray)
                     .padding(.bottom, 8)
@@ -82,11 +93,15 @@ struct EventDetailView: View {
         }
         .onAppear {
             stats.startMoment()
-            startPresence()
+            if isOwnEvent {
+                startPresence()
+            }
         }
         .onDisappear {
             stats.endMoment()
-            stopPresence()
+            if isOwnEvent {
+                stopPresence()
+            }
         }
     }
 
@@ -122,7 +137,7 @@ struct EventDetailView: View {
         guard let c = count else { return "—" }
         return c == 1 ?
             "There is 1 person with you in this moment." :
-            "There are \(c) persons with you in this moment."
+            "There are \(c) people with you in this moment."
     }
 }
 
