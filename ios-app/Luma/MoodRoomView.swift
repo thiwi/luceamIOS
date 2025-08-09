@@ -17,8 +17,6 @@ struct MoodRoomView: View {
     /// Statistics store recording time spent in rooms.
     @EnvironmentObject var stats: StatsStore
 
-    /// Mock participant count when `isOwnRoom` is true.
-    @State private var people = 0
 
     /// Work item scheduled to auto-close the room.
     @State private var closeWork: DispatchWorkItem?
@@ -70,14 +68,6 @@ struct MoodRoomView: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                    if isOwnRoom {
-                        Text(people == 1 ?
-                             "There is 1 person with you in this mood room." :
-                             "There are \(people) persons with you in this mood room.")
-                            .font(.footnote)
-                            .foregroundColor(.black)
-                            .padding(8)
-                    }
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.95,
                        height: UIScreen.main.bounds.height * 0.7)
@@ -106,10 +96,6 @@ struct MoodRoomView: View {
         }
         .onAppear {
             scheduleClose()
-            if isOwnRoom {
-                people = 0
-                incrementPeople()
-            }
             stats.startMoodRoom(background: room.background, schedule: room.schedule)
         }
         .onDisappear {
@@ -119,19 +105,6 @@ struct MoodRoomView: View {
         .interactiveDismissDisabled(!isPreview)
         .onReceive(timer) { _ in
             now = Date()
-        }
-    }
-
-    /// Adds random participants over time when previewing your own room.
-    private func incrementPeople() {
-        guard people < 15 else { return }
-        let delay = Double.random(in: 0...5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            let addition = Int.random(in: 1...3)
-            people = min(15, people + addition)
-            if people < 15 {
-                incrementPeople()
-            }
         }
     }
 

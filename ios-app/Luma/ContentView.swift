@@ -157,16 +157,16 @@ struct ContentView: View {
 /// Simple view used to preview the presence WebSocket service.
 struct EnergyRoomView: View {
     let event: Event
-    @StateObject private var presence = PresenceService()
+    @State private var count: Int? = nil
     @State private var content: String = ""
+    private let presence = PresenceClient()
+    @State private var task: Task<Void, Never>? = nil
 
     var body: some View {
         VStack {
             Text(content)
                 .padding()
-            Text(presence.count == 1 ?
-                 "There is 1 person with you in this moment." :
-                 "There are \(presence.count) persons with you in this moment.")
+            Text(countText)
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .padding()
@@ -175,7 +175,12 @@ struct EnergyRoomView: View {
         // and fetch the full event text for display.
         .onAppear {
             Task {
-                presence.connect(eventId: event.id)
+                task = Task {
+                    count = await presence.fetchPresence(momentId: event.id)
+                    for await c in presence.subscribePresence(momentId: event.id) {
+                        count = c
+                    }
+                }
                 do {
                     let fetched = try await APIClient.shared.fetchEvent(id: event.id)
                     content = fetched.content
@@ -184,8 +189,15 @@ struct EnergyRoomView: View {
         }
         // Stop listening when the view is dismissed.
         .onDisappear {
-            presence.disconnect()
+            task?.cancel()
         }
+    }
+
+    private var countText: String {
+        guard let c = count else { return "—" }
+        return c == 1 ?
+            "There is 1 person with you in this moment." :
+            "There are \(c) persons with you in this moment."
     }
 }
 

@@ -6,12 +6,14 @@ import { Event } from './event.entity';
 import { Session } from '../sessions/session.entity';
 import { validate as isUUID } from 'uuid';
 import { CreateEventDto } from './dto/create-event.dto';
+import { PresenceSimulationService } from '../presence/presence.simulation.service';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event) private events: Repository<Event>,
     @InjectRepository(Session) private sessions: Repository<Session>,
+    private readonly presenceSim: PresenceSimulationService,
   ) {}
 
   async list(): Promise<Event[]> {
@@ -41,6 +43,9 @@ export class EventsService {
     const saved = await this.events.save(event);
     console.log("✅ Created event with id: " + saved.id + ", content: " + saved.content);
     console.log("Raw response data:", JSON.stringify(saved));
+    if (process.env.SIM_PRESENCE_ENABLED === 'true') {
+      await this.presenceSim.startForMoment(saved.id);
+    }
     const found = await this.events.findOne({ where: { id: saved.id } });
     if (!found) {
       throw new Error('Event not found after saving');

@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RedisModule } from '../infra/redis/redis.module';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 import { Event } from './event.entity';
 import { Session } from '../sessions/session.entity';
-import { PresenceService } from '../presence/presence.service';
+import { PresenceModule } from '../presence/presence.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Session]), RedisModule],
+  imports: [TypeOrmModule.forFeature([Event, Session]), PresenceModule],
   controllers: [EventsController],
-  providers: [EventsService, PresenceService],
+  providers: [EventsService],
   exports: [EventsService],
 })
 export class EventsModule {}
