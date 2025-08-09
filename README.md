@@ -36,9 +36,9 @@ Mood definitions (animations, colors, ambient audio) should be loaded from the `
 
 ## Running with Docker Compose
 
-The repository includes a `docker-compose.yml` file that starts PostgreSQL and the
-NestJS backend. Bringing the stack up will also run the seeding script so the
-database contains the default moments and mood rooms:
+The repository includes a `docker-compose.yml` file that starts PostgreSQL,
+Redis, and the NestJS backend. Bringing the stack up will also run the seeding
+script so the database contains the default moments and mood rooms:
 
 ```bash
 docker-compose up --build
