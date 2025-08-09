@@ -137,7 +137,7 @@ struct EventDetailView: View {
         guard let c = count else { return "—" }
         return c == 1 ?
             "There is 1 person with you in this moment." :
-            "There are \(c) people with you in this moment."
+            "There are \(c) persons with you in this moment."
     }
 }
 
