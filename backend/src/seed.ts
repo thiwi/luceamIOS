@@ -59,6 +59,7 @@ async function bootstrap() {
     } else {
       console.log('[seed] Mood rooms already seeded. Skipping...');
     }
+    console.log('[seed] Seeding completed successfully.');
   } catch (err) {
     console.error('[seed] Error while seeding data:', err);
     process.exit(1);

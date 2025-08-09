@@ -31,17 +31,17 @@ export class EventsController {
   }
 
   @Post(':id/join')
-  join(@Param('id') id: string, @Body('userId') userId: string) {
+  join(@Param('id') id: string, @Body('userId') userId: string): Promise<{ count: number }> {
     return this.presenceService.join(id, userId);
   }
 
   @Post(':id/leave')
-  leave(@Param('id') id: string, @Body('userId') userId: string) {
+  leave(@Param('id') id: string, @Body('userId') userId: string): Promise<{ count: number }> {
     return this.presenceService.leave(id, userId);
   }
 
   @Get(':id/presence')
-  presence(@Param('id') id: string) {
+  presence(@Param('id') id: string): Promise<{ count: number }> {
     return this.presenceService.count(id);
   }
 }
