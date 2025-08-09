@@ -55,4 +55,26 @@ The project ships with placeholder unit and UI tests in `LumaTests` and `LumaUIT
 
 UI tests normally measure launch performance with `XCTApplicationLaunchMetric`. Some simulator environments lack the system files needed for these metrics and emit errors like `load_eligibility_plist` during test runs. Metrics collection is therefore disabled by default. Set the environment variable `ENABLE_LAUNCH_METRICS=1` when running tests if you want to record launch metrics.
 
+### Presence Simulation (Backend)
+
+The backend can simulate participant counts for moments by writing synthetic
+members into Redis. Enable the simulation and tune its behavior via the
+following environment variables:
+
+```
+SIM_PRESENCE_ENABLED=true
+SIM_PRESENCE_MIN=3
+SIM_PRESENCE_MAX=19
+SIM_PRESENCE_STEP_MS=4000
+SIM_PRESENCE_RISE_RATIO=0.7
+SIM_PRESENCE_DECAY_AFTER_MS=180000
+SIM_PRESENCE_TTL_SECONDS=75
+SIM_PRESENCE_MAX_DURATION_MS=600000
+```
+
+With the backend running, create a new moment through `POST /moments` and then
+query `GET /moments/:id/presence`. The count will rise and decay based on the
+configuration above and is also available via the WebSocket endpoint
+`/ws/presence/:id`.
+
 

@@ -11,8 +11,11 @@ struct EventDetailView: View {
     /// Used to close the sheet.
     @Environment(\.dismiss) private var dismiss
 
-    /// Simulated participant count for the preview.
-    @State private var people = 0
+    /// Live participant count fetched from the backend.
+    @State private var count: Int? = nil
+    private let presence = PresenceClient()
+    @State private var presenceTask: Task<Void, Never>? = nil
+    @State private var pollTimer: Timer?
 
     /// Statistics store to track time spent.
     @EnvironmentObject var stats: StatsStore
@@ -70,48 +73,56 @@ struct EventDetailView: View {
                 .clipped()
                 .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
                 .padding()
-                if isOwnEvent {
-                    Text(people == 1 ?
-                         "There is 1 person with you in this moment." :
-                         "There are \(people) persons with you in this moment.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 8)
-                } else {
-                    Text("Swipe down to leave this moment.")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 20)
-                }
+                Text(countText)
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 8)
                 Spacer()
             }
         }
-        // Start counting time and simulate participants when
-        // the view appears.
         .onAppear {
             stats.startMoment()
-            guard isOwnEvent else { return }
-            people = 0
-            incrementPeople()
+            startPresence()
         }
-        // Persist time spent once the view is dismissed.
         .onDisappear {
             stats.endMoment()
+            stopPresence()
         }
     }
 
-    /// Adds random participants over time to simulate activity in
-    /// the preview and statistics demo.
-    private func incrementPeople() {
-        guard people < 15 else { return }
-        let delay = Double.random(in: 0...5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            let addition = Int.random(in: 1...3)
-            people = min(15, people + addition)
-            if people < 15 {
-                incrementPeople()
+    /// Starts fetching and subscribing to presence counts.
+    private func startPresence() {
+        presenceTask = Task {
+            if let c = await presence.fetchPresence(momentId: event.id) {
+                await MainActor.run { count = c }
+            }
+            for await c in presence.subscribePresence(momentId: event.id) {
+                await MainActor.run { count = c }
             }
         }
+        pollTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { _ in
+            Task {
+                if let c = await presence.fetchPresence(momentId: event.id) {
+                    await MainActor.run { count = c }
+                }
+            }
+        }
+    }
+
+    /// Cancels presence subscriptions and timers.
+    private func stopPresence() {
+        presenceTask?.cancel()
+        presenceTask = nil
+        pollTimer?.invalidate()
+        pollTimer = nil
+    }
+
+    /// Human readable count text.
+    private var countText: String {
+        guard let c = count else { return "—" }
+        return c == 1 ?
+            "There is 1 person with you in this moment." :
+            "There are \(c) persons with you in this moment."
     }
 }
 
