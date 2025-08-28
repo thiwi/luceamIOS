@@ -12,37 +12,37 @@
 			containerPortal = 9174F68F2E30BD8500E94A72 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9174F6962E30BD8500E94A72;
-			remoteInfo = Luma;
+			remoteInfo = Luceam;
 		};
 		9174F6AF2E30BD8600E94A72 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9174F68F2E30BD8500E94A72 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9174F6962E30BD8500E94A72;
-			remoteInfo = Luma;
+			remoteInfo = Luceam;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9174F6972E30BD8500E94A72 /* Luma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Luma.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9174F6A42E30BD8600E94A72 /* LumaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LumaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9174F6AE2E30BD8600E94A72 /* LumaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LumaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9174F6972E30BD8500E94A72 /* Luceam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Luceam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9174F6A42E30BD8600E94A72 /* LuceamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LuceamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9174F6AE2E30BD8600E94A72 /* LuceamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LuceamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9174F6992E30BD8500E94A72 /* Luma */ = {
+		9174F6992E30BD8500E94A72 /* Luceam */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Luma;
+			path = Luceam;
 			sourceTree = "<group>";
 		};
-		9174F6A72E30BD8600E94A72 /* LumaTests */ = {
+		9174F6A72E30BD8600E94A72 /* LuceamTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LumaTests;
+			path = LuceamTests;
 			sourceTree = "<group>";
 		};
-		9174F6B12E30BD8600E94A72 /* LumaUITests */ = {
+		9174F6B12E30BD8600E94A72 /* LuceamUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LumaUITests;
+			path = LuceamUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		9174F68E2E30BD8500E94A72 = {
 			isa = PBXGroup;
 			children = (
-				9174F6992E30BD8500E94A72 /* Luma */,
-				9174F6A72E30BD8600E94A72 /* LumaTests */,
-				9174F6B12E30BD8600E94A72 /* LumaUITests */,
+				9174F6992E30BD8500E94A72 /* Luceam */,
+				9174F6A72E30BD8600E94A72 /* LuceamTests */,
+				9174F6B12E30BD8600E94A72 /* LuceamUITests */,
 				9174F6982E30BD8500E94A72 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		9174F6982E30BD8500E94A72 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9174F6972E30BD8500E94A72 /* Luma.app */,
-				9174F6A42E30BD8600E94A72 /* LumaTests.xctest */,
-				9174F6AE2E30BD8600E94A72 /* LumaUITests.xctest */,
+				9174F6972E30BD8500E94A72 /* Luceam.app */,
+				9174F6A42E30BD8600E94A72 /* LuceamTests.xctest */,
+				9174F6AE2E30BD8600E94A72 /* LuceamUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9174F6962E30BD8500E94A72 /* Luma */ = {
+		9174F6962E30BD8500E94A72 /* Luceam */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9174F6B82E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "Luma" */;
+			buildConfigurationList = 9174F6B82E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "Luceam" */;
 			buildPhases = (
 				9174F6932E30BD8500E94A72 /* Sources */,
 				9174F6942E30BD8500E94A72 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				9174F6992E30BD8500E94A72 /* Luma */,
+				9174F6992E30BD8500E94A72 /* Luceam */,
 			);
-			name = Luma;
+			name = Luceam;
 			packageProductDependencies = (
 			);
-			productName = Luma;
-			productReference = 9174F6972E30BD8500E94A72 /* Luma.app */;
+			productName = Luceam;
+			productReference = 9174F6972E30BD8500E94A72 /* Luceam.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9174F6A32E30BD8600E94A72 /* LumaTests */ = {
+		9174F6A32E30BD8600E94A72 /* LuceamTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9174F6BB2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LumaTests" */;
+			buildConfigurationList = 9174F6BB2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LuceamTests" */;
 			buildPhases = (
 				9174F6A02E30BD8600E94A72 /* Sources */,
 				9174F6A12E30BD8600E94A72 /* Frameworks */,
@@ -131,18 +131,18 @@
 				9174F6A62E30BD8600E94A72 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				9174F6A72E30BD8600E94A72 /* LumaTests */,
+				9174F6A72E30BD8600E94A72 /* LuceamTests */,
 			);
-			name = LumaTests;
+			name = LuceamTests;
 			packageProductDependencies = (
 			);
-			productName = LumaTests;
-			productReference = 9174F6A42E30BD8600E94A72 /* LumaTests.xctest */;
+			productName = LuceamTests;
+			productReference = 9174F6A42E30BD8600E94A72 /* LuceamTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		9174F6AD2E30BD8600E94A72 /* LumaUITests */ = {
+		9174F6AD2E30BD8600E94A72 /* LuceamUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9174F6BE2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LumaUITests" */;
+			buildConfigurationList = 9174F6BE2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LuceamUITests" */;
 			buildPhases = (
 				9174F6AA2E30BD8600E94A72 /* Sources */,
 				9174F6AB2E30BD8600E94A72 /* Frameworks */,
@@ -154,13 +154,13 @@
 				9174F6B02E30BD8600E94A72 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				9174F6B12E30BD8600E94A72 /* LumaUITests */,
+				9174F6B12E30BD8600E94A72 /* LuceamUITests */,
 			);
-			name = LumaUITests;
+			name = LuceamUITests;
 			packageProductDependencies = (
 			);
-			productName = LumaUITests;
-			productReference = 9174F6AE2E30BD8600E94A72 /* LumaUITests.xctest */;
+			productName = LuceamUITests;
+			productReference = 9174F6AE2E30BD8600E94A72 /* LuceamUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9174F6922E30BD8500E94A72 /* Build configuration list for PBXProject "Luma" */;
+			buildConfigurationList = 9174F6922E30BD8500E94A72 /* Build configuration list for PBXProject "Luceam" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9174F6962E30BD8500E94A72 /* Luma */,
-				9174F6A32E30BD8600E94A72 /* LumaTests */,
-				9174F6AD2E30BD8600E94A72 /* LumaUITests */,
+				9174F6962E30BD8500E94A72 /* Luceam */,
+				9174F6A32E30BD8600E94A72 /* LuceamTests */,
+				9174F6AD2E30BD8600E94A72 /* LuceamUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		9174F6A62E30BD8600E94A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9174F6962E30BD8500E94A72 /* Luma */;
+			target = 9174F6962E30BD8500E94A72 /* Luceam */;
 			targetProxy = 9174F6A52E30BD8600E94A72 /* PBXContainerItemProxy */;
 		};
 		9174F6B02E30BD8600E94A72 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9174F6962E30BD8500E94A72 /* Luma */;
+			target = 9174F6962E30BD8500E94A72 /* Luceam */;
 			targetProxy = 9174F6AF2E30BD8600E94A72 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -408,7 +408,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.Luma;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.Luceam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -436,7 +436,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.Luma;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.Luceam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -453,12 +453,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.LumaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.LuceamTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Luma.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Luma";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Luceam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Luceam";
 			};
 			name = Debug;
 		};
@@ -471,12 +471,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.LumaTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.LuceamTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Luma.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Luma";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Luceam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Luceam";
 			};
 			name = Release;
 		};
@@ -487,12 +487,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.LumaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.LuceamUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Luma;
+				TEST_TARGET_NAME = Luceam;
 			};
 			name = Debug;
 		};
@@ -503,19 +503,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luma.LumaUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thiwi.Luceam.LuceamUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Luma;
+				TEST_TARGET_NAME = Luceam;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9174F6922E30BD8500E94A72 /* Build configuration list for PBXProject "Luma" */ = {
+		9174F6922E30BD8500E94A72 /* Build configuration list for PBXProject "Luceam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9174F6B62E30BD8600E94A72 /* Debug */,
@@ -524,7 +524,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9174F6B82E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "Luma" */ = {
+		9174F6B82E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "Luceam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9174F6B92E30BD8600E94A72 /* Debug */,
@@ -533,7 +533,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9174F6BB2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LumaTests" */ = {
+		9174F6BB2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LuceamTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9174F6BC2E30BD8600E94A72 /* Debug */,
@@ -542,7 +542,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9174F6BE2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LumaUITests" */ = {
+		9174F6BE2E30BD8600E94A72 /* Build configuration list for PBXNativeTarget "LuceamUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9174F6BF2E30BD8600E94A72 /* Debug */,
