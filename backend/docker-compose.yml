@@ -70,9 +70,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # Falls dein Seeder ein eigenes Kommando hat, hier anpassen:
     command: ["npm", "run", "seed"]
-    # Seeder einmalig laufen lassen & dann Container beenden:
     restart: "no"
 
 volumes:
