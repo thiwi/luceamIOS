@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16
-    container_name: lumaios-db-1
+    container_name: luceamios-db-1
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -16,7 +16,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: lumaios-redis-1
+    container_name: luceamios-redis-1
     ports:
       - "6379:6379" # optional: nur nötig, wenn du lokal von außerhalb zugreifen willst
     healthcheck:
@@ -29,7 +29,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: lumaios-backend-1
+    container_name: luceamios-backend-1
     environment:
       NODE_ENV: ${NODE_ENV}
       PORT: ${PORT}
@@ -58,7 +58,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: lumaios-seed-1
+    container_name: luceamios-seed-1
     environment:
       NODE_ENV: ${NODE_ENV}
       DATABASE_URL: ${DATABASE_URL}

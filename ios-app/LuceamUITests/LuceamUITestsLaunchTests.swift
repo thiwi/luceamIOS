@@ -1,13 +1,13 @@
 //
-//  LumaUITestsLaunchTests.swift
-//  LumaUITests
+//  LuceamUITestsLaunchTests.swift
+//  LuceamUITests
 //
 //  Created by Thilo Wilts on 23.07.25.
 //
 
 import XCTest
 
-final class LumaUITestsLaunchTests: XCTestCase {
+final class LuceamUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

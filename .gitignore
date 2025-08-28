@@ -48,4 +48,4 @@ ormconfig.ts
 # Docker
 docker-compose.override.yml
 .DS_Store
-ios-app/Luma.xcodeproj/project.xcworkspace/xcuserdata/thilowilts.xcuserdatad/UserInterfaceState.xcuserstate
+ios-app/Luceam.xcodeproj/project.xcworkspace/xcuserdata/thilowilts.xcuserdatad/UserInterfaceState.xcuserstate

@@ -1,6 +1,6 @@
 //
-//  LumaApp.swift
-//  Luma
+//  LuceamApp.swift
+//  Luceam
 //
 //  Created by Thilo Wilts on 23.07.25.
 //
@@ -8,12 +8,12 @@
 import SwiftUI
 import Foundation
 
-/// Entry point for the Luma application.
+/// Entry point for the Luceam application.
 ///
-/// The ``LumaApp`` bootstraps the SwiftUI hierarchy and injects
+/// The ``LuceamApp`` bootstraps the SwiftUI hierarchy and injects
 /// the ``StatsStore`` that tracks usage metrics.
 @main
-struct LumaApp: App {
+struct LuceamApp: App {
     /// Shared statistics store available throughout the app.
     @StateObject private var stats = StatsStore()
     @StateObject private var sessionStore = SessionStore()
