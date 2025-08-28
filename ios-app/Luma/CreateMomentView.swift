@@ -10,6 +10,10 @@ struct CreateMomentView: View {
     /// Maximum characters allowed in the text field.
     private let maxLength = 100
 
+    /// Scale factor applied to the preview card so the action buttons sit higher
+    /// on the screen.
+    private let cardScale: CGFloat = 0.75
+
     /// Called when the user confirms creation.
     var onCreate: (String) -> Void
 
@@ -32,8 +36,8 @@ struct CreateMomentView: View {
                     .padding()
                     .multilineTextAlignment(.center)
             }
-            .frame(width: UIScreen.main.bounds.width * 0.95,
-                   height: UIScreen.main.bounds.height * 0.6)
+            .frame(width: UIScreen.main.bounds.width * 0.95 * cardScale,
+                   height: UIScreen.main.bounds.height * 0.6 * cardScale)
             .cornerRadius(16)
             .clipped()
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 4)
