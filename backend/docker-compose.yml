@@ -2,10 +2,12 @@ services:
   db:
     image: postgres:16
     container_name: luceamios-db-1
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-luceam}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
@@ -30,10 +32,25 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: luceamios-backend-1
+    env_file:
+      - .env
     environment:
       NODE_ENV: ${NODE_ENV}
       PORT: ${PORT}
-      DATABASE_URL: ${DATABASE_URL}
+      # Primary connection string with safe default
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@db:5432/luceam}
+      # Common explicit vars (for TypeORM/Prisma configs that don't use DATABASE_URL)
+      POSTGRES_DB: ${POSTGRES_DB:-luceam}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASS: ${DB_PASS:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-luceam}
+      # Redis
       REDIS_URL: ${REDIS_URL}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
@@ -59,9 +76,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: luceamios-seed-1
+    env_file:
+      - .env
     environment:
       NODE_ENV: ${NODE_ENV}
-      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_DB: ${POSTGRES_DB:-luceam}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_PASS: ${DB_PASS:-postgres}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@db:5432/luceam}
       REDIS_URL: ${REDIS_URL}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
